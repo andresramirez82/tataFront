@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "TATA app",
+  "name": "App para el control de stocks y ventas",
   "icons": [
     {
       "src": "favicon.ico",

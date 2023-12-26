@@ -1,4 +1,5 @@
 import { User } from "./user";
+import { products } from "./products";
 import { UserApiResponse } from "./api";
 
 export declare namespace Auth {
@@ -10,4 +11,8 @@ export declare namespace Auth {
 }
 export declare namespace Api {
     export type UserApiResponseType = UserApiResponse;
+}
+
+export declare namespace Product {
+    export type product = products;
 }
