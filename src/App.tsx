@@ -9,6 +9,9 @@ import CardFooter from "react-bootstrap/CardFooter";
 import { getUsers } from "./functions/api";
 import { Auth } from "models/models";
 import { formatDate } from "functions/functios";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Login from "components/login/Login";
+import Home from "components/home/Home";
 
 
 function App() {
@@ -20,28 +23,12 @@ function App() {
   }, [])
 
   return (
-    <Container className="mt-5 custom-container">
-      <Col>
-        <Row md={12} className="mb-4">
-          <h1>Elija un usuario</h1>
-        </Row>
-
-      </Col>
-      <Row>
-        <Col>
-          <div className="card-group gap-3">
-            {users && users.map((u, i) => {
-              return (
-                <Card key={`card${i}`} className="text-bg-success">
-                  <CardBody className="text-bg-success"><Button>{u.name}</Button></CardBody>
-                  <CardFooter>{formatDate(u.lastlogin)}</CardFooter>
-                </Card>);
-            })}
-          </div>
-        </Col>
-
-      </Row>
-    </Container >
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/home" element={<Home />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
