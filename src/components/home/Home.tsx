@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from 'react';
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Container, Row, Col } from 'react-bootstrap';
+import { useEffect, useRef } from 'react';
+import { Outlet } from "react-router-dom";
+
 import Sidebar from 'components/sidebar/Sidebar';
 import SearchBar from "components/searchbar/SearchBar";
 
@@ -21,16 +21,16 @@ function Home(): JSX.Element {
         };
     }, []);
 
-    return (<div>
+    return (<div >
         <SearchBar inputRef={searchInputRef}/>
         <div className="container-xxl">
             <div className="row">
-                <div className="col-md-1">
+                <div className="col-md-2" >
                     <Sidebar />
                 </div>
-                <div className="col-md-11 dashboard">
+                <div className="col-md-10 dashboard">
                     <div className="main-content">
-                        <h1>Main Content</h1>
+                        <Outlet/>
                     </div>
                 </div>
             </div>
