@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Form, Button, Alert, Spinner } from 'react-bootstrap';
 import { ProductClass } from 'functions/api';
 import { Product } from 'models/models';
 import ProductDetails from 'components/product/ProductDetails';
 import CreateProductForm from './CreateProductForm';
+import { useParams } from 'react-router-dom';
 
 interface ProductSearchProps {
   onProductFound: (product: Product.product) => void;
@@ -17,6 +18,8 @@ const ProductSearch: React.FC<ProductSearchProps> = ({ onProductFound }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [isFormInvalid, setIsFormInvalid] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const { searchtext } = useParams();
+
 
   const handleFocus = () => {
     setSelectedProductId(null);
@@ -27,6 +30,19 @@ const ProductSearch: React.FC<ProductSearchProps> = ({ onProductFound }) => {
   const handleHideCreateModal = () => {
     setShowCreateModal(false);
   };
+
+  useEffect(() => {
+    if (searchtext) {
+      const decodedText = decodeURIComponent(searchtext);
+      setBarcode(decodedText);
+      handleSearch();
+    }
+    
+
+   
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchtext])
+  
   
 
   const handleSearch = async () => {

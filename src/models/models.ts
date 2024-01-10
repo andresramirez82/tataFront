@@ -1,6 +1,7 @@
 import { User } from "./user";
 import { products } from "./products";
 import { UserApiResponse } from "./api";
+import { carts } from "./cart";
 
 export declare namespace Auth {
     interface AuthUser extends User {
@@ -15,4 +16,8 @@ export declare namespace Api {
 
 export declare namespace Product {
     export type product = products;
+}
+
+export declare namespace Cart {
+    export type cart = carts;
 }

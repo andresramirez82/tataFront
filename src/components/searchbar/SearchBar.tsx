@@ -30,15 +30,8 @@ const SearchBar = (props: propsSearchBar) => {
         event.preventDefault();
         // Aquí puedes realizar alguna acción con el texto de búsqueda
         //console.log(searchText);
-        if (searchText.length > 0) {
-            ProductClass.searchProduct(searchText).then(serch => {
-                if (serch.length > 0) {
-                    alert(serch[0].name);
-                }
-
-            })
-        }
-
+        const encodedText = encodeURIComponent(searchText);
+        Navigate(`/home/stock/${encodedText}`);
     };
 
     useEffect(() => {

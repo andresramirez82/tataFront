@@ -8,6 +8,7 @@ import EditProductForm from './EditProductForm';
 import { toast } from 'react-toastify';
 import Barcode from 'react-barcode';
 import { Carousel } from 'react-bootstrap';
+import DeleteProduct from "components/product/DeleteProduct";
 
 interface ProductDetailsProps {
     productId: number;
@@ -18,6 +19,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ productId }) => {
     const [error, setError] = useState<string | null>(null);
     const [quantityToAdd, setQuantityToAdd] = useState(0);
     const [showEditModal, setShowEditModal] = useState(false);
+    const [showDelete, setShowDelete] = useState(false);
     const [images, setImages] = useState<string[]>();
 
     useEffect(() => {
@@ -108,6 +110,13 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ productId }) => {
         setShowEditModal(false);
     };
 
+    const handleShowDeleteModal = () => {
+        setShowDelete(true);
+    };
+    const handleShowDeleteModalClose = () => {
+        setShowDelete(false);
+    };
+    
     return (
         <Container>
             {error && <Alert variant="danger">{error}</Alert>}
@@ -139,10 +148,10 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ productId }) => {
                                 />
                                 <div className="input-group-append d-flex gap-2">
                                     <Button variant="success" onClick={handleAddStock} className='col-6' >
-                                        <i className="bi bi-cart-plus mr-2"></i> <br/>Agregar
+                                        <i className="bi bi-cart-plus mr-2"></i> <br />Agregar
                                     </Button>
                                     <Button variant="danger" onClick={handleRemoveStock} className='col-6' >
-                                        <i className="bi bi-cart-x mr-2"></i> <br/>Quitar
+                                        <i className="bi bi-cart-x mr-2"></i> <br />Quitar
                                     </Button>
                                 </div>
                             </InputGroup>
@@ -150,13 +159,15 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ productId }) => {
                                 <Button variant="primary" className='col-6' size="lg" onClick={handleShowEditModal}>
                                     <i className="bi bi-pencil mr-2"></i> Editar
                                 </Button>
-                                <Button variant="danger" className='col-6' size="lg">
+                                <Button variant="danger" className='col-6' size="lg" onClick={handleShowDeleteModal}>
                                     <i className='bi bi-trash mr-2'></i> Eliminar
                                 </Button>
                             </div>
 
 
                             <EditProductForm show={showEditModal} onHide={handleHideEditModal} productId={productId} />
+                            {product.id && <DeleteProduct name={product.name} show={showDelete} onHide={handleShowDeleteModalClose} productId={product?.id} />}
+
                         </Col>
                         <Col md={6}>
                             <Carousel className="d-block w-100" style={{ height: '600px', overflow: 'hidden' }} fade slide>

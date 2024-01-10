@@ -19,7 +19,7 @@ const Sidebar: React.FC = () => {
         </a>
       </li>
       <li className="nav-item">
-        <a className="nav-link" href="/home/ventas">
+        <a className="nav-link" href="/home/sales">
           <i className="bi bi-cart-fill mr-2"></i>
           Ventas
         </a>
