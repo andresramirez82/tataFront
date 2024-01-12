@@ -134,9 +134,8 @@ const ProductSearch: React.FC<ProductSearchProps> = ({ onProductFound }) => {
       {products && products?.length > 1 && (
         <>
           <hr />
-          <p className="alert alert-secondary">
-            Se encontraron <b>{products?.length} productos </b>que coinciden con la búsqueda. Haz clic en uno para utilizar.
-          </p>
+          <Alert variant='success'> Se encontraron <b>{products?.length} productos </b>que coinciden con la búsqueda. Haz clic en uno para utilizar.</Alert>
+          
         </>
       )}
 

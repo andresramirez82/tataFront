@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Nav, NavDropdown, Navbar } from 'react-bootstrap';
-import { ProductClass } from "functions/api";
 import { keyboardKey } from "@testing-library/user-event";
 import Users from "components/users/Users";
 import { Auth } from "models/models";

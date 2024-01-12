@@ -10,7 +10,7 @@ import {
   updateProduct,
   deleteProduct
 } from "./product";
-import { getCartToday } from "./cart";
+import { getCartToday, AddCart, getCart } from "./cart";
 
 
 export const getUsers = (): Promise<Auth.AuthUser[]> => {
@@ -77,5 +77,7 @@ export const ProductClass = {
 }
 
 export const CartClass = {
-  getCartToday
+  getCartToday,
+  AddCart,
+  getCart
 }

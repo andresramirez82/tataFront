@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { Auth } from "models/models";
+import { Auth,  Sale} from "models/models";
 
 
 /**
@@ -33,6 +33,16 @@ export const SaveUser = (id: number, name: string, lastlogin: Date) => {
     sessionStorage.setItem('user',JSON.stringify(user));
 }
 
-export const getUser = ()  =>  {
+export const getUser = () : Auth.AuthUser  =>  {
     return JSON.parse( sessionStorage.getItem('user') || '')
+}
+
+export const acumular = (sales: Sale.sale[]) => {
+    let Cantidad: number = 0;
+    sales.forEach(sale => {
+        const cantidad = sale.quantity * sale.product.price;
+        console.log(cantidad, sale.quantity, ' * ', sale.product.price);
+        Cantidad += (cantidad)
+    })
+    return Cantidad;
 }

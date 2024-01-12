@@ -7,7 +7,7 @@ import Home from "components/home/Home";
 import ProductSearch from "components/product/ProductSearch";
 import Sales from "components/sales/Sales";
 
-const Stock = () => {return (<>stock</>)};
+const Stock = () => { return (<>stock</>) };
 
 
 function App() {
@@ -16,6 +16,8 @@ function App() {
     getUsers().then(
       user => setusers(user)
     )
+    console.log(users);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -24,8 +26,8 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<Home />} >
           <Route index element={<Stock />} />
-          <Route path="/home/stock" element={<ProductSearch onProductFound={()=> console.log('searched')} />} />
-          <Route path="/home/stock/:searchtext" element={<ProductSearch onProductFound={()=> console.log('searched')}/>} />
+          <Route path="/home/stock" element={<ProductSearch onProductFound={() => console.log('searched')} />} />
+          <Route path="/home/stock/:searchtext" element={<ProductSearch onProductFound={() => console.log('searched')} />} />
           <Route path="/home/Sales" element={<Sales />} />
         </Route>
 
