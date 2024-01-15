@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Button, Modal } from 'react-bootstrap';
+import { Form, Button, Modal, ButtonGroup } from 'react-bootstrap';
 import { ProductClass } from 'functions/api';
 import { Product } from 'models/models';
 import { toast } from 'react-toastify';
@@ -19,6 +19,7 @@ const CreateProductForm: React.FC<CreateProductFormProps> = ({ show, onHide, bar
     quantity: 0,
     threshold: 0,
     comment: '',
+    kind: false,
   });
 
   const [isFormInvalid, setIsFormInvalid] = useState(false);
@@ -72,65 +73,82 @@ const CreateProductForm: React.FC<CreateProductFormProps> = ({ show, onHide, bar
             </Form.Group>
 
             <Form.Group controlId="productPrice">
-                <Form.Label>Precio</Form.Label>
-                <Form.Control
-                  type="number"
-                  value={productDetails.price}
-                  onChange={(e) => setProductDetails({ ...productDetails, price: parseFloat(e.target.value) })}
-                  required
-                />
-                <Form.Control.Feedback type="invalid">
-                  Por favor ingrese un precio válido
-                </Form.Control.Feedback>
-              </Form.Group>
+              <Form.Label>Precio</Form.Label>
+              <Form.Control
+                type="number"
+                value={productDetails.price}
+                onChange={(e) => setProductDetails({ ...productDetails, price: parseFloat(e.target.value) })}
+                required
+              />
+              <Form.Control.Feedback type="invalid">
+                Por favor ingrese un precio válido
+              </Form.Control.Feedback>
+            </Form.Group>
 
-              <Form.Group controlId="productCost">
-                <Form.Label>Costo</Form.Label>
-                <Form.Control
-                  type="number"
-                  value={productDetails.cost}
-                  onChange={(e) => setProductDetails({ ...productDetails, cost: parseFloat(e.target.value) })}
-                  required
-                />
-                <Form.Control.Feedback type="invalid">
-                  Por favor ingrese un costo válido
-                </Form.Control.Feedback>
-              </Form.Group>
+            <Form.Group controlId="productCost">
+              <Form.Label>Costo</Form.Label>
+              <Form.Control
+                type="number"
+                value={productDetails.cost}
+                onChange={(e) => setProductDetails({ ...productDetails, cost: parseFloat(e.target.value) })}
+                required
+              />
+              <Form.Control.Feedback type="invalid">
+                Por favor ingrese un costo válido
+              </Form.Control.Feedback>
+            </Form.Group>
 
             <Form.Group controlId="productQuantity">
-                <Form.Label>Cantidad</Form.Label>
-                <Form.Control
-                  type="number"
-                  value={productDetails.quantity}
-                  onChange={(e) => setProductDetails({ ...productDetails, quantity: parseInt(e.target.value, 10) })}
-                  required
-                />
-                <Form.Control.Feedback type="invalid">
-                  Por favor ingrese una cantidad válida
-                </Form.Control.Feedback>
-              </Form.Group>
+              <Form.Label>Cantidad</Form.Label>
+              <Form.Control
+                type="number"
+                value={productDetails.quantity}
+                onChange={(e) => setProductDetails({ ...productDetails, quantity: parseInt(e.target.value, 10) })}
+                required
+              />
+              <Form.Control.Feedback type="invalid">
+                Por favor ingrese una cantidad válida
+              </Form.Control.Feedback>
+            </Form.Group>
 
-              <Form.Group controlId="productThreshold">
-                <Form.Label>Límite de Unidades</Form.Label>
-                <Form.Control
-                  type="number"
-                  value={productDetails.threshold}
-                  onChange={(e) => setProductDetails({ ...productDetails, threshold: parseInt(e.target.value, 10) })}
-                  required
-                />
-                <Form.Control.Feedback type="invalid">
-                  Por favor ingrese una cantidad válida
-                </Form.Control.Feedback>
-              </Form.Group>
+            <Form.Group controlId="productThreshold">
+              <Form.Label>Límite de Unidades</Form.Label>
+              <Form.Control
+                type="number"
+                value={productDetails.threshold}
+                onChange={(e) => setProductDetails({ ...productDetails, threshold: parseInt(e.target.value, 10) })}
+                required
+              />
+              <Form.Control.Feedback type="invalid">
+                Por favor ingrese una cantidad válida
+              </Form.Control.Feedback>
+            </Form.Group>
 
-              <Form.Group controlId="productComment">
-                <Form.Label>Comentario</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  value={productDetails.comment}
-                  onChange={(e) => setProductDetails({ ...productDetails, comment: e.target.value })}
-                />
-              </Form.Group>
+            <Form.Group controlId="productComment">
+              <Form.Label>Comentario</Form.Label>
+              <Form.Control
+                as="textarea"
+                value={productDetails.comment}
+                onChange={(e) => setProductDetails({ ...productDetails, comment: e.target.value })}
+              />
+            </Form.Group>
+            <Form.Group controlId='productKind'>
+              <Form.Label>Venta por unidades o por granel</Form.Label>
+              <ButtonGroup size="lg" className="mb-2" style={{ display: 'flex', justifyContent: 'center' }}>
+                <Button
+                  variant={!productDetails.kind ? 'primary' : 'secondary'}
+                  onClick={() => setProductDetails({ ...productDetails, kind: false })}
+                >
+                  Unidades
+                </Button>
+                <Button
+                  variant={productDetails.kind ? 'primary' : 'secondary'}
+                  onClick={() => setProductDetails({ ...productDetails, kind: true })}
+                >
+                  Por granel
+                </Button>
+              </ButtonGroup>
+            </Form.Group>
 
             {/* Resto de los campos del formulario */}
           </>

@@ -1,6 +1,6 @@
 // src/components/product/EditProductForm.tsx
 import React, { useState, useEffect } from 'react';
-import { Form, Button, Modal } from 'react-bootstrap';
+import { Form, Button, Modal, ButtonGroup } from 'react-bootstrap';
 import { ProductClass } from 'functions/api';
 import { Product } from 'models/models';
 import { toast } from 'react-toastify';
@@ -142,6 +142,23 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ show, onHide, product
                   onChange={(e) => setProductDetails({ ...productDetails, comment: e.target.value })}
                 />
               </Form.Group>
+              <Form.Group controlId='productKind'>
+              <Form.Label>Venta por unidades o por granel</Form.Label>
+              <ButtonGroup size="lg" className="mb-2" style={{ display: 'flex', justifyContent: 'center' }}>
+                <Button
+                  variant={!productDetails.kind ? 'primary' : 'secondary'}
+                  onClick={() => setProductDetails({ ...productDetails, kind: false })}
+                >
+                  Unidades
+                </Button>
+                <Button
+                  variant={productDetails.kind ? 'primary' : 'secondary'}
+                  onClick={() => setProductDetails({ ...productDetails, kind: true })}
+                >
+                  Por granel
+                </Button>
+              </ButtonGroup>
+            </Form.Group>
             </>
           )}
 

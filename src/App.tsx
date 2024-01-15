@@ -16,7 +16,8 @@ function App() {
     getUsers().then(
       user => setusers(user)
     )
-    console.log(users);
+ if (users)
+    console.log('Aplicación iniciada' ,users );
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

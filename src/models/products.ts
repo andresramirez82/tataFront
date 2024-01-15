@@ -8,4 +8,5 @@ export interface products {
     price: number;
     quantity: number;
     threshold: number;
+    kind: boolean;
 }

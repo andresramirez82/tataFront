@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from "react";
-import { Container, Row, Col, Alert, Form} from "react-bootstrap";
-import { CartClass } from "functions/api";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { Container, Row, Col, Alert, Form } from "react-bootstrap";
+import { CartClass, ProductClass } from "functions/api";
 import { Cart as CartModel } from "models/models";
 import { formatDate } from "functions/functios";
 import { acumular } from "functions/functios";
 import MoneyFormatter from "components/helpper/Money";
+import { toast } from 'react-toastify';
 
 interface CartProps {
     idCart: number;
@@ -12,19 +13,18 @@ interface CartProps {
 
 const Cart: React.FC<CartProps> = ({ idCart }) => {
     const [cart, setcart] = useState<CartModel.cart>();
-    const [isFormInvalid, setIsFormInvalid] = useState(false);
     const inputRef = useRef<HTMLInputElement | null>(null);
     const [isEditing, setEditing] = useState(true);
+    const [isFormInvalid, setIsFormInvalid] = useState(false);
+    const [barCode, setbarCode] = useState<string>();
 
-    const toggleEditing = () => {
-        setEditing(!isEditing);
-      };
+
 
     useEffect(() => {
-    if (isEditing && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [isEditing]);
+        if (isEditing && inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [isEditing]);
 
 
     useEffect(() => {
@@ -43,8 +43,34 @@ const Cart: React.FC<CartProps> = ({ idCart }) => {
         }
     }, [idCart])
 
+    const BuscarProd = (barcode : string) => {
+        ProductClass.getProductByBarcode(barcode).then(resp => {
+            if (resp.length>1) {
+                toast(`Hay ${resp.length} productos que coinciden con la búsqueda se más específico`);
+            } else {
+                // seguir acá
+                console.log(resp[0].id);
+            }
+        }).catch(err => {
+            console.error(err)
+        })
+    }
 
-    const handleSubmit = () => {
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const form = e.currentTarget;
+
+        if (form.checkValidity()) {
+            setIsFormInvalid(false);
+            if (barCode)
+            BuscarProd(barCode);
+        } else {
+            // Si hay errores de validación, muestra los mensajes de error
+            e.stopPropagation();
+            setIsFormInvalid(true);
+        }
+        form.classList.add('was-validated');
 
     }
     return (
@@ -72,11 +98,14 @@ const Cart: React.FC<CartProps> = ({ idCart }) => {
                     <Form noValidate validated={isFormInvalid} onSubmit={handleSubmit}>
                         <Form.Group>
                             <Form.Label></Form.Label>
-                            <Form.Control type="number"
+                            <Form.Control type="text"
                                 ref={inputRef}
-                                
+                                onChange={(e: ChangeEvent<HTMLInputElement>) => setbarCode(e.currentTarget.value)}
                                 required />
                         </Form.Group>
+                        <Form.Control.Feedback type="invalid">
+                            Por favor ingrese un codigo de barras
+                        </Form.Control.Feedback>
                     </Form>
                 </Col>
             </Row>
