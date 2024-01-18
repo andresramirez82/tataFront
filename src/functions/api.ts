@@ -10,7 +10,8 @@ import {
   updateProduct,
   deleteProduct
 } from "./product";
-import { getCartToday, AddCart, getCart } from "./cart";
+import { getCartToday, AddCart, getCart, addToCart } from "./cart";
+import { createUser, deleteUser } from "./User";
 
 
 export const getUsers = (): Promise<Auth.AuthUser[]> => {
@@ -79,5 +80,10 @@ export const ProductClass = {
 export const CartClass = {
   getCartToday,
   AddCart,
-  getCart
+  getCart,
+  addToCart
+}
+
+export const UserClass = {
+  createUser, deleteUser
 }

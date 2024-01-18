@@ -6,8 +6,9 @@ import Login from "components/login/Login";
 import Home from "components/home/Home";
 import ProductSearch from "components/product/ProductSearch";
 import Sales from "components/sales/Sales";
+import UserManagement from "components/users/UserManagement";
 
-const Stock = () => { return (<>stock</>) };
+const Stock = () => { return (<></>) };
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
           <Route path="/home/stock" element={<ProductSearch onProductFound={() => console.log('searched')} />} />
           <Route path="/home/stock/:searchtext" element={<ProductSearch onProductFound={() => console.log('searched')} />} />
           <Route path="/home/Sales" element={<Sales />} />
+          <Route path="/home/Users" element={<UserManagement />} />
         </Route>
 
       </Routes>

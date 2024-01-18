@@ -1,11 +1,12 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Container, Row, Col, Alert, Form } from "react-bootstrap";
 import { CartClass, ProductClass } from "functions/api";
-import { Cart as CartModel } from "models/models";
+import { Cart as CartModel, Product } from "models/models";
 import { formatDate } from "functions/functios";
 import { acumular } from "functions/functios";
 import MoneyFormatter from "components/helpper/Money";
 import { toast } from 'react-toastify';
+import CreateSale from "./CreateSale";
 
 interface CartProps {
     idCart: number;
@@ -17,6 +18,8 @@ const Cart: React.FC<CartProps> = ({ idCart }) => {
     const [isEditing, setEditing] = useState(true);
     const [isFormInvalid, setIsFormInvalid] = useState(false);
     const [barCode, setbarCode] = useState<string>();
+    const [Prod, setProd] = useState<Product.product>();
+    const [showCreateSale, setshowCreateSale] = useState(false);
 
 
 
@@ -43,13 +46,13 @@ const Cart: React.FC<CartProps> = ({ idCart }) => {
         }
     }, [idCart])
 
-    const BuscarProd = (barcode : string) => {
+    const BuscarProd = (barcode: string) => {
         ProductClass.getProductByBarcode(barcode).then(resp => {
-            if (resp.length>1) {
+            if (resp.length > 1) {
                 toast(`Hay ${resp.length} productos que coinciden con la búsqueda se más específico`);
             } else {
                 // seguir acá
-                console.log(resp[0].id);
+                setProd(resp[0]);
             }
         }).catch(err => {
             console.error(err)
@@ -64,7 +67,8 @@ const Cart: React.FC<CartProps> = ({ idCart }) => {
         if (form.checkValidity()) {
             setIsFormInvalid(false);
             if (barCode)
-            BuscarProd(barCode);
+                BuscarProd(barCode);
+            setshowCreateSale(true);
         } else {
             // Si hay errores de validación, muestra los mensajes de error
             e.stopPropagation();
@@ -73,6 +77,27 @@ const Cart: React.FC<CartProps> = ({ idCart }) => {
         form.classList.add('was-validated');
 
     }
+
+    const handleHideModalSale = () => {
+        setshowCreateSale(false);
+        if (idCart) {
+            CartClass.getCart(idCart)
+                .then(myCart => {
+                    if (myCart) {
+                        setcart(myCart);
+                        setEditing(true);
+                    }
+
+                })
+                .catch(err => {
+                    console.error(err);
+                })
+        }
+        if (inputRef.current) {
+            inputRef.current.value = ''; // No error
+        }
+    }
+
     return (
         <Container>
             <Row>
@@ -132,7 +157,7 @@ const Cart: React.FC<CartProps> = ({ idCart }) => {
                 </div>
 
             </Row>
-
+            {Prod && <CreateSale product={Prod} show={showCreateSale} onHide={handleHideModalSale} idCart={idCart} />}
         </Container>);
 }
 

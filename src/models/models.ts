@@ -1,8 +1,8 @@
 import { User } from "./user";
 import { products } from "./products";
-import { UserApiResponse, CartApiResponse } from "./api";
+import { UserApiResponse, CartApiResponse, ProdApiResponse } from "./api";
 import { carts } from "./cart";
-import { Sale as Sales } from "./sales";
+import { Sale as Sales,SaleCart } from "./sales";
 
 export declare namespace Auth {
     interface AuthUser extends User {
@@ -14,6 +14,7 @@ export declare namespace Auth {
 export declare namespace Api {
     export type UserApiResponseType = UserApiResponse;
     export type CartApiResponseType = CartApiResponse;
+    export type ProdApiResponseType = ProdApiResponse
 }
 
 export declare namespace Product {
@@ -26,4 +27,5 @@ export declare namespace Cart {
 
 export declare namespace Sale {
     export type sale = Sales;
+    export type saleCart = SaleCart;
 }

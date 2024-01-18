@@ -1,5 +1,5 @@
 import Axios from "components/axios/Axios";
-import { Cart, Api } from "models/models";
+import { Cart, Api, Sale } from "models/models";
 
 export const getCartToday = (): Promise<Cart.cart[]> => {
     // Utiliza async/await para trabajar de forma más cómoda con Promesas
@@ -31,6 +31,20 @@ export const getCart = (idCart: number): Promise<Cart.cart> => {
     // Utiliza async/await para trabajar de forma más cómoda con Promesas
     return new Promise<Cart.cart>((resolve, reject) => {
         Axios.get(`/carts/${idCart}`)
+            .then((response) => {
+                resolve(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+                reject(error);
+            });
+    });
+};
+
+export const addToCart = (Cart: Sale.saleCart): Promise<Api.CartApiResponseType | {message: string}> => {
+    // Utiliza async/await para trabajar de forma más cómoda con Promesas
+    return new Promise<Api.CartApiResponseType>((resolve, reject) => {
+        Axios.post(`/sales/add-to-cart/`,Cart)
             .then((response) => {
                 resolve(response.data);
             })

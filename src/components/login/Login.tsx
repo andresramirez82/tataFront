@@ -19,8 +19,13 @@ function Login() {
 
   useEffect(() => {
     getUsers().then(
-      user => setusers(user),
+      user => {setusers(user)
+      if (user.length === 0) {
+        navigate('/users');
+      }
+      }
     )
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {

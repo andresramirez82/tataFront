@@ -58,7 +58,7 @@ const Sales: React.FC = () => {
                         </tr>
 
                         </thead>
-                        <tbody>
+                        <tbody style={{overflow: 'auto'}}>
                             {
                                 carts && carts.map((c, i) => {
                                     return (
