@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { Container, Row, Col, Alert, Form } from "react-bootstrap";
+import { Container, Row, Col, Alert, Form, Button } from "react-bootstrap";
 import { CartClass, ProductClass } from "functions/api";
 import { Cart as CartModel, Product } from "models/models";
 import { formatDate } from "functions/functios";
@@ -7,6 +7,7 @@ import { acumular } from "functions/functios";
 import MoneyFormatter from "components/helpper/Money";
 import { toast } from 'react-toastify';
 import CreateSale from "./CreateSale";
+import ConfirmCart from "./ConfirmCart";
 
 interface CartProps {
     idCart: number;
@@ -78,6 +79,14 @@ const Cart: React.FC<CartProps> = ({ idCart }) => {
 
     }
 
+    const onConfirmarVenta = (idCart: number, idPayment: number) => [
+        CartClass.updateCart(idCart,idPayment).then( resp => {
+            console.log(resp);
+        }).catch(err => {
+            console.error(err);
+        })
+    ]
+
     const handleHideModalSale = () => {
         setshowCreateSale(false);
         if (idCart) {
@@ -119,6 +128,18 @@ const Cart: React.FC<CartProps> = ({ idCart }) => {
                 </Col>
             </Row>
             <Row>
+
+                <div className="input-group-append d-flex gap-1">
+                    {cart &&  <ConfirmCart idCart={cart?.id} onConfirmarVenta={onConfirmarVenta} />}
+
+
+                    <Button variant="danger" className='col-6' >
+                        <i className="bi bi-cart-x mr-2"></i> <br />Quitar
+                    </Button>
+                </div>
+
+            </Row>
+            <Row>
                 <Col md={12}>
                     <Form noValidate validated={isFormInvalid} onSubmit={handleSubmit}>
                         <Form.Group>
@@ -132,6 +153,7 @@ const Cart: React.FC<CartProps> = ({ idCart }) => {
                             Por favor ingrese un codigo de barras
                         </Form.Control.Feedback>
                     </Form>
+
                 </Col>
             </Row>
             <Row>

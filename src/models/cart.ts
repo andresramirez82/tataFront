@@ -7,3 +7,8 @@ export interface carts {
     sales: Sale[];
     user: User;
 }
+
+export interface payments {
+    id: number;
+    tipo: string;
+}

@@ -21,7 +21,7 @@ function Login() {
     getUsers().then(
       user => {setusers(user)
       if (user.length === 0) {
-        navigate('/users');
+        navigate('/home/Users');
       }
       }
     )

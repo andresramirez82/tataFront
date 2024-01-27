@@ -10,7 +10,7 @@ import {
   updateProduct,
   deleteProduct
 } from "./product";
-import { getCartToday, AddCart, getCart, addToCart } from "./cart";
+import { getCartToday, AddCart, getCart, addToCart, getPayment, updateCart } from "./cart";
 import { createUser, deleteUser } from "./User";
 
 
@@ -81,7 +81,9 @@ export const CartClass = {
   getCartToday,
   AddCart,
   getCart,
-  addToCart
+  addToCart,
+  getPayment,
+  updateCart
 }
 
 export const UserClass = {
