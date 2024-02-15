@@ -45,7 +45,7 @@ const Sales: React.FC = () => {
                     </Row>
                 </Alert>
                 </div>}
-                {idCart && <Cart idCart={idCart}/>}
+                {idCart && <Cart idCart={idCart} setidCart={setidCart}/>}
             </Col>
             <Col md={6}>
                 <div className="table-responsive">

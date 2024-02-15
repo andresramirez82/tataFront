@@ -30,6 +30,16 @@ const CreateProductForm: React.FC<CreateProductFormProps> = ({ show, onHide, bar
       await ProductClass.createProduct({ ...productDetails, barcode });
       onHide(); // Cierra el modal después de guardar los cambios
       toast("Se ha grabado correctamente!");
+      setProductDetails({
+        barcode,
+        name: '',
+        price: 0,
+        cost: 0,
+        quantity: 0,
+        threshold: 0,
+        comment: '',
+        kind: false,
+      })
     } catch (error) {
       console.error('Error al crear el producto:', error);
       toast("Error al crear el producto!");

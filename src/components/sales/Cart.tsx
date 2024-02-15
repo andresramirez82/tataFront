@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { Container, Row, Col, Alert, Form, Button } from "react-bootstrap";
+import { Container, Row, Col, Alert, Form, Button, Modal } from "react-bootstrap";
 import { CartClass, ProductClass } from "functions/api";
 import { Cart as CartModel, Product } from "models/models";
 import { formatDate } from "functions/functios";
@@ -11,9 +11,10 @@ import ConfirmCart from "./ConfirmCart";
 
 interface CartProps {
     idCart: number;
+    setidCart: React.Dispatch<React.SetStateAction<number | undefined>>;
 }
 
-const Cart: React.FC<CartProps> = ({ idCart }) => {
+const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
     const [cart, setcart] = useState<CartModel.cart>();
     const inputRef = useRef<HTMLInputElement | null>(null);
     const [isEditing, setEditing] = useState(true);
@@ -21,6 +22,10 @@ const Cart: React.FC<CartProps> = ({ idCart }) => {
     const [barCode, setbarCode] = useState<string>();
     const [Prod, setProd] = useState<Product.product>();
     const [showCreateSale, setshowCreateSale] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+    const handleShowDeleteModal = () => setShowDeleteModal(true);
+    const handleCloseDeleteModal = () => setShowDeleteModal(false);
 
 
 
@@ -82,6 +87,8 @@ const Cart: React.FC<CartProps> = ({ idCart }) => {
     const onConfirmarVenta = (idCart: number, idPayment: number) => [
         CartClass.updateCart(idCart,idPayment).then( resp => {
             console.log(resp);
+            setidCart(undefined);
+            
         }).catch(err => {
             console.error(err);
         })
@@ -107,8 +114,32 @@ const Cart: React.FC<CartProps> = ({ idCart }) => {
         }
     }
 
+    const DeleteCart = () => {
+        CartClass.deleteCart(idCart).then( resp => {
+            toast(`Se borró correctamente el carrito ${idCart}` );
+            setidCart(undefined);
+        }).catch(err => {
+            toast(`Hubo un error al eliminar la venta ${idCart}`)
+        })
+    }
     return (
         <Container>
+            <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Confirmar eliminación</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    ¿Estás seguro de que deseas eliminar este carrito?
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseDeleteModal}>
+                        Cancelar
+                    </Button>
+                    <Button variant="danger" onClick={() => { DeleteCart(); handleCloseDeleteModal(); }}>
+                        Confirmar
+                    </Button>
+                </Modal.Footer>
+            </Modal>
             <Row>
                 <Col md={6}>
                     <Alert variant="success ">{cart?.id}</Alert>
@@ -133,8 +164,8 @@ const Cart: React.FC<CartProps> = ({ idCart }) => {
                     {cart &&  <ConfirmCart idCart={cart?.id} onConfirmarVenta={onConfirmarVenta} />}
 
 
-                    <Button variant="danger" className='col-6' >
-                        <i className="bi bi-cart-x mr-2"></i> <br />Quitar
+                    <Button variant="danger" className='col-6' onClick={handleShowDeleteModal}>
+                        <i className="bi bi-cart-x mr-2"></i> <br />Cancelar
                     </Button>
                 </div>
 
@@ -164,14 +195,16 @@ const Cart: React.FC<CartProps> = ({ idCart }) => {
                                 <th>id</th>
                                 <th>producto</th>
                                 <th>precio</th>
+                                <th>cantidad</th>
                                 <th>total</th>
                                 <th>fecha</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             {cart?.sales && cart.sales.map((sale, i) => {
                                 return (<tr key={`salesporcart${i}`}>
-                                    <th scope="row">{sale.id}</th><td>{sale.product.name}</td><td>{sale.product.price}</td><td>{sale.totalPrice}</td><td>{formatDate(sale.saleDate)}</td>
+                                    <th scope="row">{sale.id}</th><td>{sale.product.name}</td><td><MoneyFormatter amount={sale.product.price}/></td><td>{sale.quantity}</td><td><MoneyFormatter amount={sale.totalPrice}/></td><td>{formatDate(sale.saleDate)}</td><td><Button variant="danger"><i className="bi bi-cart-x mr-2"></i></Button></td>
                                 </tr>);
                             })}
                         </tbody>

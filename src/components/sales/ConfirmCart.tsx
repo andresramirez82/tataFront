@@ -33,7 +33,7 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({onConfirmarVenta, idCart}
   return (
     <>
       <Button variant="success" className='col-6' onClick={handleShow}>
-                            <i className="bi bi-cart-plus mr-2"></i> <br />Agregar
+                            <i className="bi bi-cart-plus mr-2"></i> <br />Finalizar
                         </Button>
 
       <Modal show={show} onHide={handleClose}>

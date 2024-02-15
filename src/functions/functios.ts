@@ -40,8 +40,12 @@ export const getUser = () : Auth.AuthUser  =>  {
 export const acumular = (sales: Sale.sale[]) => {
     let Cantidad: number = 0;
     sales.forEach(sale => {
-        const cantidad = sale.quantity * sale.product.price;
-        console.log(cantidad, sale.quantity, ' * ', sale.product.price);
+        let div = 1;
+        if (sale.product.kind) {
+            div = 1000;
+        }
+        const cantidad = sale.quantity / div * sale.product.price;
+        console.log(cantidad, sale.quantity / div, ' * ', sale.product.price);
         Cantidad += (cantidad)
     })
     return Cantidad;

@@ -83,3 +83,17 @@ export const updateCart = (idCart: number, idPayment: number): Promise<payments[
             });
     });
 };
+
+export const deleteCart = (idCart: number): Promise<payments[]> => {
+    // Utiliza async/await para trabajar de forma más cómoda con Promesas
+    return new Promise<payments[]>((resolve, reject) => {
+        Axios.delete(`/carts/${idCart}`)
+            .then((response) => {
+                resolve(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+                reject(error);
+            });
+    });
+};

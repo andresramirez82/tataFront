@@ -78,7 +78,7 @@ const CreateSale: React.FC<EditProductFormProps> = ({ show, onHide, product, idC
   }, [product]);
 
   const ChangeCantidad = (e: ChangeEvent<HTMLInputElement>) => {
-   
+  
     if (product.id) {
       setnewSale({ ...newSale, quantity: Number(e.currentTarget.value), productId: product.id });
     }
@@ -96,7 +96,6 @@ const CreateSale: React.FC<EditProductFormProps> = ({ show, onHide, product, idC
   const Agregar = () => {
     if (product.id) {
       CartClass.addToCart(newSale).then(resp => {
-
         toast(resp.message);
         onHide();
 
