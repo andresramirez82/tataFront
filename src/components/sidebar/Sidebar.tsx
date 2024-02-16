@@ -28,6 +28,12 @@ const Sidebar: React.FC = () => {
           User
         </a>
       </li>
+      <li className="nav-item">
+        <a className="nav-link" href="/home/payment">
+          <i className="bi bi-cart-fill mr-2"></i>
+          Formas de pagos
+        </a>
+      </li>
     </ul>
   );
 };

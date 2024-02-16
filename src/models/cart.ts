@@ -9,6 +9,6 @@ export interface carts {
 }
 
 export interface payments {
-    id: number;
+    id?: number;
     tipo: string;
 }

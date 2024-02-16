@@ -44,9 +44,10 @@ export const acumular = (sales: Sale.sale[]) => {
         if (sale.product.kind) {
             div = 1000;
         }
-        const cantidad = sale.quantity / div * sale.product.price;
-        console.log(cantidad, sale.quantity / div, ' * ', sale.product.price);
-        Cantidad += (cantidad)
+       // const cantidad = sale.quantity * sale.product.price; This way the price of the product was not stored if it was changed.
+        const cantidad = sale.totalPrice;
+        // console.log(cantidad, sale.quantity, ' * ', sale.product.price);
+        Cantidad += (cantidad/div)
     })
     return Cantidad;
 }

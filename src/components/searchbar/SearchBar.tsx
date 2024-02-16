@@ -37,9 +37,9 @@ const SearchBar = (props: propsSearchBar) => {
         const userSession: Auth.AuthUser = JSON.parse(sessionStorage.getItem('user') || '{}');
         if (userSession.id === undefined) {
             Navigate("/");
-        } 
+        }
         setuser(userSession);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const CloseSession = () => {
@@ -48,13 +48,22 @@ const SearchBar = (props: propsSearchBar) => {
     }
 
     return (
-        <Navbar bg="dark" variant="dark">
-            <Navbar.Brand href="#home">Mi Aplicación</Navbar.Brand>
+        <Navbar className="bg-body-tertiary">
+            <Navbar.Brand href="/home">Despensa el tata</Navbar.Brand>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+                <Nav className="me-auto">
+                    <Nav.Link href="/home/stock">Stock</Nav.Link>
+                    <Nav.Link href="/home/sales">Ventas</Nav.Link>
+                    <Nav.Link href="/home/products">Productos</Nav.Link>
+                </Nav>
+            </Navbar.Collapse>
+
             <Nav className="ml-auto">
                 <NavDropdown title={<span className="bi bi-person" />} >
                     {user?.id && <NavDropdown.Item eventKey="perfil"><Users idUser={user?.id} /></NavDropdown.Item>}
 
-                    <NavDropdown.Item eventKey="configuracion">Configuración</NavDropdown.Item>
+                    <NavDropdown.Item eventKey="configuracion" href="/home/Settings">Configuración</NavDropdown.Item>
                     <NavDropdown.Divider />
                     <NavDropdown.Item eventKey="cerrarSesion" onClick={CloseSession}>Cerrar Sesión</NavDropdown.Item>
                 </NavDropdown>

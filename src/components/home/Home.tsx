@@ -25,10 +25,8 @@ function Home(): JSX.Element {
         <SearchBar inputRef={searchInputRef}/>
         <div className="container-xxl">
             <div className="row">
-                <div className="col-md-2" >
-                    <Sidebar />
-                </div>
-                <div className="col-md-10 dashboard">
+                
+                <div className="col-md-12 dashboard">
                     <div className="main-content">
                         <Outlet/>
                     </div>
