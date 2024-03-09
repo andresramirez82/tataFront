@@ -3,6 +3,7 @@ import { products } from "./products";
 import { UserApiResponse, CartApiResponse, ProdApiResponse } from "./api";
 import { carts, payments } from "./cart";
 import { Sale as Sales,SaleCart } from "./sales";
+import { discounts, dicountResponse } from "./discount";
 
 export declare namespace Auth {
     interface AuthUser extends User {
@@ -30,3 +31,12 @@ export declare namespace Sale {
     export type sale = Sales;
     export type saleCart = SaleCart;
 }
+
+export declare namespace Discount {
+    export type discount = discounts;
+    export type dicountsResponse = dicountResponse;
+}
+
+export interface withDiscount extends  Cart.cart{
+    discounts: Discount.dicountsResponse[];
+  }

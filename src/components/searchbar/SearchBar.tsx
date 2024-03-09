@@ -49,13 +49,14 @@ const SearchBar = (props: propsSearchBar) => {
 
     return (
         <Navbar className="bg-body-tertiary">
-            <Navbar.Brand href="/home">Despensa el tata</Navbar.Brand>
+            <Navbar.Brand href="/home">Despensa</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto">
                     <Nav.Link href="/home/stock">Stock</Nav.Link>
                     <Nav.Link href="/home/sales">Ventas</Nav.Link>
                     <Nav.Link href="/home/products">Productos</Nav.Link>
+                    <Nav.Link href="/home/Discount">Descuentos</Nav.Link>
                 </Nav>
             </Navbar.Collapse>
 

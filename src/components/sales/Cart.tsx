@@ -1,7 +1,7 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Container, Row, Col, Alert, Form, Button, Modal } from "react-bootstrap";
 import { CartClass, ProductClass } from "functions/api";
-import { Cart as CartModel, Product } from "models/models";
+import { Cart as CartModel, Product, Discount } from "models/models";
 import { formatDate } from "functions/functios";
 import { acumular } from "functions/functios";
 import MoneyFormatter from "components/helpper/Money";
@@ -23,11 +23,10 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
     const [Prod, setProd] = useState<Product.product>();
     const [showCreateSale, setshowCreateSale] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [discount, setdiscount] = useState<Discount.dicountsResponse[]>();
 
     const handleShowDeleteModal = () => setShowDeleteModal(true);
     const handleCloseDeleteModal = () => setShowDeleteModal(false);
-
-
 
     useEffect(() => {
         if (isEditing && inputRef.current) {
@@ -37,8 +36,13 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
 
 
     useEffect(() => {
-        if (idCart) {
-            CartClass.getCart(idCart)
+        Actualizar(idCart);
+    }, [idCart])
+
+
+    const Actualizar = (idCartParam: number) => {
+        if (idCartParam) {
+            CartClass.getCart(idCartParam)
                 .then(myCart => {
                     if (myCart) {
                         setcart(myCart);
@@ -49,8 +53,13 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
                 .catch(err => {
                     console.error(err);
                 })
+            CartClass.discountsForCart(idCartParam).then(dis => {
+                setdiscount(dis);
+            }).catch(err => {
+                console.log(err)
+            })
         }
-    }, [idCart])
+    }
 
     const BuscarProd = (barcode: string) => {
         ProductClass.getProductByBarcode(barcode).then(resp => {
@@ -85,10 +94,10 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
     }
 
     const onConfirmarVenta = (idCart: number, idPayment: number) => [
-        CartClass.updateCart(idCart,idPayment).then( resp => {
+        CartClass.updateCart(idCart, idPayment).then(resp => {
             console.log(resp);
             setidCart(undefined);
-            
+
         }).catch(err => {
             console.error(err);
         })
@@ -101,6 +110,7 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
                 .then(myCart => {
                     if (myCart) {
                         setcart(myCart);
+                        Actualizar(idCart);
                         setEditing(true);
                     }
 
@@ -115,11 +125,21 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
     }
 
     const DeleteCart = () => {
-        CartClass.deleteCart(idCart).then( resp => {
-            toast(`Se borró correctamente el carrito ${idCart}` );
+        CartClass.deleteCart(idCart).then(resp => {
+            toast(`Se borró correctamente el carrito ${idCart}`);
             setidCart(undefined);
         }).catch(err => {
             toast(`Hubo un error al eliminar la venta ${idCart}`)
+        })
+    }
+
+    const BorraSale = (idSale: number) => {
+        CartClass.deleteSale(idSale).then(sale => {
+            toast(`Se borró correctamente la venta`);
+            Actualizar(idCart);
+        }
+        ).catch(err => {
+            toast(`Error al borrar`);
         })
     }
     return (
@@ -154,14 +174,14 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
                     <Alert variant="success ">{cart?.user.name}</Alert>
                 </Col>
                 <Col md={6}>
-                    {cart && <Alert variant="success "><MoneyFormatter amount={acumular(cart.sales)} /></Alert>}
+                    {cart && <Alert variant="success "><MoneyFormatter amount={acumular(cart.sales, discount)} /></Alert>}
 
                 </Col>
             </Row>
             <Row>
 
                 <div className="input-group-append d-flex gap-1">
-                    {cart &&  <ConfirmCart idCart={cart?.id} onConfirmarVenta={onConfirmarVenta} />}
+                    {cart && <ConfirmCart idCart={cart?.id} onConfirmarVenta={onConfirmarVenta} />}
 
 
                     <Button variant="danger" className='col-6' onClick={handleShowDeleteModal}>
@@ -204,7 +224,16 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
                         <tbody>
                             {cart?.sales && cart.sales.map((sale, i) => {
                                 return (<tr key={`salesporcart${i}`}>
-                                    <th scope="row">{sale.id}</th><td>{sale.product.name}</td><td><MoneyFormatter amount={sale.product.price}/></td><td>{sale.quantity}</td><td><MoneyFormatter amount={sale.totalPrice}/></td><td>{formatDate(sale.saleDate)}</td><td><Button variant="danger"><i className="bi bi-cart-x mr-2"></i></Button></td>
+                                    <th scope="row">{sale.id}</th><td>{sale.product.name}</td><td><MoneyFormatter amount={sale.product.price} /></td><td>{sale.quantity}</td><td><MoneyFormatter amount={sale.totalPrice} /></td><td>{formatDate(sale.saleDate)}</td><td><Button variant="danger" onClick={() => BorraSale(sale.id)}><i className="bi bi-cart-x mr-2"></i></Button></td>
+                                </tr>);
+                            })}
+                        </tbody>
+                        <tbody>
+                            {discount && discount.map((dis, i) => {
+                                return (<tr key={`discount${i}`}>
+                                    <th scope="row" colSpan={2}>{dis.discountName}</th>
+                                    <th scope="row" colSpan={2}>Descuento en {dis.productName}</th>
+                                    <td colSpan={3}><MoneyFormatter amount={dis.discount} /></td>
                                 </tr>);
                             })}
                         </tbody>

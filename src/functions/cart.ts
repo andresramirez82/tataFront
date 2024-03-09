@@ -1,10 +1,13 @@
 import Axios from "components/axios/Axios";
-import { payments } from "models/cart";
-import { Cart, Api, Sale } from "models/models";
+import { carts, payments } from "models/cart";
+import { Cart, Api, Sale, Discount } from "models/models";
+import { withDiscount } from "models/models";
 
-export const getCartToday = (): Promise<Cart.cart[]> => {
+
+
+export const getCartToday = (): Promise<withDiscount[]> => {
     // Utiliza async/await para trabajar de forma más cómoda con Promesas
-    return new Promise<Cart.cart[]>((resolve, reject) => {
+    return new Promise<withDiscount[]>((resolve, reject) => {
         Axios.get(`/carts/today`)
             .then((response) => {
                 resolve(response.data);
@@ -112,9 +115,9 @@ export const updateCart = (idCart: number, idPayment: number): Promise<payments[
     });
 };
 
-export const deleteCart = (idCart: number): Promise<payments[]> => {
+export const deleteCart = (idCart: number): Promise<carts[]> => {
     // Utiliza async/await para trabajar de forma más cómoda con Promesas
-    return new Promise<payments[]>((resolve, reject) => {
+    return new Promise<carts[]>((resolve, reject) => {
         Axios.delete(`/carts/${idCart}`)
             .then((response) => {
                 resolve(response.data);
@@ -125,3 +128,31 @@ export const deleteCart = (idCart: number): Promise<payments[]> => {
             });
     });
 };
+
+export const deleteSale = (idSale: number): Promise<Sale.sale[]> => {
+    // Utiliza async/await para trabajar de forma más cómoda con Promesas
+    return new Promise<Sale.sale[]>((resolve, reject) => {
+        Axios.delete(`/sales/${idSale}`)
+            .then((response) => {
+                resolve(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+                reject(error);
+            });
+    });
+};
+
+
+
+export const discountsForCart = (idCart: number): Promise<Discount.dicountsResponse[]> => {
+    return new Promise<Discount.dicountsResponse[]>((resolve,reject) => {
+        Axios.get(`/carts/${idCart}/discounts`).then( response => {
+            resolve(response.data);
+        })
+        .catch((error) => {
+            console.error(error);
+            reject(error);
+        });
+    });
+}

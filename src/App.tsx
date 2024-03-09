@@ -10,6 +10,7 @@ import UserManagement from "components/users/UserManagement";
 import PaymentPage from "components/payment/PaymentPage";
 import Settings from "components/settings/Settings";
 import ListProd from "components/product/ListProd";
+import DiscountManagementScreen from "components/discount/DiscountManagementScreen";
 
 const Stock = () => { return (<></>) };
 
@@ -38,6 +39,7 @@ function App() {
           <Route path='/home/payment' element={<PaymentPage />} />
           <Route path='/home/Settings' element={<Settings />} />
           <Route path='/home/Products' element={<ListProd />} />
+          <Route path='/home/Discount' element={<DiscountManagementScreen />} />
           
         </Route>
         

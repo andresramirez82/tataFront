@@ -2,21 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Table, Button } from 'react-bootstrap';
 import EditProductForm from './EditProductForm';
 import { formatDate } from "functions/functios";
+import DeleteProduct from "components/product/DeleteProduct";
+import { fetchProductsAPI } from "functions/product";
+import { products } from "models/products";
 
-interface Product {
-    id: number;
-    barcode: string;
-    name: string;
-    price: number;
-    cost: number;
-    threshold: number;
-    quantity: number;
-    date: Date;
-    comment: string;
-}
 
 const ProductList: React.FC = () => {
-    const [products, setProducts] = useState<Product[]>([]);
+    const [products, setProducts] = useState<products[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [pagination, setPagination] = useState({
         currentPage: 1,
@@ -26,7 +18,9 @@ const ProductList: React.FC = () => {
     });
     const [order, setorder] = useState<string>('id');
     const [showEditModal, setShowEditModal] = useState(false);
-    const [selectProd, setselectProd] = useState<number>()
+    const [showDelete, setShowDelete] = useState(false);
+    const [selectProd, setselectProd] = useState<number>();
+    const [selectProdName, setselectProdName] = useState<string>();
 
     const Edit = (id: number) => {
         setShowEditModal(true);
@@ -35,6 +29,7 @@ const ProductList: React.FC = () => {
 
     const handleHideEditModal = () => {
         setShowEditModal(false);
+        fetchProducts(pagination.currentPage);
     };
 
     useEffect(() => {
@@ -44,9 +39,10 @@ const ProductList: React.FC = () => {
 
     const fetchProducts = async (page: number) => {
         try {
-            const response = await fetch(`http://localhost:5000/products?page=${pagination.currentPage}&sort=${order}`);
-            const data = await response.json();
-            setProducts(data.products);
+            // const response = await fetch(`http://localhost:5000/products?page=${pagination.currentPage}&sort=${order}`);
+            const response = fetchProductsAPI(pagination.currentPage, order);
+            const data = await response;
+            setProducts(data.dato);
             setPagination({
                 ...pagination,
                 currentPage: page,
@@ -81,9 +77,23 @@ const ProductList: React.FC = () => {
         }
     };
 
+    const handleShowDeleteModalClose = () => {
+        setShowDelete(false);
+        fetchProducts(pagination.currentPage);
+    };
+
+    const Borrar = (id: number, name: string) => {
+        setselectProdName(name);
+        setselectProd(id);
+        setShowDelete(true);
+
+    }
+
+
     return (
         <div>
             {selectProd && <EditProductForm show={showEditModal} onHide={handleHideEditModal} productId={selectProd} />}
+            {selectProd && selectProdName && <DeleteProduct name={selectProdName} show={showDelete} onHide={handleShowDeleteModalClose} productId={selectProd} />}
 
             <h1>Lista de Productos</h1>
             {loading ? (
@@ -113,11 +123,15 @@ const ProductList: React.FC = () => {
                                     <td>{product.price}</td>
                                     <td>{product.cost}</td>
                                     <td>{product.quantity}</td>
-                                    <td>{formatDate(product.date)}</td>
+                                    {product.date !== undefined && <td>{formatDate(product.date)}</td>}
                                     <td>{product.comment}</td>
-                                    <td><Button variant="primary" onClick={() => Edit(product.id)}>
+                                    {product.id !== undefined && <td><Button variant="primary" onClick={() => Edit(Number(product.id))}>
                                         <i className="bi bi-pencil mr-2"></i> Editar
-                                    </Button></td>
+                                    </Button>
+                                        <Button variant="danger" onClick={() => Borrar(Number(product.id), product.name)}>
+                                            <i className='bi bi-trash mr-2'></i> Eliminar
+                                        </Button>
+                                    </td>}
                                 </tr>
                             ))}
                         </tbody>

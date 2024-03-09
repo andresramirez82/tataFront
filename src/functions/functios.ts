@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { Auth,  Sale} from "models/models";
+import { Auth,  Sale, Discount} from "models/models";
 
 
 /**
@@ -37,17 +37,20 @@ export const getUser = () : Auth.AuthUser  =>  {
     return JSON.parse( sessionStorage.getItem('user') || '')
 }
 
-export const acumular = (sales: Sale.sale[]) => {
+export const acumular = (sales: Sale.sale[], discount: Discount.dicountsResponse[] | undefined) => {
+    
     let Cantidad: number = 0;
     sales.forEach(sale => {
-        let div = 1;
-        if (sale.product.kind) {
-            div = 1000;
-        }
+        
        // const cantidad = sale.quantity * sale.product.price; This way the price of the product was not stored if it was changed.
         const cantidad = sale.totalPrice;
         // console.log(cantidad, sale.quantity, ' * ', sale.product.price);
-        Cantidad += (cantidad/div)
+        Cantidad += (cantidad)
+    })
+    discount?.forEach( dis => {
+        const cantidad = dis.discount
+        // console.log(cantidad, sale.quantity, ' * ', sale.product.price);
+        Cantidad += (cantidad);
     })
     return Cantidad;
 }

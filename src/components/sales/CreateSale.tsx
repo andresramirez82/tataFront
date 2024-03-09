@@ -78,7 +78,7 @@ const CreateSale: React.FC<EditProductFormProps> = ({ show, onHide, product, idC
   }, [product]);
 
   const ChangeCantidad = (e: ChangeEvent<HTMLInputElement>) => {
-  
+
     if (product.id) {
       setnewSale({ ...newSale, quantity: Number(e.currentTarget.value), productId: product.id });
     }
@@ -89,15 +89,20 @@ const CreateSale: React.FC<EditProductFormProps> = ({ show, onHide, product, idC
     if (product.id) {
       setnewSale({ ...newSale, productId: product.id });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  
+
 
   const Agregar = () => {
     if (product.id) {
       CartClass.addToCart(newSale).then(resp => {
         toast(resp.message);
         onHide();
+        setnewSale({
+          cartId: idCart,
+          productId: 0,
+          quantity: 1
+        });
 
       }).catch(err => {
         toast('Hubo un error al agregar la venta');
@@ -175,7 +180,7 @@ const CreateSale: React.FC<EditProductFormProps> = ({ show, onHide, product, idC
                   </Col>
                   <Col md={6}>
                     <Row>
-                      <Alert>{product.quantity}</Alert>
+                      <Alert>Quedan {product.quantity - newSale.quantity}</Alert>
                     </Row>
                   </Col>
                 </Row>

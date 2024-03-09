@@ -2,23 +2,23 @@ import { useEffect, useState } from "react";
 import { CartClass } from "functions/api";
 import { Alert, Row, Col, Container, Button } from 'react-bootstrap';
 import { formatDate, getUser } from "functions/functios";
-import { Cart as CartType } from "models/models";
+
 import { acumular } from "functions/functios";
 import MoneyFormatter from "components/helpper/Money";
 import Cart from "components/sales/Cart";
+import { withDiscount } from './../../models/models';
 
 
 
 
 const Sales: React.FC = () => {
-    const [carts, setcarts] = useState<CartType.cart[]>();
+    const [carts, setcarts] = useState<withDiscount[]>();
     const [idCart, setidCart] = useState<number>();
     const [idUser] = useState<number>(getUser().id);
 
     useEffect(() => {
         CartClass.getCartToday().then(cart => {
             setcarts(cart);
-            // console.table(cart);
         }).catch(err => {
             console.error(err);
         })
@@ -64,7 +64,7 @@ const Sales: React.FC = () => {
                                     return (
                                         <tr key={i} className={c.id === idCart ? 'table-info' : ''}
                                         >
-                                            <th scope="row">{c.id}</th><td>{formatDate(c.cartDate)}</td><td>{c.user.name}</td><td><MoneyFormatter amount={acumular(c.sales)} /></td></tr>);
+                                            <th scope="row">{c.id}</th><td>{formatDate(c.cartDate)}</td><td>{c.user.name}</td><td><MoneyFormatter amount={acumular(c.sales, c.discounts)} /></td></tr>);
                                 })}
                         </tbody>
                     </table>
