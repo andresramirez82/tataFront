@@ -3,10 +3,12 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Container, Table, Modal, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { fetchDiscounts } from "functions/product";
+import { fetchDiscounts, searchProduct } from "functions/product";
 import { formatDate } from "functions/functios";
 import Money from "components/helpper/Money";
 import { discounts } from "models/discount";
+import { products } from "models/products";
+import { Product } from 'models/models';
 
 
 const DiscountManagementScreen: React.FC = () => {
@@ -22,6 +24,7 @@ const DiscountManagementScreen: React.FC = () => {
         discountAmount: 0,
         requiredQuantity: 0
     });
+    const [product, setproduct] = useState<products>()
 
     // Función para cargar los descuentos
     const loadDiscounts = async () => {
@@ -55,7 +58,8 @@ const DiscountManagementScreen: React.FC = () => {
             startDate: now,
             endDate: now,
             discountAmount: 0,
-            requiredQuantity: 0
+            requiredQuantity: 0,
+            product: undefined
         });
     };
 
@@ -72,17 +76,29 @@ const DiscountManagementScreen: React.FC = () => {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const form = e.currentTarget;
-    
+
         if (form.checkValidity()) {
-          setIsFormInvalid(false);
-          console.table(formData)
+            setIsFormInvalid(false);
+            console.table(formData)
         } else {
-          // Si hay errores de validación, muestra los mensajes de error
-          e.stopPropagation();
-          setIsFormInvalid(true);
+            // Si hay errores de validación, muestra los mensajes de error
+            e.stopPropagation();
+            setIsFormInvalid(true);
         }
         form.classList.add('was-validated');
     };
+
+    const handleProductChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        searchProduct(e.currentTarget.value).then(prod => {
+            if (prod.length === 1) {
+                setproduct(prod[0]);
+                setFormData(prevState => ({
+                    ...prevState,
+                    product: prod[0]
+                }));
+            }
+        })
+    }
 
     return (
         <Container>
@@ -130,21 +146,44 @@ const DiscountManagementScreen: React.FC = () => {
                             <Form.Label>Nombre</Form.Label>
                             <Form.Control type="text" name="name" value={formData.name || ''} onChange={handleChange} required />
                         </Form.Group>
+                        <Form.Group controlId="product">
+                            <Form.Label>Producto</Form.Label>
+                            <Form.Control name="product" onChange={handleProductChange} required>
+                            </Form.Control>
+                            <Table striped bordered hover>
+                                <thead>
+                                    <tr>
+                                        <td>codigo</td>
+                                        <td>nombre</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {product?.barcode && <td>
+                                        {product?.barcode}
+                                    </td>}
+
+                                    <td>
+                                        {product?.name}
+                                    </td>
+                                </tbody>
+                            </Table>
+                            <label>{product?.barcode}</label>
+                        </Form.Group>
                         <Form.Group controlId="startDate">
                             <Form.Label>Fecha de Inicio</Form.Label>
-                            {formData.startDate && <Form.Control type="datetime-local" name="startDate" value={formatDate(formData.startDate)} onChange={handleChange} required/>}
+                            {formData.startDate && <Form.Control type="datetime-local" name="startDate" value={formatDate(formData.startDate)} onChange={handleChange} required />}
                         </Form.Group>
                         <Form.Group controlId="endDate">
                             <Form.Label>Fecha de Fin</Form.Label>
-                            {formData.endDate && <Form.Control type="datetime-local" name="endDate" value={formatDate(formData.endDate)} onChange={handleChange} required/>}
+                            {formData.endDate && <Form.Control type="datetime-local" name="endDate" value={formatDate(formData.endDate)} onChange={handleChange} required />}
                         </Form.Group>
                         <Form.Group controlId="discountAmount">
                             <Form.Label>Monto de Descuento</Form.Label>
-                            <Form.Control type="number" name="discountAmount" value={formData.discountAmount || 0} onChange={handleChange} required/>
+                            <Form.Control type="number" name="discountAmount" value={formData.discountAmount || 0} onChange={handleChange} required />
                         </Form.Group>
                         <Form.Group controlId="requiredQuantity">
                             <Form.Label>Cantidad Requerida</Form.Label>
-                            <Form.Control type="number" name="requiredQuantity" value={formData.requiredQuantity || 0} onChange={handleChange} required/>
+                            <Form.Control type="number" name="requiredQuantity" value={formData.requiredQuantity || 0} onChange={handleChange} required />
                         </Form.Group>
                         <Button variant="primary" type="submit">Crear Descuento</Button>
                     </Form>
