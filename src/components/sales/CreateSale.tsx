@@ -99,9 +99,7 @@ const CreateSale: React.FC<EditProductFormProps> = ({ show, onHide, product, idC
         toast(resp.message);
         onHide();
         setnewSale({
-          cartId: idCart,
-          productId: 0,
-          quantity: 1
+          ...newSale, quantity: 1
         });
 
       }).catch(err => {

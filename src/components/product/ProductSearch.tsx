@@ -11,7 +11,6 @@ interface ProductSearchProps {
 }
 
 const ProductSearch: React.FC<ProductSearchProps> = ({ onProductFound }) => {
-  const [barcode, setBarcode] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
   const [products, setProducts] = useState<Product.product[] | undefined>();
@@ -19,6 +18,7 @@ const ProductSearch: React.FC<ProductSearchProps> = ({ onProductFound }) => {
   const [isFormInvalid, setIsFormInvalid] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const { searchtext } = useParams();
+  const [barcode, setBarcode] = useState(decodeURIComponent(searchtext?searchtext:''));
 
 
   const handleFocus = () => {
@@ -50,7 +50,7 @@ const ProductSearch: React.FC<ProductSearchProps> = ({ onProductFound }) => {
     setProducts(undefined);
     setError(null);
     setLoading(true);
-
+    console.log('barcode',barcode)
     try {
       const product = await ProductClass.getProductByBarcode(barcode);
 
