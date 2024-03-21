@@ -1,7 +1,7 @@
 import Axios from "components/axios/Axios";
 import { Product } from "models/models";
 import { pagination } from './../models/api';
-import { products } from "models/products";
+import { products,Tag } from "models/products";
 import { discounts } from "models/discount";
 
 
@@ -167,6 +167,55 @@ export const fetchDiscounts = (currentPage: number, order: string): Promise<pagi
             });
     });
 }
+
+
+export const CreateDiscounts = (newDisc: discounts): Promise<discounts> => {
+    return new Promise<discounts>((resolve, reject) => {
+        Axios.post(`/discounts`,newDisc)
+            .then((response) => {
+                // Aquí asumo que los datos devueltos por la API tienen la forma correcta
+                // const usersData: Auth.AuthUser[] = response.data;
+                resolve(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+                reject(error);
+            });
+    });
+}
+
+
+export const getDiscount = (id: number): Promise<discounts> => {
+    return new Promise<discounts>((resolve, reject) => {
+        Axios.get(`/discounts/${id}`)
+            .then((response) => {
+                // Aquí asumo que los datos devueltos por la API tienen la forma correcta
+                // const usersData: Auth.AuthUser[] = response.data;
+                resolve(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+                reject(error);
+            });
+    });
+}
+
+
+export const listTags = (): Promise<Tag[]> => {
+    return new Promise<Tag[]>((resolve, reject) => {
+        Axios.get(`/tags`)
+            .then((response) => {
+                // Aquí asumo que los datos devueltos por la API tienen la forma correcta
+                // const usersData: Auth.AuthUser[] = response.data;
+                resolve(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+                reject(error);
+            });
+    });
+}
+
 
 
 

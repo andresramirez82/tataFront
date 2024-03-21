@@ -1,7 +1,7 @@
 import { products } from "./products";
 
 export interface discounts {
-    id: number,
+    id?: number,
     name: string,
     startDate: Date,
     endDate: Date,

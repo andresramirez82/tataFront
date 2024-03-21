@@ -15,7 +15,16 @@ export const formatDate = (fechaOriginal: Date | null): string => {
     } else {
         return 'nunca entró';
     }
-   
+}
+
+export const formatDateISO = (fechaOriginal: Date | null): string => {
+    if (fechaOriginal !== null) {
+        const fechaFormateada = format(new Date(fechaOriginal), 'yyyy-MM-dd\'T\'HH:mm:ss');
+
+        return fechaFormateada;
+    } else {
+        return 'nunca entró';
+    }
 }
 
 /**

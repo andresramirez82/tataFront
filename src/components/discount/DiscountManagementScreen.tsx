@@ -2,20 +2,24 @@
 
 import React, { useEffect, useState } from 'react';
 import { Button, Container, Table, Modal, Form } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import { fetchDiscounts, searchProduct } from "functions/product";
+import { fetchDiscounts, searchProduct, CreateDiscounts } from "functions/product";
 import { formatDate } from "functions/functios";
 import Money from "components/helpper/Money";
 import { discounts } from "models/discount";
 import { products } from "models/products";
-import { Product } from 'models/models';
+import { toast } from 'react-toastify';
+
+import EditDiscount from "./Edit";
+
+
 
 
 const DiscountManagementScreen: React.FC = () => {
     const now = new Date();
-    const navigate = useNavigate();
     const [isFormInvalid, setIsFormInvalid] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [showDelete, setShowDelete] = useState(false);
     const [discounts, setDiscounts] = useState<discounts[]>([]);
     const [formData, setFormData] = useState<Partial<discounts>>({
         name: '',
@@ -24,7 +28,10 @@ const DiscountManagementScreen: React.FC = () => {
         discountAmount: 0,
         requiredQuantity: 0
     });
-    const [product, setproduct] = useState<products>()
+    const [product, setproduct] = useState<products>();
+
+    const [selectDiscount, setselectDiscount] = useState<number>();
+    const [selectDiscountName, setselectDiscountName] = useState<string>();
 
     // Función para cargar los descuentos
     const loadDiscounts = async () => {
@@ -39,10 +46,6 @@ const DiscountManagementScreen: React.FC = () => {
         loadDiscounts();
     }, []);
 
-    // Función para redirigir a la pantalla de creación de descuentos
-    const handleCreateDiscount = () => {
-        navigate('/create-discount');
-    };
 
     // Función para abrir el modal de creación de descuentos
     const handleShowModal = () => {
@@ -79,7 +82,7 @@ const DiscountManagementScreen: React.FC = () => {
 
         if (form.checkValidity()) {
             setIsFormInvalid(false);
-            console.table(formData)
+            AddDiscount();
         } else {
             // Si hay errores de validación, muestra los mensajes de error
             e.stopPropagation();
@@ -89,19 +92,64 @@ const DiscountManagementScreen: React.FC = () => {
     };
 
     const handleProductChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        searchProduct(e.currentTarget.value).then(prod => {
-            if (prod.length === 1) {
-                setproduct(prod[0]);
-                setFormData(prevState => ({
-                    ...prevState,
-                    product: prod[0]
-                }));
+        if (e.currentTarget.value !== '') {
+            searchProduct(e.currentTarget.value).then(prod => {
+                if (prod.length === 1) {
+                    setproduct(prod[0]);
+                    setFormData(prevState => ({
+                        ...prevState,
+                        product: prod[0]
+                    }));
+                }
+            })
+        }
+
+    }
+
+    const AddDiscount = () => {
+        if (formData.name && product && formData.discountAmount && formData.endDate && formData.requiredQuantity && formData.startDate) {
+            const newDiscount: discounts = {
+                name: formData.name,
+                discountAmount: formData.discountAmount,
+                endDate: formData.endDate,
+                requiredQuantity: formData.requiredQuantity,
+                startDate: formData.startDate,
+                product
             }
-        })
+            CreateDiscounts(newDiscount).then(n => {
+                toast(`Se ha insertado correctamente el descuento ${newDiscount.name} en el producto ${newDiscount.product.name}`);
+            }).catch(err => {
+
+                toast(`Ha habido un error al insertar el descuento ${newDiscount.name} en el producto ${newDiscount.product.name}`);
+            }).finally(() => {
+                loadDiscounts();
+                handleCloseModal();
+            })
+            // console.log(newDiscount);
+        }
+    }
+
+    const Edit = (id: number) => {
+        setShowEditModal(true);
+        setselectDiscount(id);
+    }
+
+    const Borrar = (id: number, name: string) => {
+        setselectDiscountName(name);
+        setselectDiscount(id);
+        setShowDelete(true);
+
+    }
+
+
+    const hideEdit = () => {
+        setShowEditModal(false);
     }
 
     return (
         <Container>
+            {selectDiscount && <EditDiscount discountId={selectDiscount} onHide={hideEdit}  show={showEditModal}/>}
+            {selectDiscount && selectDiscountName && <p>asdasd</p>}
             <h1>Administrar Descuentos</h1>
             <Button onClick={handleShowModal} variant="primary">Crear Descuento</Button>
             <Table striped bordered hover>
@@ -128,7 +176,12 @@ const DiscountManagementScreen: React.FC = () => {
                             <td><Money amount={discount.discountAmount}></Money></td>
                             <td>{discount.requiredQuantity}</td>
                             <td>
-                                {/* Agregar aquí botones para editar y eliminar el descuento */}
+                                <Button variant="primary" onClick={() => Edit(Number(discount.id))}>
+                                    <i className="bi bi-pencil mr-2"></i> Editar
+                                </Button>
+                                <Button variant="danger" onClick={() => Borrar(Number(discount.id), discount.name)}>
+                                    <i className='bi bi-trash mr-2'></i> Eliminar
+                                </Button>
                             </td>
                         </tr>
                     ))}
@@ -158,24 +211,25 @@ const DiscountManagementScreen: React.FC = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {product?.barcode && <td>
-                                        {product?.barcode}
-                                    </td>}
+                                    <tr>
+                                        {product?.barcode && <td>
+                                            {product?.barcode}
+                                        </td>}
 
-                                    <td>
-                                        {product?.name}
-                                    </td>
+                                        <td>
+                                            {product?.name}
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </Table>
-                            <label>{product?.barcode}</label>
                         </Form.Group>
                         <Form.Group controlId="startDate">
                             <Form.Label>Fecha de Inicio</Form.Label>
-                            {formData.startDate && <Form.Control type="datetime-local" name="startDate" value={formatDate(formData.startDate)} onChange={handleChange} required />}
+                            {formData.startDate && <Form.Control type="datetime-local" name="startDate" onChange={handleChange} required />}
                         </Form.Group>
                         <Form.Group controlId="endDate">
                             <Form.Label>Fecha de Fin</Form.Label>
-                            {formData.endDate && <Form.Control type="datetime-local" name="endDate" value={formatDate(formData.endDate)} onChange={handleChange} required />}
+                            {formData.endDate && <Form.Control type="datetime-local" name="endDate" onChange={handleChange} required />}
                         </Form.Group>
                         <Form.Group controlId="discountAmount">
                             <Form.Label>Monto de Descuento</Form.Label>
@@ -185,7 +239,7 @@ const DiscountManagementScreen: React.FC = () => {
                             <Form.Label>Cantidad Requerida</Form.Label>
                             <Form.Control type="number" name="requiredQuantity" value={formData.requiredQuantity || 0} onChange={handleChange} required />
                         </Form.Group>
-                        <Button variant="primary" type="submit">Crear Descuento</Button>
+                        <Button variant="primary" type="submit" onSubmit={AddDiscount}>Crear Descuento</Button>
                     </Form>
                 </Modal.Body>
             </Modal>

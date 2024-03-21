@@ -1,5 +1,10 @@
 import { discounts } from "./discount";
 
+export interface Tag {
+    id: number;
+    name: string;
+}
+
 export interface products {
     barcode: string;
     comment: string;
@@ -12,6 +17,7 @@ export interface products {
     threshold: number;
     kind: boolean;
     discounts?: discounts[]
+    tags?: Tag[]
 }
 
 export interface ProductApi {
