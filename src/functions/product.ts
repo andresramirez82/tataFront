@@ -184,10 +184,40 @@ export const CreateDiscounts = (newDisc: discounts): Promise<discounts> => {
     });
 }
 
+export const UpdateDiscounts = (newDisc: discounts): Promise<discounts> => {
+    return new Promise<discounts>((resolve, reject) => {
+        Axios.put(`/discounts/${newDisc.id}`,newDisc)
+            .then((response) => {
+                // Aquí asumo que los datos devueltos por la API tienen la forma correcta
+                // const usersData: Auth.AuthUser[] = response.data;
+                resolve(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+                reject(error);
+            });
+    });
+}
+
 
 export const getDiscount = (id: number): Promise<discounts> => {
     return new Promise<discounts>((resolve, reject) => {
         Axios.get(`/discounts/${id}`)
+            .then((response) => {
+                // Aquí asumo que los datos devueltos por la API tienen la forma correcta
+                // const usersData: Auth.AuthUser[] = response.data;
+                resolve(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+                reject(error);
+            });
+    });
+}
+
+export const deleteDiscount = (id: number): Promise<discounts> => {
+    return new Promise<discounts>((resolve, reject) => {
+        Axios.delete(`/discounts/${id}`)
             .then((response) => {
                 // Aquí asumo que los datos devueltos por la API tienen la forma correcta
                 // const usersData: Auth.AuthUser[] = response.data;

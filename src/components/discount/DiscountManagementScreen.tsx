@@ -10,6 +10,7 @@ import { products } from "models/products";
 import { toast } from 'react-toastify';
 
 import EditDiscount from "./Edit";
+import DeleteDiscount from "./Delete";
 
 
 
@@ -144,12 +145,18 @@ const DiscountManagementScreen: React.FC = () => {
 
     const hideEdit = () => {
         setShowEditModal(false);
+        loadDiscounts();
+    }
+
+    const hideDelete = () => {
+        setShowDelete(false);
+        loadDiscounts();
     }
 
     return (
         <Container>
             {selectDiscount && <EditDiscount discountId={selectDiscount} onHide={hideEdit}  show={showEditModal}/>}
-            {selectDiscount && selectDiscountName && <p>asdasd</p>}
+            {selectDiscount && selectDiscountName && <DeleteDiscount discountId={selectDiscount} onHide={hideDelete}  show={showDelete} name={selectDiscountName} />}
             <h1>Administrar Descuentos</h1>
             <Button onClick={handleShowModal} variant="primary">Crear Descuento</Button>
             <Table striped bordered hover>

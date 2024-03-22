@@ -10,7 +10,9 @@ import {
   updateProduct,
   deleteProduct, 
   CreateDiscounts,
-  getDiscount
+  getDiscount,
+  UpdateDiscounts,
+  deleteDiscount
 
 } from "./product";
 import { getCartToday, AddCart, getCart, addToCart, getPayment, updateCart, deleteCart, deleteSale, discountsForCart } from "./cart";
@@ -82,7 +84,9 @@ export const ProductClass = {
 
 export const DiscountClass = {
   CreateDiscounts,
-  getDiscount
+  getDiscount,
+  UpdateDiscounts,
+  deleteDiscount
 }
 
 export const CartClass = {

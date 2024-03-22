@@ -45,10 +45,19 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ show, onHide, discoun
 
     const handleSaveChanges = async () => {
         // Agregar lógica para guardar los cambios en la API
-        if (discountsDetails) {
+        if (discountsDetails && product) {
             try {
-                // Ejemplo de cómo podrías guardar los cambios
-                //await ProductClass.updateProduct(productId, productDetails);
+                const descuento: Discount.discount = {
+                    name: discountsDetails.name || "Default Name",
+                    discountAmount: discountsDetails.discountAmount || 0,
+                    endDate: discountsDetails.endDate || new Date(),
+                    startDate: discountsDetails.startDate || new Date(),
+                    product: discountsDetails.product || product,
+                    requiredQuantity: discountsDetails.requiredQuantity || 0,
+                    id: discountsDetails.id || 0
+                };
+                const update = await DiscountClass.UpdateDiscounts(descuento);
+                console.log(update);
                 toast('Se ha editado correctamente');
                 onHide(); // Cierra el modal después de guardar los cambios
             } catch (error) {
@@ -136,7 +145,7 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ show, onHide, discoun
                             </Form.Group>
                             <Form.Group controlId="product">
                             <Form.Label>Producto</Form.Label>
-                            <Form.Control name="product" onChange={handleProductChange}  required>
+                            <Form.Control name="product" onChange={handleProductChange}  >
                             </Form.Control>
                             <Table striped bordered hover>
                                 <thead>
