@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { Cart  } from "models/models";
 import { CartClass } from "functions/api";
+import { createOrder } from "functions/mercadopago";
 
 interface confSaleProps {
     idCart: number;
@@ -29,6 +30,18 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({onConfirmarVenta, idCart}
     onConfirmarVenta(idCart,Number(selectedFormaPago));
     handleClose();
   };
+
+  useEffect(() => {
+    if (selectedFormaPago==='5') {
+      createOrder({}).then((result: any) => {
+        console.log(result)        
+      }).catch((err : any) => {
+        console.error(err)
+      });
+      
+    }
+  }, [selectedFormaPago])
+  
 
   return (
     <>
