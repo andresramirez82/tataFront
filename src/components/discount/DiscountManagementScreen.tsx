@@ -9,6 +9,8 @@ import { discounts } from "models/discount";
 import { products } from "models/products";
 import { toast } from 'react-toastify';
 
+import DiscountDays from "./DiscountDays";
+import WeekDays from "./WeekDays";
 import EditDiscount from "./Edit";
 import DeleteDiscount from "./Delete";
 
@@ -108,14 +110,15 @@ const DiscountManagementScreen: React.FC = () => {
     }
 
     const AddDiscount = () => {
-        if (formData.name && product && formData.discountAmount && formData.endDate && formData.requiredQuantity && formData.startDate) {
+        if (formData.name && product && formData.discountAmount && formData.endDate && formData.requiredQuantity && formData.startDate && formData.discountDays) {
             const newDiscount: discounts = {
                 name: formData.name,
                 discountAmount: formData.discountAmount,
                 endDate: formData.endDate,
                 requiredQuantity: formData.requiredQuantity,
                 startDate: formData.startDate,
-                product
+                product,
+                discountDays: formData.discountDays
             }
             CreateDiscounts(newDiscount).then(n => {
                 toast(`Se ha insertado correctamente el descuento ${newDiscount.name} en el producto ${newDiscount.product.name}`);
@@ -153,10 +156,17 @@ const DiscountManagementScreen: React.FC = () => {
         loadDiscounts();
     }
 
+    const onChangeDays = (newdiscountDays: any) => {
+        setFormData(prevState => ({
+            ...prevState,
+            discountDays: newdiscountDays
+        }));
+    }
+
     return (
         <Container>
-            {selectDiscount && <EditDiscount discountId={selectDiscount} onHide={hideEdit}  show={showEditModal}/>}
-            {selectDiscount && selectDiscountName && <DeleteDiscount discountId={selectDiscount} onHide={hideDelete}  show={showDelete} name={selectDiscountName} />}
+            {selectDiscount && <EditDiscount discountId={selectDiscount} onHide={hideEdit} show={showEditModal} />}
+            {selectDiscount && selectDiscountName && <DeleteDiscount discountId={selectDiscount} onHide={hideDelete} show={showDelete} name={selectDiscountName} />}
             <h1>Administrar Descuentos</h1>
             <Button onClick={handleShowModal} variant="primary">Crear Descuento</Button>
             <Table striped bordered hover>
@@ -169,6 +179,7 @@ const DiscountManagementScreen: React.FC = () => {
                         <th>Fecha de Fin</th>
                         <th>Monto de Descuento</th>
                         <th>Cantidad Requerida</th>
+                        <th>Días</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -182,6 +193,7 @@ const DiscountManagementScreen: React.FC = () => {
                             <td>{formatDate(discount.endDate)}</td>
                             <td><Money amount={discount.discountAmount}></Money></td>
                             <td>{discount.requiredQuantity}</td>
+                            <td><WeekDays weekSchedule={discount.discountDays}/></td>
                             <td>
                                 <Button variant="primary" onClick={() => Edit(Number(discount.id))}>
                                     <i className="bi bi-pencil mr-2"></i> Editar
@@ -237,6 +249,10 @@ const DiscountManagementScreen: React.FC = () => {
                         <Form.Group controlId="endDate">
                             <Form.Label>Fecha de Fin</Form.Label>
                             {formData.endDate && <Form.Control type="datetime-local" name="endDate" onChange={handleChange} required />}
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Días de la semana</Form.Label>
+                            <DiscountDays onSave={onChangeDays} />
                         </Form.Group>
                         <Form.Group controlId="discountAmount">
                             <Form.Label>Monto de Descuento</Form.Label>

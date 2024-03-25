@@ -1,5 +1,8 @@
 import { products } from "./products";
 
+interface DiscountDays {
+    [key: string]: boolean;
+  }
 export interface discounts {
     id?: number,
     name: string,
@@ -7,7 +10,8 @@ export interface discounts {
     endDate: Date,
     discountAmount: number,
     requiredQuantity: number,
-    product: products
+    product: products,
+    discountDays: DiscountDays;
 }
 
 export interface dicountResponse {

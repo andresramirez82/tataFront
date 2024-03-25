@@ -2,9 +2,10 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import { Form, Button, Modal, Table } from 'react-bootstrap';
 import { DiscountClass } from 'functions/api';
-import { formatDateISO  } from "functions/functios";
+import { formatDateISO } from "functions/functios";
 import { Discount, Product } from 'models/models';
 import { searchProduct } from "functions/product";
+import DiscountDays from "./DiscountDays";
 import { toast } from 'react-toastify';
 
 
@@ -45,13 +46,14 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ show, onHide, discoun
 
     const handleSaveChanges = async () => {
         // Agregar lógica para guardar los cambios en la API
-        if (discountsDetails && product) {
+        if (discountsDetails && product && discountsDetails.discountDays) {
             try {
                 const descuento: Discount.discount = {
                     name: discountsDetails.name || "Default Name",
                     discountAmount: discountsDetails.discountAmount || 0,
                     endDate: discountsDetails.endDate || new Date(),
                     startDate: discountsDetails.startDate || new Date(),
+                    discountDays: discountsDetails.discountDays,
                     product: discountsDetails.product || product,
                     requiredQuantity: discountsDetails.requiredQuantity || 0,
                     id: discountsDetails.id || 0
@@ -89,25 +91,25 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ show, onHide, discoun
             [name]: value
         }));
     };
-    
+
     const handleStartDateChange = (e: ChangeEvent<HTMLInputElement>) => {
         const startDate = e.target.value;
 
         setDiscountsDetails(prevState => ({
-          ...prevState,
-          startDate:  new Date(startDate)
+            ...prevState,
+            startDate: new Date(startDate)
         }));
-      };
-      
-      const handleEndDateChange = (e: ChangeEvent<HTMLInputElement>) => {
+    };
+
+    const handleEndDateChange = (e: ChangeEvent<HTMLInputElement>) => {
         const endDate = e.target.value;
         setDiscountsDetails(prevState => ({
-          ...prevState,
-          endDate:  new Date(endDate)
+            ...prevState,
+            endDate: new Date(endDate)
         }));
-      };
+    };
 
-      const handleProductChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleProductChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.currentTarget.value !== '') {
             searchProduct(e.currentTarget.value).then(prod => {
                 if (prod.length === 1) {
@@ -119,8 +121,15 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ show, onHide, discoun
                 }
             })
         }
-
     }
+
+    const onChangeDays = (newdiscountDays: any) => {
+        setDiscountsDetails(prevState => ({
+            ...prevState,
+            discountDays: newdiscountDays
+        }));
+    }
+
 
     return (
         <Modal show={show} onHide={onHide}>
@@ -144,29 +153,29 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ show, onHide, discoun
                                 </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="product">
-                            <Form.Label>Producto</Form.Label>
-                            <Form.Control name="product" onChange={handleProductChange}  >
-                            </Form.Control>
-                            <Table striped bordered hover>
-                                <thead>
-                                    <tr>
-                                        <td>codigo</td>
-                                        <td>nombre</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        {product?.barcode && <td>
-                                            {product?.barcode}
-                                        </td>}
+                                <Form.Label>Producto</Form.Label>
+                                <Form.Control name="product" onChange={handleProductChange}  >
+                                </Form.Control>
+                                <Table striped bordered hover>
+                                    <thead>
+                                        <tr>
+                                            <td>codigo</td>
+                                            <td>nombre</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            {product?.barcode && <td>
+                                                {product?.barcode}
+                                            </td>}
 
-                                        <td>
-                                            {product?.name}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </Table>
-                        </Form.Group>
+                                            <td>
+                                                {product?.name}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </Table>
+                            </Form.Group>
                             <Form.Group controlId="startDate">
                                 <Form.Label>Fecha de Inicio</Form.Label>
                                 {discountsDetails.startDate && <Form.Control type="datetime-local" name="startDate" value={formatDateISO(discountsDetails.startDate)} onChange={handleStartDateChange} required />}
@@ -174,6 +183,10 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ show, onHide, discoun
                             <Form.Group controlId="endDate">
                                 <Form.Label>Fecha de Fin</Form.Label>
                                 {discountsDetails.endDate && <Form.Control type="datetime-local" name="endDate" value={formatDateISO(discountsDetails.endDate)} onChange={handleEndDateChange} required />}
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label>Días de la semana</Form.Label>
+                                <DiscountDays onSave={onChangeDays} discountDaysData={discountsDetails.discountDays}/>
                             </Form.Group>
                             <Form.Group controlId="discountAmount">
                                 <Form.Label>Monto de Descuento</Form.Label>
