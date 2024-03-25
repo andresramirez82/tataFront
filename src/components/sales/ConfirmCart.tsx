@@ -11,7 +11,8 @@ interface confSaleProps {
 
 const ConfirmarVentaModal: React.FC<confSaleProps> = ({onConfirmarVenta, idCart}) => {
   const [selectedFormaPago, setSelectedFormaPago] = useState('1');
-  const [payments, setpayments] = useState<Cart.payment[]>([])
+  const [payments, setpayments] = useState<Cart.payment[]>([]);
+  const [cart, setcart] = useState<Cart.cart>();
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -25,6 +26,13 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({onConfirmarVenta, idCart}
     })
   }, []);
 
+  useEffect(() => {
+    CartClass.getCart(idCart).then( (mycart) => {
+      setcart(mycart)
+    })
+  }, [idCart])
+  
+
   const handleConfirmarVenta = () => {
     // Lógica para confirmar la venta con la forma de pago seleccionada
     onConfirmarVenta(idCart,Number(selectedFormaPago));
@@ -32,15 +40,15 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({onConfirmarVenta, idCart}
   };
 
   useEffect(() => {
-    if (selectedFormaPago==='5') {
-      createOrder({}).then((result: any) => {
+    if (selectedFormaPago==='5' && cart) {
+      createOrder(cart.sales).then((result: any) => {
         console.log(result)        
       }).catch((err : any) => {
         console.error(err)
       });
       
     }
-  }, [selectedFormaPago])
+  }, [cart, selectedFormaPago])
   
 
   return (

@@ -47,7 +47,6 @@ export const getUser = () : Auth.AuthUser  =>  {
 }
 
 export const acumular = (sales: Sale.sale[], discount: Discount.dicountsResponse[] | undefined) => {
-    
     let Cantidad: number = 0;
     sales.forEach(sale => {
         
