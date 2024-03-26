@@ -7,7 +7,6 @@ import { fetchProductsAPI } from "functions/product";
 import { products } from "models/products";
 
 
-
 const ProductList: React.FC = () => {
     const [products, setProducts] = useState<products[]>([]);
     const [loading, setLoading] = useState<boolean>(true);

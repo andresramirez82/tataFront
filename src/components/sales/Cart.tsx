@@ -94,7 +94,7 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
     }
 
     const onConfirmarVenta = (idCart: number, idPayment: number) => [
-        CartClass.updateCart(idCart, idPayment).then(resp => {
+        CartClass.updateCart(idCart, idPayment, discount).then(resp => {
             console.log(resp);
             setidCart(undefined);
 

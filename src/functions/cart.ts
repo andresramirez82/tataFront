@@ -45,6 +45,20 @@ export const getCart = (idCart: number): Promise<Cart.cart> => {
     });
 };
 
+export const getOpenCart = (): Promise<Cart.cart> => {
+    // Utiliza async/await para trabajar de forma más cómoda con Promesas
+    return new Promise<Cart.cart>((resolve, reject) => {
+        Axios.get(`/carts/open`)
+            .then((response) => {
+                resolve(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+                reject(error);
+            });
+    });
+};
+
 export const addToCart = (Cart: Sale.saleCart): Promise<Api.CartApiResponseType | { message: string }> => {
     // Utiliza async/await para trabajar de forma más cómoda con Promesas
     return new Promise<Api.CartApiResponseType>((resolve, reject) => {
@@ -101,10 +115,10 @@ export const deletePayment = (id: number): Promise<payments[]> => {
     });
 };
 
-export const updateCart = (idCart: number, idPayment: number): Promise<payments[]> => {
+export const updateCart = (idCart: number, idPayment: number, discount: Discount.dicountsResponse[] | undefined): Promise<payments[]> => {
     // Utiliza async/await para trabajar de forma más cómoda con Promesas
     return new Promise<payments[]>((resolve, reject) => {
-        Axios.put(`/carts/confirm`, { idCart, idPayment })
+        Axios.put(`/carts/confirm`, { idCart, idPayment, discount })
             .then((response) => {
                 resolve(response.data);
             })

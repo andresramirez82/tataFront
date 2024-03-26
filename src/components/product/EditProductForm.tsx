@@ -3,7 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { Form, Button, Modal, ButtonGroup } from 'react-bootstrap';
 import { ProductClass } from 'functions/api';
 import { Product } from 'models/models';
+import { Tag } from 'models/products';
 import { toast } from 'react-toastify';
+import TagSearch from "components/helpper/Tag";
 
 interface EditProductFormProps {
   show: boolean;
@@ -14,6 +16,7 @@ interface EditProductFormProps {
 const EditProductForm: React.FC<EditProductFormProps> = ({ show, onHide, productId }) => {
   const [productDetails, setProductDetails] = useState<Product.product | null>(null);
   const [isFormInvalid, setIsFormInvalid] = useState(false);
+  const [existingTags, setExistingTags] = useState<number[]>([]);
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -29,6 +32,11 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ show, onHide, product
       fetchProductDetails();
     }
   }, [show, productId]);
+
+  const handleAddTag = (tags: Tag[]) => {
+    const tagIds = tags.map(tag => tag.id);
+    setExistingTags(prevTags => [...prevTags, ...tagIds]);
+  };
 
   const handleSaveChanges = async () => {
     // Agregar lógica para guardar los cambios en la API
@@ -143,22 +151,25 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ show, onHide, product
                 />
               </Form.Group>
               <Form.Group controlId='productKind'>
-              <Form.Label>Venta por unidades o por granel</Form.Label>
-              <ButtonGroup size="lg" className="mb-2" style={{ display: 'flex', justifyContent: 'center' }}>
-                <Button
-                  variant={!productDetails.kind ? 'primary' : 'secondary'}
-                  onClick={() => setProductDetails({ ...productDetails, kind: false })}
-                >
-                  Unidades
-                </Button>
-                <Button
-                  variant={productDetails.kind ? 'primary' : 'secondary'}
-                  onClick={() => setProductDetails({ ...productDetails, kind: true })}
-                >
-                  Por granel
-                </Button>
-              </ButtonGroup>
-            </Form.Group>
+                <Form.Label>Venta por unidades o por granel</Form.Label>
+                <ButtonGroup size="lg" className="mb-2" style={{ display: 'flex', justifyContent: 'center' }}>
+                  <Button
+                    variant={!productDetails.kind ? 'primary' : 'secondary'}
+                    onClick={() => setProductDetails({ ...productDetails, kind: false })}
+                  >
+                    Unidades
+                  </Button>
+                  <Button
+                    variant={productDetails.kind ? 'primary' : 'secondary'}
+                    onClick={() => setProductDetails({ ...productDetails, kind: true })}
+                  >
+                    Por granel
+                  </Button>
+                </ButtonGroup>
+              </Form.Group>
+              <Form.Group>
+                <TagSearch existingTags={existingTags} onAddTag={handleAddTag} />
+              </Form.Group>
             </>
           )}
 

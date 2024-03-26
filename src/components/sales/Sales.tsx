@@ -16,6 +16,16 @@ const Sales: React.FC = () => {
     const [idCart, setidCart] = useState<number>();
     const [idUser] = useState<number>(getUser().id);
 
+
+    useEffect(() => {
+        CartClass.getOpenCart().then( open => {
+            setidCart(open.id);
+        }).catch(err => {
+            console.error(err);
+        })
+    }, [])
+    
+
     useEffect(() => {
         CartClass.getCartToday().then(cart => {
             setcarts(cart);
@@ -64,7 +74,7 @@ const Sales: React.FC = () => {
                                     return (
                                         <tr key={i} className={c.id === idCart ? 'table-info' : ''}
                                         >
-                                            <th scope="row">{c.id}</th><td>{formatDate(c.cartDate)}</td><td>{c.user.name}</td><td><MoneyFormatter amount={acumular(c.sales, c.discounts)} /></td></tr>);
+                                            <th scope="row">{c.id}</th><td>{formatDate(c.cartDate)}</td><td>{c.user.name}</td><td><MoneyFormatter amount={acumular(c.sales, c.discountsApplied)} /></td></tr>);
                                 })}
                         </tbody>
                     </table>

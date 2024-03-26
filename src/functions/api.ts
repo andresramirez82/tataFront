@@ -8,14 +8,15 @@ import {
   addStock,
   removeStock,
   updateProduct,
-  deleteProduct, 
+  deleteProduct,
   CreateDiscounts,
   getDiscount,
   UpdateDiscounts,
   deleteDiscount
 
 } from "./product";
-import { getCartToday, AddCart, getCart, addToCart, getPayment, updateCart, deleteCart, deleteSale, discountsForCart } from "./cart";
+import { getCartToday, AddCart, getCart, addToCart, getPayment, updateCart, deleteCart, deleteSale, discountsForCart, getOpenCart } from "./cart";
+import { getTags } from "./tag";
 import { createUser, deleteUser } from "./User";
 
 
@@ -98,9 +99,14 @@ export const CartClass = {
   updateCart,
   deleteCart,
   deleteSale,
-  discountsForCart
+  discountsForCart,
+  getOpenCart
 }
 
 export const UserClass = {
   createUser, deleteUser
+}
+
+export const TagClass = {
+  getTags
 }
