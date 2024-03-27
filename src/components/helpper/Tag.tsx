@@ -9,7 +9,7 @@ interface Tag {
 }
 
 interface TagSearchProps {
-    existingTags: number[];
+    existingTags: Tag[];
     onAddTag: (tags: Tag[]) => void;
 }
 
@@ -18,25 +18,27 @@ const TagSearch: React.FC<TagSearchProps> = ({ existingTags, onAddTag }) => {
     const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
 
     useEffect(() => {
-        // Simulación de carga de etiquetas desde una API
-
         TagClass.getTags().then(tag => {
-            const filteredTags = tag.filter(tag => !existingTags.includes(tag.id));
+            const filteredTags = tag.filter(tag => !existingTags.includes(tag));
             setOptions(filteredTags);
+            setSelectedTags(existingTags)
         })
-        // Filtrar las etiquetas que ya están seleccionadas o son parte de las etiquetas existentes
-
     }, [existingTags]);
 
     const handleTagChange: TypeaheadComponentProps['onChange'] = (selected) => {
         setSelectedTags(selected as Tag[]);
     };
 
-    const handleAddTags = () => {
+    const handleAddTags = (event: any) => {
+        event.preventDefault();
         onAddTag(selectedTags);
         setSelectedTags([]);
     };
 
+    useEffect(() => {
+
+    }, [selectedTags])
+    
     return (
         <div>
             <Typeahead
@@ -47,6 +49,9 @@ const TagSearch: React.FC<TagSearchProps> = ({ existingTags, onAddTag }) => {
                 placeholder="Buscar etiquetas..."
                 selected={selectedTags}
                 onChange={handleTagChange}
+                allowNew // Permite la creación de nuevas etiquetas
+                newSelectionPrefix="Agregar nueva etiqueta: "
+                emptyLabel="No se encontraron coincidencias"
             />
             <button onClick={handleAddTags}>Agregar Etiquetas</button>
         </div>

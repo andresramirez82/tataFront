@@ -1,11 +1,12 @@
 // src/components/product/EditProductForm.tsx
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Modal, ButtonGroup } from 'react-bootstrap';
-import { ProductClass } from 'functions/api';
+import { ProductClass, TagClass } from 'functions/api';
 import { Product } from 'models/models';
 import { Tag } from 'models/products';
 import { toast } from 'react-toastify';
 import TagSearch from "components/helpper/Tag";
+import ProductDetails from './ProductDetails';
 
 interface EditProductFormProps {
   show: boolean;
@@ -33,9 +34,26 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ show, onHide, product
     }
   }, [show, productId]);
 
+
   const handleAddTag = (tags: Tag[]) => {
-    const tagIds = tags.map(tag => tag.id);
-    setExistingTags(prevTags => [...prevTags, ...tagIds]);
+    const TagsToAdd: Tag[] = [];
+    tags.forEach(async t => {
+      if (t.customOption) {
+        const tagToAdd: Tag = {
+          id: 0,
+          name: t.name
+        };
+        const newTagAdded = await TagClass.addTags(tagToAdd);
+        TagsToAdd.push(newTagAdded);
+      } else {
+        TagsToAdd.push(t)
+      }
+    })
+    // const tagIds = tags.map(tag => tag.id);
+    // setExistingTags(prevTags => [...prevTags, ...TagsToAdd]);
+    if (productDetails) {
+      setProductDetails({ ...productDetails, tags: TagsToAdd });
+    }
   };
 
   const handleSaveChanges = async () => {
@@ -168,7 +186,7 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ show, onHide, product
                 </ButtonGroup>
               </Form.Group>
               <Form.Group>
-                <TagSearch existingTags={existingTags} onAddTag={handleAddTag} />
+                {productDetails.tags && <TagSearch existingTags={productDetails?.tags} onAddTag={handleAddTag} />}
               </Form.Group>
             </>
           )}

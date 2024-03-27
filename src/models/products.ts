@@ -3,6 +3,7 @@ import { discounts } from "./discount";
 export interface Tag {
     id: number;
     name: string;
+    customOption?: boolean;
 }
 
 export interface products {

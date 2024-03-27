@@ -16,7 +16,7 @@ import {
 
 } from "./product";
 import { getCartToday, AddCart, getCart, addToCart, getPayment, updateCart, deleteCart, deleteSale, discountsForCart, getOpenCart } from "./cart";
-import { getTags } from "./tag";
+import { getTags,addTags } from "./tag";
 import { createUser, deleteUser } from "./User";
 
 
@@ -108,5 +108,6 @@ export const UserClass = {
 }
 
 export const TagClass = {
-  getTags
+  getTags,
+  addTags
 }
