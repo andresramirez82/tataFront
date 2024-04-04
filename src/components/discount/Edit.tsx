@@ -189,7 +189,7 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ show, onHide, discoun
                                 <DiscountDays onSave={onChangeDays} discountDaysData={discountsDetails.discountDays}/>
                             </Form.Group>
                             <Form.Group controlId="discountAmount">
-                                <Form.Label>Monto de Descuento</Form.Label>
+                                <Form.Label>Descuento</Form.Label>
                                 <Form.Control type="number" name="discountAmount" value={discountsDetails.discountAmount || 0} onChange={handleChange} required />
                             </Form.Group>
                             <Form.Group controlId="requiredQuantity">

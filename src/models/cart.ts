@@ -6,7 +6,7 @@ interface DiscountApplied {
     discountName: string;
     discountAmount: number;
     productId: number; // O cualquier otro identificador único del producto
-  }
+}
 
 export interface carts {
     id: number;
@@ -19,4 +19,10 @@ export interface carts {
 export interface payments {
     id?: number;
     tipo: string;
+}
+
+export interface CartList {
+    idCart: number;
+    date: Date;
+    total: number
 }

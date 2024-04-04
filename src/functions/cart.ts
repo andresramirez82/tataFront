@@ -170,3 +170,17 @@ export const discountsForCart = (idCart: number): Promise<Discount.dicountsRespo
         });
     });
 }
+
+export const getCartTotalsByDay = (startDate: Date, endDate: Date, page: number, limit: number): Promise<Cart.cartList[]> => {
+    return new Promise<Cart.cartList[]>((resolve,reject) => {
+        Axios.post(`/carts/totalbyday`,{
+            startDate, endDate, page, limit
+        }).then( response => {
+            resolve(response.data);
+        })
+        .catch((error) => {
+            console.error(error);
+            reject(error);
+        });
+    });
+}

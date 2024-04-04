@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { CartClass } from "functions/api";
 import { Alert, Row, Col, Container, Button } from 'react-bootstrap';
-import { formatDate, getUser } from "functions/functios";
+import { formatDate, getUser, formatDateWithoutHours } from "functions/functios";
 
 import { acumular } from "functions/functios";
 import MoneyFormatter from "components/helpper/Money";
@@ -13,22 +13,27 @@ import { withDiscount } from './../../models/models';
 
 const Sales: React.FC = () => {
     const [carts, setcarts] = useState<withDiscount[]>();
+    const [totalGeneral, setTotalGeneral] = useState<number>(0);
     const [idCart, setidCart] = useState<number>();
     const [idUser] = useState<number>(getUser().id);
 
 
     useEffect(() => {
-        CartClass.getOpenCart().then( open => {
+        CartClass.getOpenCart().then(open => {
             setidCart(open.id);
         }).catch(err => {
             console.error(err);
         })
     }, [])
-    
+
 
     useEffect(() => {
         CartClass.getCartToday().then(cart => {
             setcarts(cart);
+            const total = cart.reduce((accumulator, currentValue) => {
+                return accumulator + acumular(currentValue.sales, currentValue.discountsApplied);
+            }, 0);
+            setTotalGeneral(total);
         }).catch(err => {
             console.error(err);
         })
@@ -36,12 +41,17 @@ const Sales: React.FC = () => {
 
 
     const addCart = () => {
-        const newCart : any = {
+        const newCart: any = {
             userId: idUser
         }
-        CartClass.AddCart(newCart).then( nc => {
+        CartClass.AddCart(newCart).then(nc => {
             setidCart(nc.cart.id);
         })
+    }
+
+    const hoy = () => {
+        const now = new Date();
+        return formatDateWithoutHours(now);
     }
 
     return (<Container>
@@ -55,9 +65,11 @@ const Sales: React.FC = () => {
                     </Row>
                 </Alert>
                 </div>}
-                {idCart && <Cart idCart={idCart} setidCart={setidCart}/>}
+                {idCart && <Cart idCart={idCart} setidCart={setidCart} />}
             </Col>
             <Col md={6}>
+                <Alert className="text-right" variant='success '>Total Diario ( {hoy()} ) <h4><MoneyFormatter amount={totalGeneral} /></h4></Alert>
+                <div></div>
                 <div className="table-responsive">
                     <table className="table">
                         <thead><tr>
@@ -68,7 +80,7 @@ const Sales: React.FC = () => {
                         </tr>
 
                         </thead>
-                        <tbody style={{overflow: 'auto'}}>
+                        <tbody style={{ overflow: 'auto' }}>
                             {
                                 carts && carts.map((c, i) => {
                                     return (
@@ -79,7 +91,6 @@ const Sales: React.FC = () => {
                         </tbody>
                     </table>
                 </div>
-
             </Col>
         </Row>
     </Container>);

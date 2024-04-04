@@ -177,7 +177,7 @@ const DiscountManagementScreen: React.FC = () => {
                         <th>Producto</th>
                         <th>Fecha de Inicio</th>
                         <th>Fecha de Fin</th>
-                        <th>Monto de Descuento</th>
+                        <th>Descuento</th>
                         <th>Cantidad Requerida</th>
                         <th>Días</th>
                         <th>Acciones</th>
@@ -191,7 +191,7 @@ const DiscountManagementScreen: React.FC = () => {
                             <td>{discount.product.name}</td>
                             <td>{formatDate(discount.startDate)}</td>
                             <td>{formatDate(discount.endDate)}</td>
-                            <td><Money amount={discount.discountAmount}></Money></td>
+                            <td>{discount.discountAmount} %</td>
                             <td>{discount.requiredQuantity}</td>
                             <td><WeekDays weekSchedule={discount.discountDays}/></td>
                             <td>
@@ -255,7 +255,7 @@ const DiscountManagementScreen: React.FC = () => {
                             <DiscountDays onSave={onChangeDays} />
                         </Form.Group>
                         <Form.Group controlId="discountAmount">
-                            <Form.Label>Monto de Descuento</Form.Label>
+                            <Form.Label>Descuento</Form.Label>
                             <Form.Control type="number" name="discountAmount" value={formData.discountAmount || 0} onChange={handleChange} required />
                         </Form.Group>
                         <Form.Group controlId="requiredQuantity">

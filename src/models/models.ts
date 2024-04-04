@@ -1,7 +1,7 @@
 import { User } from "./user";
 import { products } from "./products";
 import { UserApiResponse, CartApiResponse, ProdApiResponse } from "./api";
-import { carts, payments } from "./cart";
+import { carts, payments, CartList } from "./cart";
 import { Sale as Sales,SaleCart } from "./sales";
 import { discounts, dicountResponse } from "./discount";
 
@@ -25,6 +25,7 @@ export declare namespace Product {
 export declare namespace Cart {
     export type cart = carts;
     export type payment = payments;
+    export type cartList = CartList;
 }
 
 export declare namespace Sale {

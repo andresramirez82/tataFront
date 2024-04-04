@@ -12,7 +12,7 @@ interface propsSearchBar {
 
 const SearchBar = (props: propsSearchBar) => {
     const [searchText, setSearchText] = useState("");
-    const [user, setuser] = useState<Auth.AuthUser>();
+    const [user, setUser] = useState<Auth.AuthUser>();
     const Navigate = useNavigate();
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,8 +27,6 @@ const SearchBar = (props: propsSearchBar) => {
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        // Aquí puedes realizar alguna acción con el texto de búsqueda
-        //console.log(searchText);
         const encodedText = encodeURIComponent(searchText);
         Navigate(`/home/stock/${encodedText}`);
     };
@@ -38,11 +36,11 @@ const SearchBar = (props: propsSearchBar) => {
         if (userSession.id === undefined) {
             Navigate("/");
         }
-        setuser(userSession);
+        setUser(userSession);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const CloseSession = () => {
+    const closeSession = () => {
         sessionStorage.clear();
         Navigate("/");
     }
@@ -54,7 +52,10 @@ const SearchBar = (props: propsSearchBar) => {
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto">
                     <Nav.Link href="/home/stock">Stock</Nav.Link>
-                    <Nav.Link href="/home/sales">Ventas</Nav.Link>
+                    <NavDropdown title="Ventas">
+                        <NavDropdown.Item href="/home/sales">Nuevas Ventas</NavDropdown.Item>
+                        <NavDropdown.Item href="/home/sales/list">Listado</NavDropdown.Item>
+                    </NavDropdown>
                     <Nav.Link href="/home/products">Productos</Nav.Link>
                     <Nav.Link href="/home/Discount">Descuentos</Nav.Link>
                 </Nav>
@@ -66,10 +67,9 @@ const SearchBar = (props: propsSearchBar) => {
 
                     <NavDropdown.Item eventKey="configuracion" href="/home/Settings">Configuración</NavDropdown.Item>
                     <NavDropdown.Divider />
-                    <NavDropdown.Item eventKey="cerrarSesion" onClick={CloseSession}>Cerrar Sesión</NavDropdown.Item>
+                    <NavDropdown.Item eventKey="cerrarSesion" onClick={closeSession}>Cerrar Sesión</NavDropdown.Item>
                 </NavDropdown>
             </Nav>
-
 
             <form className="d-none d-md-flex ms-auto" role="search" onSubmit={handleSubmit}>
                 <input
@@ -86,11 +86,7 @@ const SearchBar = (props: propsSearchBar) => {
                 </button>
             </form>
         </Navbar>
-
-
     );
 };
 
 export default SearchBar;
-
-

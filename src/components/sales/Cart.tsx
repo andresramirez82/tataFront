@@ -174,7 +174,7 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
                     <Alert variant="success ">{cart?.user.name}</Alert>
                 </Col>
                 <Col md={6}>
-                    {cart && <Alert variant="success "><MoneyFormatter amount={acumular(cart.sales, discount)} /></Alert>}
+                    {cart && <Alert variant="primary"><h4><MoneyFormatter amount={acumular(cart.sales, discount)} /></h4></Alert>}
 
                 </Col>
             </Row>
