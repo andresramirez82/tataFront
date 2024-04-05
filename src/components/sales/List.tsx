@@ -1,9 +1,11 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from "react";
 import { Alert, Container, Row, Col, Table, Form, Button } from 'react-bootstrap';
 import { getCartTotalsByDay } from "../../functions/cart";
 import { formatDateWithoutHours } from "functions/functios";
 import Money from "components/helpper/Money";
-import { Cart  } from "models/models";
+import { Cart } from "models/models";
+import CartByDate from "components/sales/CartsByDate";
 
 
 
@@ -14,6 +16,8 @@ const CartTotalsByDay: React.FC = () => {
     const [endDate, setEndDate] = useState<Date>(now);
     const [page, setPage] = useState<number>(1);
     const [limit, setLimit] = useState<number>(10);
+    const [showCartModal, setShowCartModal] = useState(false);
+    const [selectedCartDate, setselectedCartDate] = useState<Date>();
 
     useEffect(() => {
         fetchCartTotals();
@@ -56,6 +60,11 @@ const CartTotalsByDay: React.FC = () => {
         setPage(prevPage => Math.max(prevPage - 1, 1));
     };
 
+    const showModal = (fecha: Date) => {
+        setselectedCartDate(fecha);
+        setShowCartModal(true);
+    }
+
     return (
         <Container>
             <Row className="mt-4">
@@ -79,19 +88,25 @@ const CartTotalsByDay: React.FC = () => {
                                     <Form.Control name='endDate' type="date" onChange={handleChange} />
                                 </Form.Group>
                             </Col>
+                            <Col md={4}>
+                                <Form.Group controlId="limit">
+                                    <Form.Label>cantidad por página</Form.Label>
+                                    <Form.Control name='limit' type="number" value={limit} onChange={(e) => setLimit(Number(e.target.value))} />
+                                </Form.Group>
+                            </Col>
                             <Col md={2}>
-                                <Button className="mt-4" variant="primary" onClick={handleSearch}>Buscar</Button>
+                                <Button className="mt-4 col-12" variant="primary" onClick={handleSearch}>Buscar</Button>
                             </Col>
                         </Row>
                     </Form>
                 </Col>
             </Row>
             <Row className="mt-4">
-                <Col>
+                <Col className="col-6">
+                    <h4>Cierres</h4>
                     <Table striped bordered hover>
                         <thead>
                             <tr>
-                                <th>ID</th>
                                 <th>Fecha</th>
                                 <th>Total</th>
                             </tr>
@@ -99,13 +114,18 @@ const CartTotalsByDay: React.FC = () => {
                         <tbody>
                             {totals.map((item, index) => (
                                 <tr key={index}>
-                                    <th>{item.idCart}</th>
-                                    <td>{formatDateWithoutHours(item.date)}</td>
+                                    <th onClick={() => showModal(item.date)}>
+                                        <a href='#' className='link-underline link-underline-opacity-0 link-underline-opacity-75-hover cursor-pointer'>{formatDateWithoutHours(item.date)}</a>
+                                    </th>
                                     <td><Money amount={item.total} /></td>
                                 </tr>
                             ))}
                         </tbody>
                     </Table>
+                </Col>
+                <Col className="col-6">
+                    <h4>Carritos</h4>
+                   {selectedCartDate && <CartByDate date={selectedCartDate}/>} 
                 </Col>
             </Row>
             <Row className="mt-4">

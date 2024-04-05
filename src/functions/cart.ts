@@ -19,6 +19,22 @@ export const getCartToday = (): Promise<withDiscount[]> => {
     });
 };
 
+export const getCartByDate = (date: Date): Promise<withDiscount[]> => {
+    // Utiliza async/await para trabajar de forma más cómoda con Promesas
+    return new Promise<withDiscount[]>((resolve, reject) => {
+        Axios.post(`carts/bydate`, { date })
+            .then((response) => {
+                resolve(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+                reject(error);
+            });
+    });
+};
+
+
+
 export const AddCart = (newCart: Cart.cart): Promise<Api.CartApiResponseType> => {
     return new Promise<Api.CartApiResponseType>((resolve, reject) => {
         Axios.post(`/carts`, newCart).then(resp => {
@@ -160,27 +176,27 @@ export const deleteSale = (idSale: number): Promise<Sale.sale[]> => {
 
 
 export const discountsForCart = (idCart: number): Promise<Discount.dicountsResponse[]> => {
-    return new Promise<Discount.dicountsResponse[]>((resolve,reject) => {
-        Axios.get(`/carts/${idCart}/discounts`).then( response => {
+    return new Promise<Discount.dicountsResponse[]>((resolve, reject) => {
+        Axios.get(`/carts/${idCart}/discounts`).then(response => {
             resolve(response.data);
         })
-        .catch((error) => {
-            console.error(error);
-            reject(error);
-        });
+            .catch((error) => {
+                console.error(error);
+                reject(error);
+            });
     });
 }
 
 export const getCartTotalsByDay = (startDate: Date, endDate: Date, page: number, limit: number): Promise<Cart.cartList[]> => {
-    return new Promise<Cart.cartList[]>((resolve,reject) => {
-        Axios.post(`/carts/totalbyday`,{
+    return new Promise<Cart.cartList[]>((resolve, reject) => {
+        Axios.post(`/carts/totalbyday`, {
             startDate, endDate, page, limit
-        }).then( response => {
+        }).then(response => {
             resolve(response.data);
         })
-        .catch((error) => {
-            console.error(error);
-            reject(error);
-        });
+            .catch((error) => {
+                console.error(error);
+                reject(error);
+            });
     });
 }

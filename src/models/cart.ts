@@ -22,7 +22,6 @@ export interface payments {
 }
 
 export interface CartList {
-    idCart: number;
     date: Date;
     total: number
 }

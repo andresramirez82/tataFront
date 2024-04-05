@@ -15,7 +15,7 @@ import {
   deleteDiscount
 
 } from "./product";
-import { getCartToday, AddCart, getCart, addToCart, getPayment, updateCart, deleteCart, deleteSale, discountsForCart, getOpenCart } from "./cart";
+import { getCartToday, AddCart, getCart, addToCart, getPayment, updateCart, deleteCart, deleteSale, discountsForCart, getOpenCart, getCartByDate } from "./cart";
 import { getTags,addTags } from "./tag";
 import { createUser, deleteUser } from "./User";
 
@@ -100,7 +100,8 @@ export const CartClass = {
   deleteCart,
   deleteSale,
   discountsForCart,
-  getOpenCart
+  getOpenCart,
+  getCartByDate
 }
 
 export const UserClass = {
