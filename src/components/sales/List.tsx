@@ -8,7 +8,6 @@ import { Cart } from "models/models";
 import CartByDate from "components/sales/CartsByDate";
 
 
-
 const CartTotalsByDay: React.FC = () => {
     const now = new Date();
     const [totals, setTotals] = useState<Cart.cartList[]>([]);
