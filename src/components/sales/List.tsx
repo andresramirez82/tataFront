@@ -3,9 +3,10 @@ import React, { useEffect, useState } from "react";
 import { Alert, Container, Row, Col, Table, Form, Button } from 'react-bootstrap';
 import { getCartTotalsByDay } from "../../functions/cart";
 import { formatDateWithoutHours } from "functions/functios";
-import Money from "components/helpper/Money";
 import { Cart } from "models/models";
 import CartByDate from "components/sales/CartsByDate";
+import Total from "./Total";
+
 
 
 const CartTotalsByDay: React.FC = () => {
@@ -15,7 +16,6 @@ const CartTotalsByDay: React.FC = () => {
     const [endDate, setEndDate] = useState<Date>(now);
     const [page, setPage] = useState<number>(1);
     const [limit, setLimit] = useState<number>(10);
-    const [showCartModal, setShowCartModal] = useState(false);
     const [selectedCartDate, setselectedCartDate] = useState<Date>();
 
     useEffect(() => {
@@ -35,11 +35,26 @@ const CartTotalsByDay: React.FC = () => {
         }
     };
 
+
+
+
+
+
     const fetchCartTotals = async () => {
         try {
             if (startDate && endDate) {
                 const response = await getCartTotalsByDay(startDate, endDate, page, limit);
-                setTotals(response);
+                /*const Acc: Cart.cartList[] = [];
+                response.forEach((carts) => {
+                    //console.log(formatDateWithoutHours(carts.cartDate), acumular(carts.sales, carts.discountsApplied));
+                    Acc.push({
+                        date: new Date((carts.cartDate)),
+                        total: acumular(carts.sales, carts.discountsApplied)
+                    })
+                });
+                // acumularTotalesPorFecha(Acc)
+                */
+                setTotals((response));
             }
         } catch (error) {
             console.error("Error fetching cart totals by day:", error);
@@ -59,9 +74,8 @@ const CartTotalsByDay: React.FC = () => {
         setPage(prevPage => Math.max(prevPage - 1, 1));
     };
 
-    const showModal = (fecha: Date) => {
+    const SelectedDate = (fecha: Date) => {
         setselectedCartDate(fecha);
-        setShowCartModal(true);
     }
 
     return (
@@ -94,7 +108,7 @@ const CartTotalsByDay: React.FC = () => {
                                 </Form.Group>
                             </Col>
                             <Col md={2}>
-                                <Button className="mt-4 col-12" variant="primary" onClick={handleSearch}>Buscar</Button>
+                                <Button className="mt-4 col-12" variant="primary" onClick={handleSearch}><span className="bi-search"></span> Buscar</Button>
                             </Col>
                         </Row>
                     </Form>
@@ -113,10 +127,10 @@ const CartTotalsByDay: React.FC = () => {
                         <tbody>
                             {totals.map((item, index) => (
                                 <tr key={index}>
-                                    <th onClick={() => showModal(item.date)}>
-                                        <a href='#' className='link-underline link-underline-opacity-0 link-underline-opacity-75-hover cursor-pointer'>{formatDateWithoutHours(item.date)}</a>
+                                    <th onClick={() => SelectedDate(item.date)}>
+                                    <a href='#' className='link-underline link-underline-opacity-0 link-underline-opacity-75-hover cursor-pointer'><span className="bi-calendar-date"></span> {formatDateWithoutHours(item.date)}</a>
                                     </th>
-                                    <td><Money amount={item.total} /></td>
+                                    <td><Total date={item.date} /></td>
                                 </tr>
                             ))}
                         </tbody>
@@ -124,7 +138,7 @@ const CartTotalsByDay: React.FC = () => {
                 </Col>
                 <Col className="col-6">
                     <h4>Carritos</h4>
-                   {selectedCartDate && <CartByDate date={selectedCartDate}/>} 
+                    {selectedCartDate && <CartByDate date={selectedCartDate} />}
                 </Col>
             </Row>
             <Row className="mt-4">

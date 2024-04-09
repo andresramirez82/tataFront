@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { CartClass } from "functions/api";
-import { Alert, Row, Col, Container, Button } from 'react-bootstrap';
+import { Alert, Row, Col, Container, Button, Table } from 'react-bootstrap';
 import { formatDate, getUser, formatDateWithoutHours } from "functions/functios";
-
 import { acumular } from "functions/functios";
 import MoneyFormatter from "components/helpper/Money";
 import Cart from "components/sales/Cart";
@@ -68,10 +67,17 @@ const Sales: React.FC = () => {
                 {idCart && <Cart idCart={idCart} setidCart={setidCart} />}
             </Col>
             <Col md={6}>
-                <Alert className="text-right" variant='success '>Total Diario ( {hoy()} ) <h4><MoneyFormatter amount={totalGeneral} /></h4></Alert>
+                <Table striped bordered hover>
+                    <tr>
+                        <th><i className="bi bi-cash-coin"></i>Total Diario </th>
+                        <th><span className="bi-calendar"></span>( {hoy()} )</th>
+                        <td><h4><MoneyFormatter amount={totalGeneral} /></h4></td>
+                    </tr>
+                </Table>
+
                 <div></div>
                 <div className="table-responsive">
-                    <table className="table">
+                    <Table striped bordered hover>
                         <thead><tr>
                             <th>id</th>
                             <th>fecha</th>
@@ -89,7 +95,7 @@ const Sales: React.FC = () => {
                                             <th scope="row">{c.id}</th><td>{formatDate(c.cartDate)}</td><td>{c.user.name}</td><td><MoneyFormatter amount={acumular(c.sales, c.discountsApplied)} /></td></tr>);
                                 })}
                         </tbody>
-                    </table>
+                    </Table>
                 </div>
             </Col>
         </Row>

@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { Container, Row, Col, Alert, Form, Button, Modal } from "react-bootstrap";
+import { Container, Row, Col, Alert, Form, Button, Modal, Table } from "react-bootstrap";
 import { CartClass, ProductClass } from "functions/api";
 import { Cart as CartModel, Product, Discount } from "models/models";
 import { formatDate } from "functions/functios";
@@ -142,6 +142,7 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
             toast(`Error al borrar`);
         })
     }
+    
     return (
         <Container>
             <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
@@ -160,24 +161,18 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
                     </Button>
                 </Modal.Footer>
             </Modal>
-            <Row>
-                <Col md={6}>
-                    <Alert variant="success ">{cart?.id}</Alert>
-                </Col>
-                <Col md={6}>
-                    {cart && <Alert variant="success ">{formatDate(cart?.cartDate)}</Alert>}
-
-                </Col>
-            </Row>
-            <Row>
-                <Col md={6}>
-                    <Alert variant="success ">{cart?.user.name}</Alert>
-                </Col>
-                <Col md={6}>
-                    {cart && <Alert variant="primary"><h4><MoneyFormatter amount={acumular(cart.sales, discount)} /></h4></Alert>}
-
-                </Col>
-            </Row>
+            <Table hover>
+                <tbody>
+                    <tr>
+                        <td><span className="bi-cart"></span> {cart?.id}</td>
+                        <td><span className="bi-calendar"></span> {cart && formatDate(cart?.cartDate)}</td>
+                    </tr>
+                    <tr>
+                        <td><i className="bi bi-person"></i> {cart?.user.name}</td>
+                        <td>{cart && <h4><MoneyFormatter amount={acumular(cart.sales, discount)} /></h4>}</td>
+                    </tr>
+                </tbody>
+            </Table>
             <Row>
 
                 <div className="input-group-append d-flex gap-1">
@@ -209,7 +204,7 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
             </Row>
             <Row>
                 <div className="table-responsive">
-                    <table className="table">
+                    <Table striped bordered hover>
                         <thead>
                             <tr>
                                 <th>id</th>
@@ -224,20 +219,20 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
                         <tbody>
                             {cart?.sales && cart.sales.map((sale, i) => {
                                 return (<tr key={`salesporcart${i}`}>
-                                    <th scope="row">{sale.id}</th><td>{sale.product.name}</td><td><MoneyFormatter amount={sale.product.price} /></td><td>{sale.quantity}</td><td><MoneyFormatter amount={sale.totalPrice} /></td><td>{formatDate(sale.saleDate)}</td><td><Button variant="danger" onClick={() => BorraSale(sale.id)}><i className="bi bi-cart-x mr-2"></i></Button></td>
+                                    <th scope="row"><i className="bi bi-bag"></i> {sale.id}</th><td>{sale.product.name}</td><td><MoneyFormatter amount={sale.product.price} /></td><td>{sale.quantity}</td><td><MoneyFormatter amount={sale.totalPrice} /></td><td>{formatDate(sale.saleDate)}</td><td><Button variant="danger" onClick={() => BorraSale(sale.id)}><i className="bi bi-cart-x mr-2"></i></Button></td>
                                 </tr>);
                             })}
                         </tbody>
                         <tbody>
                             {discount && discount.map((dis, i) => {
                                 return (<tr key={`discount${i}`}>
-                                    <th scope="row" colSpan={2}>{dis.discountName}</th>
+                                    <th scope="row" colSpan={2}><i className="bi bi-percent"></i> {dis.discountName}</th>
                                     <th scope="row" colSpan={2}>Descuento en {dis.productName}</th>
                                     <td colSpan={3}><MoneyFormatter amount={dis.discount} /></td>
                                 </tr>);
                             })}
                         </tbody>
-                    </table>
+                    </Table>
                 </div>
 
             </Row>

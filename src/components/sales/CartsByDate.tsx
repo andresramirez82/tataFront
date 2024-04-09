@@ -1,14 +1,14 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // src/components/product/EditProductForm.tsx
-import React, { useState, useEffect, useRef, ChangeEvent } from 'react';
-import { Form, Container, Modal, Row, Col, Carousel, Table } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Container, Table } from 'react-bootstrap';
 import { CartClass } from 'functions/api';
-import { Product, Sale, Cart } from 'models/models';
-import Stock from "components/helpper/Stock";
+import { Cart } from 'models/models';
 import { toast } from 'react-toastify';
-import Barcode from 'react-barcode';
 import { formatDate } from 'functions/functios';
 import { acumular } from 'functions/functios';
 import MoneyFormatter from 'components/helpper/Money';
+import Spinner from "components/helpper/Spinner";
 
 
 
@@ -20,7 +20,8 @@ interface propsCartbydate {
 
 
 const CartByDate: React.FC<propsCartbydate> = ({ date }) => {
-    const [cart, setcart] = useState<Cart.cart[]>()
+    const [cart, setcart] = useState<Cart.cart[]>();
+    const [totales, settotales] = useState({ sales: 0, discount: 0 });
 
     useEffect(() => {
         if (date) {
@@ -35,10 +36,33 @@ const CartByDate: React.FC<propsCartbydate> = ({ date }) => {
         }
     }, [date])
 
+    useEffect(() => {
+        totalCalculate();
+    }, [cart])
+
+
+    const totalCalculate = () => {
+        let TSales: number = 0;
+        let TDiscount: number = 0;
+        cart?.forEach(c => {
+            c.sales.forEach(s => {
+                TSales = TSales + s.totalPrice;
+            });
+            c.discountsApplied.forEach(d => {
+                TDiscount = TDiscount + d.discount;
+            });
+        });
+
+        settotales({
+            sales: TSales,
+            discount: TDiscount
+        });
+    }
 
     return (
 
         <Container>
+            {cart === undefined && <Spinner />}
             <Table striped bordered hover>
                 <thead>
                     <tr>
@@ -51,13 +75,27 @@ const CartByDate: React.FC<propsCartbydate> = ({ date }) => {
                 <tbody>
                     {cart?.map((c, i) => {
                         return (<tr key={i}>
-                            <th>{c.id}</th>
+                            <th><span className="bi-cart"></span> {c.id}</th>
                             <td>{formatDate(c.cartDate)}</td>
                             <td>{c.user.name}</td>
                             <td><MoneyFormatter amount={acumular(c.sales, c.discountsApplied)}></MoneyFormatter></td>
-                            
                         </tr>);
                     })}
+                </tbody>
+                <thead>
+                    <tr>
+                        <th colSpan={4}>Totales</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th colSpan={2}><i className="bi bi-currency-dollar"></i> Ventas</th>
+                        <td colSpan={2}><MoneyFormatter amount={totales.sales} /></td>
+                    </tr>
+                    <tr>
+                        <th colSpan={2} ><i className="bi bi-percent"></i> Descuentos</th>
+                        <td colSpan={2}><MoneyFormatter amount={totales.discount} /></td>
+                    </tr>
                 </tbody>
             </Table>
         </Container>)
