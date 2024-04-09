@@ -67,7 +67,7 @@ const Sales: React.FC = () => {
                 {idCart && <Cart idCart={idCart} setidCart={setidCart} />}
             </Col>
             <Col md={6}>
-                <Table striped bordered hover>
+                <Table striped  hover>
                     <tr>
                         <th><i className="bi bi-cash-coin"></i>Total Diario </th>
                         <th><span className="bi-calendar"></span>( {hoy()} )</th>
@@ -77,7 +77,7 @@ const Sales: React.FC = () => {
 
                 <div></div>
                 <div className="table-responsive">
-                    <Table striped bordered hover>
+                    <Table striped  hover>
                         <thead><tr>
                             <th>id</th>
                             <th>fecha</th>

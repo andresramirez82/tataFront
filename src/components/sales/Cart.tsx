@@ -142,7 +142,7 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
             toast(`Error al borrar`);
         })
     }
-    
+
     return (
         <Container>
             <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
@@ -204,7 +204,7 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
             </Row>
             <Row>
                 <div className="table-responsive">
-                    <Table striped bordered hover>
+                    <Table striped hover>
                         <thead>
                             <tr>
                                 <th>id</th>
