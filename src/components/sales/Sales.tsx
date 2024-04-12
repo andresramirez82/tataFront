@@ -67,22 +67,26 @@ const Sales: React.FC = () => {
                 {idCart && <Cart idCart={idCart} setidCart={setidCart} />}
             </Col>
             <Col md={6}>
-                <Table striped  hover>
-                    <tr>
-                        <th><i className="bi bi-cash-coin"></i>Total Diario </th>
-                        <th><span className="bi-calendar"></span>( {hoy()} )</th>
-                        <td><h4><MoneyFormatter amount={totalGeneral} /></h4></td>
-                    </tr>
+                <Table>
+                    <tbody>
+                        <tr>
+                            <th><i className="bi bi-cash-coin"></i>Total Diario </th>
+                            <th><span className="bi-calendar"></span>( {hoy()} )</th>
+                            <td><h4><MoneyFormatter amount={totalGeneral} /></h4></td>
+                        </tr>
+                    </tbody>
+
                 </Table>
 
                 <div></div>
                 <div className="table-responsive">
-                    <Table striped  hover>
+                    <Table hover striped bordered>
                         <thead><tr>
-                            <th>id</th>
-                            <th>fecha</th>
-                            <th>usuario</th>
-                            <th>monto</th>
+                            <th>Id</th>
+                            <th>Fecha</th>
+                            <th>Pago</th>
+                            <th>Usuario</th>
+                            <th>Monto</th>
                         </tr>
 
                         </thead>
@@ -92,7 +96,9 @@ const Sales: React.FC = () => {
                                     return (
                                         <tr key={i} className={c.id === idCart ? 'table-info' : ''}
                                         >
-                                            <th scope="row">{c.id}</th><td>{formatDate(c.cartDate)}</td><td>{c.user.name}</td><td><MoneyFormatter amount={acumular(c.sales, c.discountsApplied)} /></td></tr>);
+                                            <th scope="row"><span className="bi-cart"></span> {c.id}</th><td>{formatDate(c.cartDate)}</td>
+                                            <td>{c.payment.tipo}</td>
+                                            <td>{c.user.name}</td><td><MoneyFormatter amount={totalGeneral} /></td></tr>);
                                 })}
                         </tbody>
                     </Table>

@@ -1,6 +1,6 @@
 import { products } from "./products";
 
-interface DiscountDays {
+export interface DiscountDays {
     [key: string]: boolean;
   }
 export interface discounts {

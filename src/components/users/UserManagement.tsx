@@ -1,10 +1,11 @@
 // src/components/UserManagement.tsx
 import React, { useState, useEffect } from "react";
-import { Form } from 'react-bootstrap';
+import { Form, Table } from 'react-bootstrap';
 import { UserClass, getUsers } from "functions/api";
 import { User } from "models/user";
 import { formatDate } from "functions/functios";
 import { toast } from 'react-toastify';
+import Spinner from "components/helpper/Spinner";
 
 
 const UserManagement: React.FC = () => {
@@ -87,18 +88,31 @@ const UserManagement: React.FC = () => {
 
 
 
-            <h2 className="mt-4">Lista de Usuarios</h2>
+            <h4 className="mt-4">Lista de Usuarios</h4>
             {loading ? (
-                <p>Cargando usuarios...</p>
+                <Spinner />
             ) : (
-                <ul className="list-group">
-                    {users.map((user) => (
-                        <li key={user.id} className="list-group-item d-flex justify-content-between align-items-center">
-                            {user.name} - último acceso: {formatDate(user.lastlogin)}
-                            <button className="btn btn-danger" onClick={() => deleteUser(user.id)}>Eliminar</button>
-                        </li>
-                    ))}
-                </ul>
+                <Table striped hover>
+                    <thead>
+                        <th>id</th>
+                        <th>Nombre</th>
+                        <th>Último acceso</th>
+                        <th>Acción</th>
+                    </thead>
+                    <tbody>
+                        {users.map((user) => (
+                            <tr key={user.id}>
+                                <th><span className="bi-person"></span> {user.id}</th>
+                                <td>{user.name} </td>
+                                <td> {user.name} - último acceso: {formatDate(user.lastlogin)}</td>
+                               <td><button className="btn btn-danger" onClick={() => deleteUser(user.id)}>Eliminar</button></td>
+                                
+                            </tr>
+                        ))}
+
+                    </tbody>
+
+                </Table>
             )}
         </div>
     );

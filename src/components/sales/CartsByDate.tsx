@@ -69,6 +69,7 @@ const CartByDate: React.FC<propsCartbydate> = ({ date }) => {
                         <th>Id</th>
                         <th>Fecha</th>
                         <th>Vendedor</th>
+                        <th>Pago</th>
                         <th>Total</th>
                     </tr>
                 </thead>
@@ -78,22 +79,23 @@ const CartByDate: React.FC<propsCartbydate> = ({ date }) => {
                             <th><span className="bi-cart"></span> {c.id}</th>
                             <td>{formatDate(c.cartDate)}</td>
                             <td>{c.user.name}</td>
+                            <td>{c.payment.tipo}</td>
                             <td><MoneyFormatter amount={acumular(c.sales, c.discountsApplied)}></MoneyFormatter></td>
                         </tr>);
                     })}
                 </tbody>
                 <thead>
                     <tr>
-                        <th colSpan={4}>Totales</th>
+                        <th colSpan={5}>Totales</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <th colSpan={2}><i className="bi bi-currency-dollar"></i> Ventas</th>
+                        <th colSpan={3}><i className="bi bi-currency-dollar"></i> Ventas</th>
                         <td colSpan={2}><MoneyFormatter amount={totales.sales} /></td>
                     </tr>
                     <tr>
-                        <th colSpan={2} ><i className="bi bi-percent"></i> Descuentos</th>
+                        <th colSpan={3} ><i className="bi bi-percent"></i> Descuentos</th>
                         <td colSpan={2}><MoneyFormatter amount={totales.discount} /></td>
                     </tr>
                 </tbody>

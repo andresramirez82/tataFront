@@ -1,5 +1,5 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { Container, Row, Col, Alert, Form, Button, Modal, Table } from "react-bootstrap";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import { Container, Row, Col, InputGroup, Form, Button, Modal, Table } from "react-bootstrap";
 import { CartClass, ProductClass } from "functions/api";
 import { Cart as CartModel, Product, Discount } from "models/models";
 import { formatDate } from "functions/functios";
@@ -161,7 +161,7 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
                     </Button>
                 </Modal.Footer>
             </Modal>
-            <Table hover>
+            <Table>
                 <tbody>
                     <tr>
                         <td><span className="bi-cart"></span> {cart?.id}</td>
@@ -173,69 +173,70 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
                     </tr>
                 </tbody>
             </Table>
-            <Row>
+            <div className='row gap-3'>
+                <Row>
 
-                <div className="input-group-append d-flex gap-1">
-                    {cart && <ConfirmCart idCart={cart?.id} onConfirmarVenta={onConfirmarVenta} />}
+                    <div className="input-group-append d-flex gap-1">
+                        <Button variant="danger" className='col-6' onClick={handleShowDeleteModal}>
+                            <i className="bi bi-cart-x mr-2"></i> <br />Cancelar
+                        </Button>
+                        {cart && <ConfirmCart idCart={cart?.id} onConfirmarVenta={onConfirmarVenta} totalSales={acumular(cart.sales,discount)}/>}
+                    </div>
 
+                </Row>
+                <Row>
+                    <Col md={12}>
+                        <Form noValidate validated={isFormInvalid} onSubmit={handleSubmit}>
+                            <InputGroup className="mb-3">
+                                <Form.Control type="text"
+                                    ref={inputRef}
+                                    onChange={(e: ChangeEvent<HTMLInputElement>) => setbarCode(e.currentTarget.value)}
+                                    required />
+                                <InputGroup.Text id="basic-addon2"><span className="bi-upc-scan"></span></InputGroup.Text>
+                            </InputGroup>
+                            <Form.Control.Feedback type="invalid">
+                                Por favor ingrese un codigo de barras
+                            </Form.Control.Feedback>
+                        </Form>
 
-                    <Button variant="danger" className='col-6' onClick={handleShowDeleteModal}>
-                        <i className="bi bi-cart-x mr-2"></i> <br />Cancelar
-                    </Button>
-                </div>
+                    </Col>
+                </Row>
+                <Row>
+                    <div className="table-responsive">
+                        <Table striped hover bordered>
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Producto</th>
+                                    <th>Precio</th>
+                                    <th>Cantidad</th>
+                                    <th>Total</th>
+                                    <th>Fecha</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {cart?.sales && cart.sales.map((sale, i) => {
+                                    return (<tr key={`salesporcart${i}`}>
+                                        <th scope="row"><i className="bi bi-bag"></i> {sale.id}</th><td>{sale.product.name}</td><td><MoneyFormatter amount={sale.product.price} /></td><td>{sale.quantity}</td><td><MoneyFormatter amount={sale.totalPrice} /></td><td>{formatDate(sale.saleDate)}</td><td><Button variant="danger" onClick={() => BorraSale(sale.id)}><i className="bi bi-cart-x mr-2"></i></Button></td>
+                                    </tr>);
+                                })}
+                            </tbody>
+                            <tbody>
+                                {discount && discount.map((dis, i) => {
+                                    return (<tr key={`discount${i}`}>
+                                        <th scope="row" colSpan={2}><i className="bi bi-percent"></i> {dis.discountName}</th>
+                                        <th scope="row" colSpan={2}>Descuento en {dis.productName}</th>
+                                        <td colSpan={3}><MoneyFormatter amount={dis.discount} /></td>
+                                    </tr>);
+                                })}
+                            </tbody>
+                        </Table>
+                    </div>
 
-            </Row>
-            <Row>
-                <Col md={12}>
-                    <Form noValidate validated={isFormInvalid} onSubmit={handleSubmit}>
-                        <Form.Group>
-                            <Form.Label></Form.Label>
-                            <Form.Control type="text"
-                                ref={inputRef}
-                                onChange={(e: ChangeEvent<HTMLInputElement>) => setbarCode(e.currentTarget.value)}
-                                required />
-                        </Form.Group>
-                        <Form.Control.Feedback type="invalid">
-                            Por favor ingrese un codigo de barras
-                        </Form.Control.Feedback>
-                    </Form>
+                </Row>
+            </div>
 
-                </Col>
-            </Row>
-            <Row>
-                <div className="table-responsive">
-                    <Table striped hover>
-                        <thead>
-                            <tr>
-                                <th>id</th>
-                                <th>producto</th>
-                                <th>precio</th>
-                                <th>cantidad</th>
-                                <th>total</th>
-                                <th>fecha</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {cart?.sales && cart.sales.map((sale, i) => {
-                                return (<tr key={`salesporcart${i}`}>
-                                    <th scope="row"><i className="bi bi-bag"></i> {sale.id}</th><td>{sale.product.name}</td><td><MoneyFormatter amount={sale.product.price} /></td><td>{sale.quantity}</td><td><MoneyFormatter amount={sale.totalPrice} /></td><td>{formatDate(sale.saleDate)}</td><td><Button variant="danger" onClick={() => BorraSale(sale.id)}><i className="bi bi-cart-x mr-2"></i></Button></td>
-                                </tr>);
-                            })}
-                        </tbody>
-                        <tbody>
-                            {discount && discount.map((dis, i) => {
-                                return (<tr key={`discount${i}`}>
-                                    <th scope="row" colSpan={2}><i className="bi bi-percent"></i> {dis.discountName}</th>
-                                    <th scope="row" colSpan={2}>Descuento en {dis.productName}</th>
-                                    <td colSpan={3}><MoneyFormatter amount={dis.discount} /></td>
-                                </tr>);
-                            })}
-                        </tbody>
-                    </Table>
-                </div>
-
-            </Row>
             {Prod && <CreateSale product={Prod} show={showCreateSale} onHide={handleHideModalSale} idCart={idCart} />}
         </Container>);
 }

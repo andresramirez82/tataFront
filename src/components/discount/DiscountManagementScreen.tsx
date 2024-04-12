@@ -4,8 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Container, Table, Modal, Form } from 'react-bootstrap';
 import { fetchDiscounts, searchProduct, CreateDiscounts } from "functions/product";
 import { formatDate } from "functions/functios";
-import Money from "components/helpper/Money";
-import { discounts } from "models/discount";
+import { discounts, DiscountDays as DiscountDaysT } from "models/discount";
 import { products } from "models/products";
 import { toast } from 'react-toastify';
 
@@ -15,7 +14,7 @@ import EditDiscount from "./Edit";
 import DeleteDiscount from "./Delete";
 
 
-
+const Descuentos : DiscountDaysT = {"0":true,"1":true,"2":true,"3":true,"4":true,"5":true,"6":true}
 
 const DiscountManagementScreen: React.FC = () => {
     const now = new Date();
@@ -252,7 +251,7 @@ const DiscountManagementScreen: React.FC = () => {
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Días de la semana</Form.Label>
-                            <DiscountDays onSave={onChangeDays} />
+                            <DiscountDays onSave={onChangeDays} discountDaysData={Descuentos}/>
                         </Form.Group>
                         <Form.Group controlId="discountAmount">
                             <Form.Label>Descuento</Form.Label>

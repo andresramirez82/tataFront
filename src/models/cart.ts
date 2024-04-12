@@ -14,6 +14,7 @@ export interface carts {
     sales: Sale[];
     user: User;
     discountsApplied: dicountResponse[];
+    payment: payments
 }
 
 export interface payments {
