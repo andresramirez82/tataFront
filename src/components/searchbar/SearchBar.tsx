@@ -52,7 +52,7 @@ const SearchBar = (props: propsSearchBar) => {
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto">
                     <Nav.Link href="/home/stock"><span className="bi bi-calculator"/> Stock</Nav.Link>
-                    <NavDropdown title="Ventas">
+                    <NavDropdown title={<span className="bi bi-cart"> Ventas</span> }>
                         <NavDropdown.Item href="/home/sales"><span className="bi bi-cart"/> Nuevas Ventas</NavDropdown.Item>
                         <NavDropdown.Item href="/home/sales/list"><span className="bi bi-list"/> Listado</NavDropdown.Item>
                     </NavDropdown>
