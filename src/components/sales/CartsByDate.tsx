@@ -48,9 +48,14 @@ const CartByDate: React.FC<propsCartbydate> = ({ date }) => {
             c.sales.forEach(s => {
                 TSales = TSales + s.totalPrice;
             });
-            c.discountsApplied.forEach(d => {
-                TDiscount = TDiscount + d.discount;
-            });
+            if (c.discountsApplied !== null) {
+                c.discountsApplied.forEach(d => {
+                    TDiscount = TDiscount + d.discount;
+                });
+            } else {
+                TDiscount = 0;
+            }
+            
         });
 
         settotales({

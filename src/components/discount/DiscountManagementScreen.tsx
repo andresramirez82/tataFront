@@ -166,8 +166,8 @@ const DiscountManagementScreen: React.FC = () => {
         <Container>
             {selectDiscount && <EditDiscount discountId={selectDiscount} onHide={hideEdit} show={showEditModal} />}
             {selectDiscount && selectDiscountName && <DeleteDiscount discountId={selectDiscount} onHide={hideDelete} show={showDelete} name={selectDiscountName} />}
-            <h1>Administrar Descuentos</h1>
-            <Button onClick={handleShowModal} variant="primary">Crear Descuento</Button>
+            <h2><span className='bi bi-percent'/> Administrar Descuentos</h2>
+            <Button onClick={handleShowModal} variant="primary"><span className='bi bi-plus'/> Crear Descuento</Button>
             <Table striped bordered hover>
                 <thead>
                     <tr>
@@ -185,7 +185,7 @@ const DiscountManagementScreen: React.FC = () => {
                 <tbody>
                     {discounts.map(discount => (
                         <tr key={discount.id}>
-                            <td>{discount.id}</td>
+                            <th><span className='bi bi-percent'/> {discount.id}</th>
                             <td>{discount.name}</td>
                             <td>{discount.product.name}</td>
                             <td>{formatDate(discount.startDate)}</td>

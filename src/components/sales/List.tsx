@@ -82,7 +82,7 @@ const CartTotalsByDay: React.FC = () => {
         <Container>
             <Row className="mt-4">
                 <Col>
-                    <Alert variant='light'><h1>Lista de Totales Diarios de Carritos</h1></Alert>
+                    <span ><h2><span className="bi bi-list"/> Lista de Totales Diarios de Carritos</h2></span>
                 </Col>
             </Row>
             <Row className="mt-4">

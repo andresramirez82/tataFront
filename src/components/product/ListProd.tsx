@@ -95,7 +95,7 @@ const ProductList: React.FC = () => {
             {selectProd && <EditProductForm show={showEditModal} onHide={handleHideEditModal} productId={selectProd} />}
             {selectProd && selectProdName && <DeleteProduct name={selectProdName} show={showDelete} onHide={handleShowDeleteModalClose} productId={selectProd} />}
 
-            <h1>Lista de Productos</h1>
+            <h2><span className='bi bi-bag' /> Lista de Productos</h2>
             {loading ? (
                 <p>Cargando productos...</p>
             ) : (
@@ -117,7 +117,7 @@ const ProductList: React.FC = () => {
                         <tbody>
                             {products.map((product) => (
                                 <tr key={product.id}>
-                                    <td>{product.id}</td>
+                                    <th><span className='bi bi-bag' /> {product.id}</th>
                                     <td>{product.barcode}</td>
                                     <td>{product.name}</td>
                                     <td>{product.price}</td>
@@ -138,11 +138,11 @@ const ProductList: React.FC = () => {
                     </Table>
                     <div>
                         <Button onClick={handlePrevPage} disabled={pagination.prevPage === null}>
-                            Anterior
+                            <i className="bi bi-arrow-left"/> Anterior
                         </Button>
                         <span>Página {pagination.currentPage} de {pagination.totalPages}</span>
                         <Button onClick={handleNextPage} disabled={pagination.nextPage === null}>
-                            Siguiente
+                        <i className="bi bi-arrow-right"/> Siguiente
                         </Button>
                     </div>
                 </>

@@ -51,13 +51,13 @@ const SearchBar = (props: propsSearchBar) => {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto">
-                    <Nav.Link href="/home/stock">Stock</Nav.Link>
+                    <Nav.Link href="/home/stock"><span className="bi bi-calculator"/> Stock</Nav.Link>
                     <NavDropdown title="Ventas">
-                        <NavDropdown.Item href="/home/sales">Nuevas Ventas</NavDropdown.Item>
-                        <NavDropdown.Item href="/home/sales/list">Listado</NavDropdown.Item>
+                        <NavDropdown.Item href="/home/sales"><span className="bi bi-cart"/> Nuevas Ventas</NavDropdown.Item>
+                        <NavDropdown.Item href="/home/sales/list"><span className="bi bi-list"/> Listado</NavDropdown.Item>
                     </NavDropdown>
-                    <Nav.Link href="/home/products">Productos</Nav.Link>
-                    <Nav.Link href="/home/Discount">Descuentos</Nav.Link>
+                    <Nav.Link href="/home/products"><span className="bi bi-bag"/> Productos</Nav.Link>
+                    <Nav.Link href="/home/Discount"><span className="bi bi-percent"/> Descuentos</Nav.Link>
                 </Nav>
             </Navbar.Collapse>
 

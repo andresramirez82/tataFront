@@ -175,13 +175,13 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ show, onHide, product
                     variant={!productDetails.kind ? 'primary' : 'secondary'}
                     onClick={() => setProductDetails({ ...productDetails, kind: false })}
                   >
-                    Unidades
+                    <span className="bi bi-123"/> Unidades
                   </Button>
                   <Button
                     variant={productDetails.kind ? 'primary' : 'secondary'}
                     onClick={() => setProductDetails({ ...productDetails, kind: true })}
                   >
-                    Por granel
+                    <span className="bi bi-box"/> Por granel
                   </Button>
                 </ButtonGroup>
               </Form.Group>
@@ -194,10 +194,10 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ show, onHide, product
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={onHide}>
-            Cancelar
+            <span className='bi bi-x' /> Cancelar
           </Button>
           <Button variant="primary" type='submit'>
-            Guardar Cambios
+            <span className='bi bi-floppy' /> Guardar
           </Button>
         </Modal.Footer>
       </Form>
