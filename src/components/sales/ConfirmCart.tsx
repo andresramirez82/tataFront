@@ -8,15 +8,19 @@ import MP from "img/mp.png";
 import AFIP from "img/afip.png";
 import MoneyFormatter from 'components/helpper/Money';
 import Spinner from "components/helpper/Spinner";
+import io from 'socket.io-client';
+import { toast } from 'react-toastify';
+import { getOrder } from "functions/mercadopago";
 
 
 interface confSaleProps {
   idCart: number;
   onConfirmarVenta: (idCart: number, idPayment: number) => void;
   totalSales: number;
+  handleCloseParent: () => void;
 }
 
-const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart, totalSales }) => {
+const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart, totalSales, handleCloseParent }) => {
   const [selectedFormaPago, setSelectedFormaPago] = useState('1');
   const [payments, setpayments] = useState<Cart.payment[]>([]);
   const [cart, setcart] = useState<Cart.cart>();
@@ -24,8 +28,13 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
   const [sendMP, setsendMP] = useState<boolean>(false);
   const [sendAFIP, setsendAFIP] = useState<boolean>(false);
   const [loading, setloading] = useState<boolean>(false);
+  const [notifications, setNotifications] = useState<string>('Esperando la respuesta de Mercado Pago');
 
-  const handleClose = () => setShow(false);
+
+  const handleClose = () => {
+    handleCloseParent();
+    setShow(false);
+  }
   const handleShow = () => setShow(true);
 
   useEffect(() => {
@@ -43,26 +52,52 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
     })
   }, [idCart])
 
+  useEffect(() => {
+    const socket = io('https://deep-drain-production.up.railway.app');
+    socket.on('notification', (notification) => {
+      // console.log(notification)
+      if (notification) {
+        if (notification.topic === 'merchant_order') {
+          setNotifications('Procesando pago');
+        }
+        if (notification.action === 'payment.created') {
+          toast(`Pago realizado`);
+          getOrder(idCart).then(resp => {
+            onConfirmarVenta(idCart, Number(selectedFormaPago));
+            handleClose();
+          })
+
+        }
+      }
+
+    });
+
+    return () => {
+      socket.off('notification');
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+
+
 
   const handleConfirmarVenta = () => {
     // Lógica para confirmar la venta con la forma de pago seleccionada
     if (sendMP && cart) {
       setloading(true);
       createOrder(cart, totalSales).then((result: any) => {
-        console.log(result);
-        onConfirmarVenta(idCart, Number(selectedFormaPago));
+        console.log(result)
       }).catch((err: any) => {
         console.error(err)
       }).finally(() => {
-        setloading(false);
-        handleClose();
+
       })
     }
     else {
       onConfirmarVenta(idCart, Number(selectedFormaPago));
       handleClose();
     }
-    
+
   };
 
 
@@ -71,6 +106,8 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
     setsendMP(false);
     setsendAFIP(false);
   }
+
+
 
 
   // region JSX
@@ -120,9 +157,10 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
               <Col>
                 {loading && (
                   <div className="text-center">
-                    <h5>Esperando la respuesta de Mercado Pago</h5>
+                    <h5>{notifications}</h5>
                     <Image src={MP} alt="MP Logo" style={{ width: '64px', height: '64px' }} />
                     <br />
+                    {notifications}
                     <Spinner />
                   </div>
                 )}

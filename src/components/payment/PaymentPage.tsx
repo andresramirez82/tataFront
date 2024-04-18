@@ -5,6 +5,7 @@ import { payments } from 'models/cart';
 import { toast } from 'react-toastify';
 import { getPayment, deletePayment, addPayment } from "functions/cart";
 import { AxiosError } from "axios";
+import PaymentEdit from "./PaymentEdit";
 
 interface ErrorResponse {
   message: string;
@@ -14,52 +15,72 @@ interface ErrorResponse {
 
 const PaymentPage: React.FC = () => {
   const [payments, setPayments] = useState<payments[]>([]);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState<payments>();
+
 
   useEffect(() => {
     listar();
 
-  
-}, [])
+
+  }, [])
 
 
-const listar = () => {
-    getPayment().then( payment => {
-        setPayments(payment);
+  const listar = () => {
+    getPayment().then(payment => {
+      setPayments(payment);
     })
-}
+  }
 
   const handleAddPayment = (payment: payments) => {
     addPayment(payment).then(resp => {
-        toast(`Se agregó correcatmente`);
-        listar();
+      toast(`Se agregó correcatmente`);
+      listar();
     })
-   
+
   };
 
   const handleDeletePayment = (id: number) => {
-    
-    deletePayment(id).then( () => {
-        setPayments(payments.filter(payment => payment.id !== id));
-        toast(`Se Borró correcatmente`)
+
+    deletePayment(id).then(() => {
+      setPayments(payments.filter(payment => payment.id !== id));
+      toast(`Se Borró correcatmente`)
     }
     ).catch((err: AxiosError<ErrorResponse>) => {
-        toast(`${err.response?.data.message}`)
+      toast(`${err.response?.data.message}`)
     })
   };
 
+
+  const handleUpdatePayment = (selectedPayment: payments) => {
+    setSelectedPayment(
+      selectedPayment
+    )
+    setShowUpdateModal(true)
+  };
+
+  // Función para cerrar el modal de actualización
+  const handleCloseUpdateModal = () => {
+    setShowUpdateModal(false);
+    setSelectedPayment(undefined);
+  };
+
+  const onUpdate = () => {
+    toast(`Se editó corretamente el método de pago ${selectedPayment?.id}`);
+    listar();
+  }
+
   return (
-    <div className="container">
-      <div className="row mt-3">
-        <div className="col-md-6">
-          <h2>Agregar forma de Pago</h2>
-          <PaymentForm onSubmit={handleAddPayment} />
-        </div>
-        <div className="col-md-6">
-          <h2>Lista de formas de Pagos</h2>
-          <PaymentList payments={payments} onDelete={handleDeletePayment} />
-        </div>
-      </div>
+    <div className="container mt-4">
+      <h2><span className="bi bi-credit-card." /> <span className='bi bi-credit-card'/> Administración de Medios de pago</h2>
+      <PaymentForm onSubmit={handleAddPayment} />
+      <h4 className="mt-4">Lista de Medios de pago</h4>
+      <PaymentList payments={payments} onDelete={handleDeletePayment} onUpdate={handleUpdatePayment} />
+
+      {selectedPayment && <PaymentEdit show={showUpdateModal} onHide={handleCloseUpdateModal} selectdPayment={selectedPayment} onUpdate={onUpdate}/>}
     </div>
+
+
   );
 };
 

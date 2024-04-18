@@ -1,22 +1,34 @@
 import React from 'react';
-import { payments } from 'models/cart'; // Suponiendo que tienes un archivo types.ts donde defines el tipo Payment
+import { payments } from 'models/cart';
+import { Table } from 'react-bootstrap';
 
 interface PaymentListProps {
   payments: payments[];
   onDelete: (id: number) => void;
+  onUpdate: (selectedPayment: payments) => void;
 }
 
-const PaymentList: React.FC<PaymentListProps> = ({ payments, onDelete }) => {
+const PaymentList: React.FC<PaymentListProps> = ({ payments, onDelete, onUpdate }) => {
   return (
-    <ul className="list-group">
-      {payments.map(payment => (
-        <li key={payment.id} className="list-group-item d-flex justify-content-between align-items-center">
-          {payment.tipo}
-          {payment.id && <button className="btn btn-danger" onClick={() => onDelete(Number(payment.id))}>Eliminar</button>}
-          
-        </li>
-      ))}
-    </ul>
+    <Table striped hover>
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Nombre</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        {payments.map(payment => (
+          <tr key={payment.id}>
+            <th><span className="bi-credit-card-2-back"></span> {payment.id}</th>
+            <td>{payment.tipo}</td>
+            <td>{payment.id && <><button className="btn btn-primary" onClick={() => onUpdate(payment)}><span className='bi bi-pencil' /> Editar</button><button className="btn btn-danger" onClick={() => onDelete(Number(payment.id))}><span className='bi bi-trash' /> Eliminar</button></>}</td>
+          </tr>
+        ))}
+      </tbody>
+
+    </Table>
   );
 };
 

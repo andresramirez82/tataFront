@@ -51,3 +51,13 @@ export const createOrder = async (cart: Cart.cart, total: number): Promise<any> 
     });
 
 };
+
+export const getOrder = async (idPreferencia: number): Promise<any> => {
+    return new Promise<any>((resolve, reject) => {
+        Axios.get(`/mercadopago/consultar-orden/${idPreferencia}`).then(resp => {
+            resolve(resp.data);
+        }).catch(err => {
+            reject(err)
+        })
+    });
+}

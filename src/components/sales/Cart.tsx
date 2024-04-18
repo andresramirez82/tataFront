@@ -8,6 +8,7 @@ import MoneyFormatter from "components/helpper/Money";
 import { toast } from 'react-toastify';
 import CreateSale from "./CreateSale";
 import ConfirmCart from "./ConfirmCart";
+import { set } from "date-fns/esm";
 
 interface CartProps {
     idCart: number;
@@ -38,6 +39,11 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
     useEffect(() => {
         Actualizar(idCart);
     }, [idCart])
+
+    const confirmSaleClose = () => {
+        setcart(undefined);
+        Actualizar(idCart);
+    }
 
 
     const Actualizar = (idCartParam: number) => {
@@ -95,7 +101,6 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
 
     const onConfirmarVenta = (idCart: number, idPayment: number) => [
         CartClass.updateCart(idCart, idPayment, discount).then(resp => {
-            console.log(resp);
             setidCart(undefined);
 
         }).catch(err => {
@@ -180,7 +185,7 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
                         <Button variant="danger" className='col-6' onClick={handleShowDeleteModal}>
                             <i className="bi bi-cart-x mr-2"></i> <br />Cancelar
                         </Button>
-                        {cart && <ConfirmCart idCart={cart?.id} onConfirmarVenta={onConfirmarVenta} totalSales={acumular(cart.sales,discount)}/>}
+                        {cart && <ConfirmCart idCart={cart?.id} onConfirmarVenta={onConfirmarVenta} totalSales={acumular(cart.sales,discount)} handleCloseParent={confirmSaleClose}/>}
                     </div>
 
                 </Row>

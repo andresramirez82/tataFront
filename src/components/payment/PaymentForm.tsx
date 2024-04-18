@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { payments } from 'models/cart'; // Suponiendo que tienes un archivo types.ts donde defines el tipo Payment
+import { payments } from 'models/cart';
+import { Form } from 'react-bootstrap';
 
 interface PaymentFormProps {
   onSubmit: (payment: payments) => void;
@@ -7,16 +8,26 @@ interface PaymentFormProps {
 
 const PaymentForm: React.FC<PaymentFormProps> = ({ onSubmit }) => {
   const [tipo, setTipo] = useState<string>('');
+  const [isFormInvalid, setIsFormInvalid] = useState(false);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const newPayment: payments = { tipo }; // Suponiendo que Payment tiene una propiedad 'tipo'
-    onSubmit(newPayment);
-    setTipo('');
+    const form = e.currentTarget;
+
+
+    if (form.checkValidity()) {
+      const newPayment: payments = { tipo }; // Suponiendo que Payment tiene una propiedad 'tipo'
+      onSubmit(newPayment);
+      setTipo('');
+    } else {
+      // Si hay errores de validación, muestra los mensajes de error
+      e.stopPropagation();
+      setIsFormInvalid(true);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit} noValidate validated={isFormInvalid}>
       <div className="mb-3">
         <label htmlFor="tipo" className="form-label">Tipo:</label>
         <input
@@ -28,8 +39,8 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onSubmit }) => {
           required
         />
       </div>
-      <button type="submit" className="btn btn-primary">Guardar</button>
-    </form>
+      <button type="submit" className="btn btn-primary"><span className='bi bi-floppy' /> Crear Medio de pago</button>
+    </Form>
   );
 };
 

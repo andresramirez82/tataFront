@@ -200,3 +200,18 @@ export const getCartTotalsByDay = (startDate: Date, endDate: Date, page: number,
             });
     });
 }
+
+export const updatePayment = (Payment: payments): Promise<payments> => {
+    // Utiliza async/await para trabajar de forma más cómoda con Promesas
+    return new Promise<payments>((resolve, reject) => {
+        Axios.put(`/payments/${Payment.id}`, { tipo: Payment.tipo })
+            .then((response) => {
+                resolve(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+                reject(error);
+            });
+    });
+};
+

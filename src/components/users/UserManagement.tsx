@@ -70,7 +70,7 @@ const UserManagement: React.FC = () => {
 
     return (
         <div className="container mt-4">
-            <h1>Administración de Usuarios</h1>
+            <h2><span className="bi bi-person" /> Administración de Usuarios</h2>
             <Form noValidate validated={isFormInvalid} onSubmit={handleSubmit}>
                 <div className="mb-3">
                     <label htmlFor="name" className="form-label">Nombre:</label>
@@ -83,7 +83,7 @@ const UserManagement: React.FC = () => {
                         required
                     />
                 </div>
-                <button className="btn btn-primary" type="submit" >Crear Usuario</button>
+                <button className="btn btn-primary" type="submit" ><span className='bi bi-person-add' /> Crear Usuario</button>
             </Form>
 
 
@@ -94,10 +94,12 @@ const UserManagement: React.FC = () => {
             ) : (
                 <Table striped hover>
                     <thead>
-                        <th>id</th>
-                        <th>Nombre</th>
-                        <th>Último acceso</th>
-                        <th>Acción</th>
+                        <tr>
+                            <th>id</th>
+                            <th>Nombre</th>
+                            <th>Último acceso</th>
+                            <th>Acción</th>
+                        </tr>
                     </thead>
                     <tbody>
                         {users.map((user) => (
@@ -105,13 +107,11 @@ const UserManagement: React.FC = () => {
                                 <th><span className="bi-person"></span> {user.id}</th>
                                 <td>{user.name} </td>
                                 <td> {user.name} - último acceso: {formatDate(user.lastlogin)}</td>
-                               <td><button className="btn btn-danger" onClick={() => deleteUser(user.id)}>Eliminar</button></td>
-                                
+                                <td><button className="btn btn-danger" onClick={() => deleteUser(user.id)}><span className='bi bi-trash' /> Eliminar</button></td>
+
                             </tr>
                         ))}
-
                     </tbody>
-
                 </Table>
             )}
         </div>
