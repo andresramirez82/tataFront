@@ -12,6 +12,7 @@ import PaymentPage from "components/payment/PaymentPage";
 import Settings from "components/settings/Settings";
 import ListProd from "components/product/ListProd";
 import DiscountManagementScreen from "components/discount/DiscountManagementScreen";
+import Company from "components/company/Company";
 
 const Stock = () => { return (<></>) };
 
@@ -40,6 +41,7 @@ function App() {
           <Route path="/home/Users" element={<UserManagement />} />
           <Route path='/home/payment' element={<PaymentPage />} />
           <Route path='/home/Settings' element={<Settings />} />
+          <Route path='/home/Company' element={<Company />} />
           <Route path='/home/Products' element={<ListProd />} />
           <Route path='/home/Discount' element={<DiscountManagementScreen />} />
         </Route>
