@@ -4,6 +4,10 @@ import { Company } from 'models/company';
 import { getCompanies, deleteCompany, createCompany } from "functions/company";
 import { toast } from 'react-toastify';
 import Update from "./Upload";
+import CUIL from "components/UI/CUIL/Cuil";
+import Tel from "components/UI/Tel/Tel";
+import Email from "components/UI/Email/Email";
+import Image from "components/UI/Image/Image";
 
 const CompanyCRUD: React.FC = () => {
     const [companies, setCompanies] = useState<Company | undefined>({ id: 0, name: '', cuil: '', phone: '', email: '', address: '' });
@@ -62,6 +66,9 @@ const CompanyCRUD: React.FC = () => {
         //setchangePic(false);
     };
 
+
+
+
     return (
         <div>
             {companies && companies.id === 0 && <Button onClick={() => setShowModal(true)}><span className="bi bi-building" > Agregar datos de la empresa</span></Button>}
@@ -93,7 +100,7 @@ const CompanyCRUD: React.FC = () => {
 
                 </tbody>
             </Table>
-            {companies?.logo && <img src={companies?.logo} />}
+            {companies?.logo && <Image imageData={companies?.logo} />}
 
             <Modal show={showModal} onHide={handleCloseModal}>
                 <Modal.Header closeButton>
@@ -105,18 +112,10 @@ const CompanyCRUD: React.FC = () => {
                             <Form.Label>Name</Form.Label>
                             <Form.Control type="text" name="name" value={formData.name} onChange={handleInputChange} required />
                         </Form.Group>
-                        <Form.Group controlId="formCuil">
-                            <Form.Label>CUIL</Form.Label>
-                            <Form.Control type="text" name="cuil" value={formData.cuil} onChange={handleInputChange} required />
-                        </Form.Group>
-                        <Form.Group controlId="formPhone">
-                            <Form.Label>Phone</Form.Label>
-                            <Form.Control type="text" name="phone" value={formData.phone} onChange={handleInputChange} required />
-                        </Form.Group>
-                        <Form.Group controlId="formEmail">
-                            <Form.Label>Email</Form.Label>
-                            <Form.Control type="email" name="email" value={formData.email} onChange={handleInputChange} required />
-                        </Form.Group>
+                        <CUIL name="cuil" value={formData.cuil} onChange={handleInputChange} required />
+                        <Tel name="phone" value={formData.phone} onChange={handleInputChange} required />
+                        <Email name="email" aria-label={'Email'} value={formData.email} onChange={handleInputChange} required />
+
                         <Form.Group controlId="formAddress">
                             <Form.Label>Address</Form.Label>
                             <Form.Control type="text" name="address" value={formData.address} onChange={handleInputChange} required />

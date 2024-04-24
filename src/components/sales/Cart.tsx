@@ -8,7 +8,9 @@ import MoneyFormatter from "components/helpper/Money";
 import { toast } from 'react-toastify';
 import CreateSale from "./CreateSale";
 import ConfirmCart from "./ConfirmCart";
-import { set } from "date-fns/esm";
+import { carts } from "models/cart";
+import Ticket from "components/helpper/Ticket";
+import { PDFViewer } from '@react-pdf/renderer';
 
 interface CartProps {
     idCart: number;
@@ -23,6 +25,7 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
     const [barCode, setbarCode] = useState<string>();
     const [Prod, setProd] = useState<Product.product>();
     const [showCreateSale, setshowCreateSale] = useState(false);
+    const [cartTicket, setcartTicket] = useState<CartModel.cart>();
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [discount, setdiscount] = useState<Discount.dicountsResponse[]>();
 
@@ -101,7 +104,7 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
 
     const onConfirmarVenta = (idCart: number, idPayment: number) => [
         CartClass.updateCart(idCart, idPayment, discount).then(resp => {
-            setidCart(undefined);
+
 
         }).catch(err => {
             console.error(err);
@@ -129,6 +132,11 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
         }
     }
 
+    const CerrarModal = () => {
+        setidCart(undefined);
+        setcartTicket(undefined);
+    }
+
     const DeleteCart = () => {
         CartClass.deleteCart(idCart).then(resp => {
             toast(`Se borró correctamente el carrito ${idCart}`);
@@ -148,8 +156,25 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
         })
     }
 
+    const mostarTicket = (cart: carts) => {
+        setcartTicket(cart)
+    }
+    const ventaEjemplo = {
+        id: '12345',
+        fecha: '2024-04-28',
+        total: 100,
+        items: [
+            { nombre: 'Producto 1', precio: 50, cantidad: 2 },
+            { nombre: 'Producto 2', precio: 25, cantidad: 1 },
+        ],
+    };
     return (
         <Container>
+
+
+
+
+
             <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
                 <Modal.Header closeButton>
                     <Modal.Title>Confirmar eliminación</Modal.Title>
@@ -179,34 +204,44 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
                 </tbody>
             </Table>
             <div className='row gap-3'>
-                <Row>
+                {!cartTicket && <><Row>
 
                     <div className="input-group-append d-flex gap-1">
                         <Button variant="danger" className='col-6' onClick={handleShowDeleteModal}>
                             <i className="bi bi-cart-x mr-2"></i> <br />Cancelar
                         </Button>
-                        {cart && <ConfirmCart idCart={cart?.id} onConfirmarVenta={onConfirmarVenta} totalSales={acumular(cart.sales,discount)} handleCloseParent={confirmSaleClose}/>}
+                        {cart && <ConfirmCart idCart={cart?.id} onConfirmarVenta={onConfirmarVenta} totalSales={acumular(cart.sales, discount)} handleCloseParent={confirmSaleClose} mostarTicket={mostarTicket} />}
                     </div>
 
                 </Row>
-                <Row>
-                    <Col md={12}>
-                        <Form noValidate validated={isFormInvalid} onSubmit={handleSubmit}>
-                            <InputGroup className="mb-3">
-                                <Form.Control type="text"
-                                    ref={inputRef}
-                                    onChange={(e: ChangeEvent<HTMLInputElement>) => setbarCode(e.currentTarget.value)}
-                                    required />
-                                <InputGroup.Text id="basic-addon2"><span className="bi-upc-scan"></span></InputGroup.Text>
-                            </InputGroup>
-                            <Form.Control.Feedback type="invalid">
-                                Por favor ingrese un codigo de barras
-                            </Form.Control.Feedback>
-                        </Form>
+                    <Row>
+                        <Col md={12}>
+                            <Form noValidate validated={isFormInvalid} onSubmit={handleSubmit}>
+                                <InputGroup className="mb-3">
+                                    <Form.Control type="text"
+                                        ref={inputRef}
+                                        onChange={(e: ChangeEvent<HTMLInputElement>) => setbarCode(e.currentTarget.value)}
+                                        required />
+                                    <InputGroup.Text id="basic-addon2"><span className="bi-upc-scan"></span></InputGroup.Text>
+                                </InputGroup>
+                                <Form.Control.Feedback type="invalid">
+                                    Por favor ingrese un codigo de barras
+                                </Form.Control.Feedback>
+                            </Form>
 
-                    </Col>
-                </Row>
-                <Row>
+                        </Col>
+                    </Row></>}
+                {cartTicket && <>
+                    <form onSubmit={CerrarModal}>
+                        <Button variant="danger" className='col-12' onClick={CerrarModal} autoFocus >
+                            <i className="bi bi-cart-x mr-2"></i> <br />Cerrar
+                        </Button>
+                    </form>
+                </>}
+                {cartTicket && <PDFViewer width="1000" height="600">
+                    <Ticket cart={cartTicket} />
+                </PDFViewer>}
+                {!cartTicket && <Row>
                     <div className="table-responsive">
                         <Table striped hover bordered>
                             <thead>
@@ -239,7 +274,8 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
                         </Table>
                     </div>
 
-                </Row>
+                </Row>}
+
             </div>
 
             {Prod && <CreateSale product={Prod} show={showCreateSale} onHide={handleHideModalSale} idCart={idCart} />}

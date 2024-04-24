@@ -11,6 +11,7 @@ import Spinner from "components/helpper/Spinner";
 import io from 'socket.io-client';
 import { toast } from 'react-toastify';
 import { getOrder } from "functions/mercadopago";
+import { carts } from 'models/cart';
 
 
 interface confSaleProps {
@@ -18,9 +19,10 @@ interface confSaleProps {
   onConfirmarVenta: (idCart: number, idPayment: number) => void;
   totalSales: number;
   handleCloseParent: () => void;
+  mostarTicket: (cart: carts) => void;
 }
 
-const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart, totalSales, handleCloseParent }) => {
+const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart, totalSales, handleCloseParent, mostarTicket }) => {
   const [selectedFormaPago, setSelectedFormaPago] = useState('1');
   const [payments, setpayments] = useState<Cart.payment[]>([]);
   const [cart, setcart] = useState<Cart.cart>();
@@ -96,6 +98,9 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
     else {
       onConfirmarVenta(idCart, Number(selectedFormaPago));
       handleClose();
+      if (cart) {
+        mostarTicket(cart);
+      }
     }
 
   };
