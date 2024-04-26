@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import { Cart, Discount } from "models/models";
 import { Company } from "models/company";
 import { acumular, formatDate } from "functions/functios";
@@ -41,6 +41,18 @@ const styles = StyleSheet.create({
   },
   head: {
     borderBottom: '1 solid black',
+  },
+  total: {
+    fontSize: 25,
+    fontStyle: 'bold',
+    marginBottom: 10,
+    textAlign: 'right'
+  },
+  img: {
+    textAlign: 'right',
+    width: '70px',
+    height: '70px',
+    alignContent: 'center',
   }
 });
 
@@ -62,7 +74,6 @@ const ComprobanteVentaPDF: React.FC<ComprobanteVentaProps> = ({ cart }) => {
       }
     )
   }, [])
-
 
   useEffect(() => {
     Actualizar(cart.id);
@@ -108,6 +119,9 @@ const ComprobanteVentaPDF: React.FC<ComprobanteVentaProps> = ({ cart }) => {
       <Page size="A4" style={styles.page}>
         <View style={styles.head}>
         <View style={styles.row}>
+          <Image style={styles.img} src={company?.logo} />
+        </View>
+        <View style={styles.row}>
           <View style={styles.header}>
             <Text style={styles.title}>Comprobante de Venta</Text>
             <Text style={styles.subtitle}>ID de Venta: {cart.id}</Text>
@@ -129,7 +143,7 @@ const ComprobanteVentaPDF: React.FC<ComprobanteVentaProps> = ({ cart }) => {
           <Text style={styles.subtitle}>Detalle de la venta:</Text>
           {tcart && tcart.sales.map((item, index) => (
             <Text key={index} style={styles.content}>
-              - {item.quantity} x {item.product.name} - Precio unitario: {formatPrice(item.product.price)} - Subtotal: {formatPrice(item.quantity * item.product.price)}
+              - {item.product.kind ? `${item.quantity} g de ` : `${item.quantity} x `} {item.product.name} - Precio unitario: {formatPrice(item.product.price)} - Subtotal: {formatPrice(item.quantity * item.product.price)}
             </Text>
           ))}
         </View>
@@ -137,12 +151,12 @@ const ComprobanteVentaPDF: React.FC<ComprobanteVentaProps> = ({ cart }) => {
           <Text style={styles.subtitle}>Descuentos:</Text>
           {discount && discount.map((item, index) => (
             <Text key={index} style={styles.content}>
-              {item.discountName} - {item.productName} - Subtotal: {item.discount}
+              {item.discountName} - {item.productName} - Subtotal: {formatPrice(item.discount)}
             </Text>
           ))}
         </View>
         <View style={styles.section}>
-          <Text style={styles.subtitle}>Total: {tcart?.sales && formatPrice(acumular(tcart?.sales, discount))}</Text>
+          <Text style={styles.total}>Total: {tcart?.sales && formatPrice(acumular(tcart?.sales, discount))}</Text>
         </View>
       </Page>
     </Document>

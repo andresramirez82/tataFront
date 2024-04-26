@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Outlet } from "react-router-dom";
 
-import Sidebar from 'components/sidebar/Sidebar';
+// import Sidebar from 'components/sidebar/Sidebar';
 import SearchBar from "components/searchbar/SearchBar";
 
 function Home(): JSX.Element {

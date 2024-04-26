@@ -1,7 +1,9 @@
+/* eslint-disable array-callback-return */
 /* eslint-disable jsx-a11y/alt-text */
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Image, Row, Col } from 'react-bootstrap';
 import { Cart } from "models/models";
+import { pay } from "models/Pay";
 import { CartClass } from "functions/api";
 import { createOrder } from "functions/mercadopago";
 import MP from "img/mp.png";
@@ -12,6 +14,8 @@ import io from 'socket.io-client';
 import { toast } from 'react-toastify';
 import { getOrder } from "functions/mercadopago";
 import { carts } from 'models/cart';
+import { keyboardKey } from "@testing-library/user-event";
+import { set } from 'date-fns/esm';
 
 
 interface confSaleProps {
@@ -20,9 +24,10 @@ interface confSaleProps {
   totalSales: number;
   handleCloseParent: () => void;
   mostarTicket: (cart: carts) => void;
+  finalizar: boolean;
 }
 
-const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart, totalSales, handleCloseParent, mostarTicket }) => {
+const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart, totalSales, handleCloseParent, mostarTicket, finalizar }) => {
   const [selectedFormaPago, setSelectedFormaPago] = useState('1');
   const [payments, setpayments] = useState<Cart.payment[]>([]);
   const [cart, setcart] = useState<Cart.cart>();
@@ -31,6 +36,15 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
   const [sendAFIP, setsendAFIP] = useState<boolean>(false);
   const [loading, setloading] = useState<boolean>(false);
   const [notifications, setNotifications] = useState<string>('Esperando la respuesta de Mercado Pago');
+  const [mixP, setmixP] = useState<pay[]>([]);
+  const [total, settotal] = useState<number>(0)
+
+
+  useEffect(() => {
+    if (finalizar) {
+      handleShow();
+    }
+  }, [finalizar])
 
 
   const handleClose = () => {
@@ -67,6 +81,9 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
           getOrder(idCart).then(resp => {
             onConfirmarVenta(idCart, Number(selectedFormaPago));
             handleClose();
+            if (cart) {
+              mostarTicket(cart);
+            }
           })
 
         }
@@ -105,6 +122,12 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
 
   };
 
+  const selectOnKeyPressHandler = (e: keyboardKey) => {
+    if (e.key === 'c') {
+      handleConfirmarVenta();
+    }
+  }
+
 
   const changePayment = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedFormaPago(e.target.value);
@@ -112,8 +135,44 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
     setsendAFIP(false);
   }
 
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (cart) {
+      const newPay: pay = {
+        amount: Number(e.currentTarget.value),
+        cart: idCart,
+        payment: Number([e.currentTarget.name]),
+        id: 0
+      };
+      let Array = mixP;
+    Array.push(newPay);
+    setmixP(Array);
+    let total: number = 0;
+    
+    if (Array.length > 0) {
+      Array.forEach(r => {
+        total = r.amount + total;
+      })
+      settotal(total);
+    }
+    }
+  }
+
+  useEffect(() => {
+    TotalParcial();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mixP])
 
 
+  const TotalParcial = () => {
+    let total: number = 0;
+    
+    if (mixP.length > 0) {
+      mixP.forEach(r => {
+        total = r.amount + total;
+      })
+      settotal(total);
+    }
+  }
 
   // region JSX
   return (
@@ -135,6 +194,8 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
                   as="select"
                   value={selectedFormaPago}
                   onChange={changePayment}
+                  onKeyDown={selectOnKeyPressHandler}
+                  autoFocus
                 >
                   {payments.map((formaPago) => (
                     <option key={formaPago.id} value={formaPago.id}>
@@ -145,7 +206,7 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
               </Form.Group>
               </Col><Col md={6}>
                   <Form.Check type='checkbox' id={`check-api`}>
-                    <Form.Check.Input type='checkbox' disabled={selectedFormaPago !== '5' ? true : false} checked={sendMP} onChange={(e) => setsendMP(e.currentTarget.checked)} />
+                    <Form.Check.Input type='checkbox' disabled={selectedFormaPago !== '2' ? true : false} checked={sendMP} onChange={(e) => setsendMP(e.currentTarget.checked)} />
                     <Form.Check.Label>
                       <Image src={MP} alt="MP Logo" style={{ width: '32px', height: '32px' }} /> Enviar a QR de  Merdado pago
                     </Form.Check.Label>
@@ -171,6 +232,32 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
                 )}
               </Col>
             </Row>
+            {selectedFormaPago === '4' &&
+              <Row>
+                <Col>
+                  {payments.map((f, i) => {
+                    if (f.id !== 4) {
+                      return (
+                        <Row key={`rows${i}`}>
+                          <Form.Group controlId={`formasDePagoInput${f.id}`}>
+                            <Form.Label>{f.tipo}</Form.Label>
+                            <Form.Control
+                              type='number'
+                              onChange={onChange}
+                              name={f.id?.toString()}
+                            >
+                            </Form.Control>
+                          </Form.Group>
+                        </Row>
+                      );
+                    }
+                  })}
+                  <Row>
+                    {total}
+                  </Row>
+                </Col>
+              </Row>}
+
           </Form>
         </Modal.Body>
         <Modal.Footer>
@@ -178,7 +265,7 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
             Cancelar
           </Button>
           <Button variant="primary" onClick={handleConfirmarVenta} disabled={loading}>
-            Confirmar
+            <u>C</u>onfirmar
           </Button>
         </Modal.Footer>
       </Modal>

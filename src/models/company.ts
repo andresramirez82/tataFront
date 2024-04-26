@@ -5,5 +5,5 @@ export interface Company {
     phone: string,
     email: string,
     address: string,
-    logo?: any; // Puede ser un Buffer o nulo si no hay logo
+    logo?: string;
 }

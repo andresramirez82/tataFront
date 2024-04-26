@@ -9,19 +9,18 @@ import { formatDate } from 'functions/functios';
 import { acumular } from 'functions/functios';
 import MoneyFormatter from 'components/helpper/Money';
 import Spinner from "components/helpper/Spinner";
-
-
-
+import TicketModal from "./TicketModal";
 
 
 interface propsCartbydate {
     date: Date;
 }
 
-
 const CartByDate: React.FC<propsCartbydate> = ({ date }) => {
     const [cart, setcart] = useState<Cart.cart[]>();
+    const [cartv, setcartv] = useState<Cart.cart>();
     const [totales, settotales] = useState({ sales: 0, discount: 0 });
+    const [showTicket, setshowTicket] = useState<boolean>(false);
 
     useEffect(() => {
         if (date) {
@@ -40,7 +39,6 @@ const CartByDate: React.FC<propsCartbydate> = ({ date }) => {
         totalCalculate();
     }, [cart])
 
-
     const totalCalculate = () => {
         let TSales: number = 0;
         let TDiscount: number = 0;
@@ -55,7 +53,7 @@ const CartByDate: React.FC<propsCartbydate> = ({ date }) => {
             } else {
                 TDiscount = 0;
             }
-            
+
         });
 
         settotales({
@@ -64,9 +62,20 @@ const CartByDate: React.FC<propsCartbydate> = ({ date }) => {
         });
     }
 
+    const verTicket = (cart: Cart.cart) => {
+        setcartv(cart);
+        setshowTicket(true);
+    }
+
+    const CloseTicket = () => {
+        setcartv(undefined);
+        setshowTicket(false);
+    }
+
     return (
 
         <Container>
+            {showTicket && cartv && <TicketModal cart={cartv} onClose={CloseTicket} show={showTicket} />}
             {cart === undefined && <Spinner />}
             <Table striped bordered hover>
                 <thead>
@@ -76,6 +85,7 @@ const CartByDate: React.FC<propsCartbydate> = ({ date }) => {
                         <th>Vendedor</th>
                         <th>Pago</th>
                         <th>Total</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -86,6 +96,8 @@ const CartByDate: React.FC<propsCartbydate> = ({ date }) => {
                             <td>{c.user.name}</td>
                             <td>{c.payment.tipo}</td>
                             <td><MoneyFormatter amount={acumular(c.sales, c.discountsApplied)}></MoneyFormatter></td>
+                            <td><span className="btn btn-success bi bi-ticket" title='ver Ticket' onClick={() => verTicket(c)}> Ticket</span>
+                            </td>
                         </tr>);
                     })}
                 </tbody>

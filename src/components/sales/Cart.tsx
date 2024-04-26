@@ -28,6 +28,7 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
     const [cartTicket, setcartTicket] = useState<CartModel.cart>();
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [discount, setdiscount] = useState<Discount.dicountsResponse[]>();
+    const [finalizarBtn, setfinalizarBtn] = useState<boolean>(false);
 
     const handleShowDeleteModal = () => setShowDeleteModal(true);
     const handleCloseDeleteModal = () => setShowDeleteModal(false);
@@ -46,6 +47,7 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
     const confirmSaleClose = () => {
         setcart(undefined);
         Actualizar(idCart);
+        setfinalizarBtn(false);
     }
 
 
@@ -104,7 +106,7 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
 
     const onConfirmarVenta = (idCart: number, idPayment: number) => [
         CartClass.updateCart(idCart, idPayment, discount).then(resp => {
-
+            setfinalizarBtn(false);
 
         }).catch(err => {
             console.error(err);
@@ -159,22 +161,29 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
     const mostarTicket = (cart: carts) => {
         setcartTicket(cart)
     }
-    const ventaEjemplo = {
-        id: '12345',
-        fecha: '2024-04-28',
-        total: 100,
-        items: [
-            { nombre: 'Producto 1', precio: 50, cantidad: 2 },
-            { nombre: 'Producto 2', precio: 25, cantidad: 1 },
-        ],
-    };
+
+    /**
+     * Hot´s keys Handler
+     */
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === ' ') {
+                setfinalizarBtn(true);
+            }
+            if (event.key === 'Escape') {
+                handleShowDeleteModal()
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
+
     return (
         <Container>
-
-
-
-
-
             <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
                 <Modal.Header closeButton>
                     <Modal.Title>Confirmar eliminación</Modal.Title>
@@ -210,7 +219,7 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
                         <Button variant="danger" className='col-6' onClick={handleShowDeleteModal}>
                             <i className="bi bi-cart-x mr-2"></i> <br />Cancelar
                         </Button>
-                        {cart && <ConfirmCart idCart={cart?.id} onConfirmarVenta={onConfirmarVenta} totalSales={acumular(cart.sales, discount)} handleCloseParent={confirmSaleClose} mostarTicket={mostarTicket} />}
+                        {cart && <ConfirmCart idCart={cart?.id} onConfirmarVenta={onConfirmarVenta} totalSales={acumular(cart.sales, discount)} handleCloseParent={confirmSaleClose} mostarTicket={mostarTicket} finalizar={finalizarBtn}/>}
                     </div>
 
                 </Row>
@@ -221,7 +230,7 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
                                     <Form.Control type="text"
                                         ref={inputRef}
                                         onChange={(e: ChangeEvent<HTMLInputElement>) => setbarCode(e.currentTarget.value)}
-                                        required />
+                                        required autoFocus />
                                     <InputGroup.Text id="basic-addon2"><span className="bi-upc-scan"></span></InputGroup.Text>
                                 </InputGroup>
                                 <Form.Control.Feedback type="invalid">
@@ -258,7 +267,7 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
                             <tbody>
                                 {cart?.sales && cart.sales.map((sale, i) => {
                                     return (<tr key={`salesporcart${i}`}>
-                                        <th scope="row"><i className="bi bi-bag"></i> {sale.id}</th><td>{sale.product.name}</td><td><MoneyFormatter amount={sale.product.price} /></td><td>{sale.quantity}</td><td><MoneyFormatter amount={sale.totalPrice} /></td><td>{formatDate(sale.saleDate)}</td><td><Button variant="danger" onClick={() => BorraSale(sale.id)}><i className="bi bi-cart-x mr-2"></i></Button></td>
+                                        <th scope="row"><i className="bi bi-bag"></i> {sale.id}</th><td>{sale.product.name}</td><td><MoneyFormatter amount={sale.product.price} /></td>{sale.product.kind ? <td>{sale.quantity} g</td> : <td>{sale.quantity}</td>}<td><MoneyFormatter amount={sale.totalPrice} /></td><td>{formatDate(sale.saleDate)}</td><td><Button variant="danger" onClick={() => BorraSale(sale.id)}><i className="bi bi-cart-x mr-2"></i></Button></td>
                                     </tr>);
                                 })}
                             </tbody>

@@ -3,11 +3,11 @@ import { Button, Form, Modal, Table } from 'react-bootstrap';
 import { Company } from 'models/company';
 import { getCompanies, deleteCompany, createCompany } from "functions/company";
 import { toast } from 'react-toastify';
-import Update from "./Upload";
 import CUIL from "components/UI/CUIL/Cuil";
 import Tel from "components/UI/Tel/Tel";
 import Email from "components/UI/Email/Email";
 import Image from "components/UI/Image/Image";
+import URL from "components/UI/URL/URL";
 
 const CompanyCRUD: React.FC = () => {
     const [companies, setCompanies] = useState<Company | undefined>({ id: 0, name: '', cuil: '', phone: '', email: '', address: '' });
@@ -81,6 +81,7 @@ const CompanyCRUD: React.FC = () => {
                         <th>Teléfono</th>
                         <th>Email</th>
                         <th>Dirección</th>
+                        <th>Logo</th>
                         <th>Acción</th>
                     </tr>
                 </thead>
@@ -92,6 +93,7 @@ const CompanyCRUD: React.FC = () => {
                         <td>{companies.phone}</td>
                         <td>{companies.email}</td>
                         <td>{companies.address}</td>
+                        <td><img src={companies.logo} alt={companies.name} width={50}></img></td>
                         <td>
                             <Button variant="danger" onClick={() => handleDelete(companies.id)}><span className='bi bi-trash'> Borrar</span></Button>
                         </td>
@@ -100,11 +102,9 @@ const CompanyCRUD: React.FC = () => {
 
                 </tbody>
             </Table>
-            {companies?.logo && <Image imageData={companies?.logo} />}
-
             <Modal show={showModal} onHide={handleCloseModal}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Add Company</Modal.Title>
+                    <Modal.Title>Agregar datos de la empresa</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
@@ -115,12 +115,13 @@ const CompanyCRUD: React.FC = () => {
                         <CUIL name="cuil" value={formData.cuil} onChange={handleInputChange} required />
                         <Tel name="phone" value={formData.phone} onChange={handleInputChange} required />
                         <Email name="email" aria-label={'Email'} value={formData.email} onChange={handleInputChange} required />
+                        <URL name='logo' value={formData.logo} label={'URL logo'} onChange={handleInputChange} required />
 
                         <Form.Group controlId="formAddress">
-                            <Form.Label>Address</Form.Label>
+                            <Form.Label>Dirección</Form.Label>
                             <Form.Control type="text" name="address" value={formData.address} onChange={handleInputChange} required />
                         </Form.Group>
-                        <Update onPictureUpload={upload} />
+
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
