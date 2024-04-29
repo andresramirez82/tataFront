@@ -16,6 +16,7 @@ import { getOrder } from "functions/mercadopago";
 import { carts } from 'models/cart';
 import { keyboardKey } from "@testing-library/user-event";
 import { set } from 'date-fns/esm';
+import { createPay } from 'functions/pay';
 
 
 interface confSaleProps {
@@ -97,27 +98,60 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const agregarPay = (p: pay) => {
+    createPay(p);
+  }
+
 
 
 
   const handleConfirmarVenta = () => {
     // Lógica para confirmar la venta con la forma de pago seleccionada
-    if (sendMP && cart) {
+    if (sendMP && cart && selectedFormaPago === '2') {
       setloading(true);
       createOrder(cart, totalSales).then((result: any) => {
-        console.log(result)
+        // console.log(result)
       }).catch((err: any) => {
         console.error(err)
       }).finally(() => {
 
       })
     }
-    else {
+    if (selectedFormaPago !== '4' && !sendMP) {
       onConfirmarVenta(idCart, Number(selectedFormaPago));
       handleClose();
       if (cart) {
         mostarTicket(cart);
       }
+    }
+
+    if (selectedFormaPago === '4' && cart) {
+      if (total === totalSales) {
+        mixP.forEach(p => {
+          if (p.amount !== 0) {
+            if (p.payment === 2 && sendMP) {
+              createOrder(cart, p.amount).then((result: any) => {
+                agregarPay(p);
+              }).catch((err: any) => {
+                console.error(err)
+              }).finally(() => {
+  
+              })
+            } else {
+              agregarPay(p)
+            }
+          }
+        }
+        )
+        onConfirmarVenta(idCart, Number(selectedFormaPago));
+        handleClose();
+        if (cart) {
+          mostarTicket(cart);
+        }
+      } else {
+        toast(`No coinciden los valores de los pagos faltan $ ${total-totalSales}`)
+      }
+      
     }
 
   };
@@ -143,17 +177,22 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
         payment: Number([e.currentTarget.name]),
         id: 0
       };
-      let Array = mixP;
-    Array.push(newPay);
-    setmixP(Array);
-    let total: number = 0;
-    
-    if (Array.length > 0) {
-      Array.forEach(r => {
-        total = r.amount + total;
+      let Array: pay[] = [];
+      mixP.forEach(r => {
+        if (r.payment !== Number([e.currentTarget.name])) {
+          Array.push(r)
+        }
       })
-      settotal(total);
-    }
+      Array.push(newPay);
+      setmixP(Array);
+      let total: number = 0;
+
+      if (Array.length > 0) {
+        Array.forEach(r => {
+          total = r.amount + total;
+        })
+        settotal(total);
+      }
     }
   }
 
@@ -165,7 +204,7 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
 
   const TotalParcial = () => {
     let total: number = 0;
-    
+
     if (mixP.length > 0) {
       mixP.forEach(r => {
         total = r.amount + total;
@@ -253,7 +292,7 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
                     }
                   })}
                   <Row>
-                    {total}
+                    Total : <MoneyFormatter amount={total}/>
                   </Row>
                 </Col>
               </Row>}
