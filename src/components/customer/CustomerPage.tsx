@@ -1,0 +1,67 @@
+import React, { useState, useEffect } from 'react';
+import { Container, Row, Col } from 'react-bootstrap';
+import CustomerForm from './CustomerForm';
+import CustomerList from './CustomerList';
+import { Customer } from 'models/customer';
+import { getCustomers, createCustomer, deleteCustomer } from "functions/customer";
+import { toast } from 'react-toastify';
+import CurrentAccountPage from "components/CurrentAccount/CurrentAccountPage";
+
+const CustomerPage: React.FC = () => {
+  const [customers, setCustomers] = useState<Customer[]>([]);
+
+  const handleAddCustomer = (newCustomer: Customer) => {
+    createCustomer(newCustomer).then(t => {
+      toast(`Se agregó correctamente el Cliente ${t.name}`)
+      actualiar();
+    }).catch(e => {
+      toast(`Huvo un error al agregar el cliente ${newCustomer.name}`)
+    })
+
+  };
+
+  const handleDeleteCustomer = (id: number) => {
+    deleteCustomer(id).then(t => {
+      toast(`Se borró correctamente el Cliente id`)
+      actualiar();
+    }).catch(e => {
+      toast(`Huvo un error al borrar el cliente`)
+    })
+  };
+
+  useEffect(() => {
+    actualiar();
+  }, [])
+
+  const actualiar = () => {
+    getCustomers().then(customer => {
+      setCustomers(customer);
+    }).catch(e => {
+      console.error(e)
+    })
+  }
+
+
+  return (
+    <Container>
+      <Row>
+        <Col>
+          <h1>Clientes</h1>
+          <CustomerForm onSubmit={handleAddCustomer} />
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <CustomerList customers={customers} onDelete={handleDeleteCustomer} />
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <CurrentAccountPage />
+        </Col>
+      </Row>
+    </Container>
+  );
+};
+
+export default CustomerPage;
