@@ -6,6 +6,8 @@ import { User } from "models/user";
 import { formatDate } from "functions/functios";
 import { toast } from 'react-toastify';
 import Spinner from "components/helpper/Spinner";
+import { AxiosError } from "axios";
+import { ErrorResponse } from "models/models";
 
 
 const UserManagement: React.FC = () => {
@@ -44,7 +46,7 @@ const UserManagement: React.FC = () => {
     const createUser = async () => {
         try {
             UserClass.createUser({ name: name }).then(resp => {
-                toast(`Se creó correctamente el usuario ${name}`);
+                toast(`Se creó correctamente el usuario ${resp.name}`);
                 fetchUsers();
             })
         } catch (error) {
@@ -54,14 +56,15 @@ const UserManagement: React.FC = () => {
     };
 
     const deleteUser = async (userId: number) => {
-        try {
-            await UserClass.deleteUser(userId);
-            toast(`Se eliminó correctamente el usuario ${name}`);
+
+        UserClass.deleteUser(userId).then(u => {
+            toast(`Se eliminó correctamente el usuario ${u.name}`);
             fetchUsers();
-        } catch (error) {
-            toast(`Error al eliminar el usuario ${name}`);
-            console.error("Error al eliminar usuario:", error);
-        }
+        }).catch((err: AxiosError<ErrorResponse>) => {
+            toast(`${err.response?.data.message}`)
+        })
+
+
     };
 
     useEffect(() => {

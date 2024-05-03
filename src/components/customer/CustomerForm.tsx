@@ -15,7 +15,7 @@ const CustomerForm: React.FC<Props> = ({ onSubmit }) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const newCustomer: Customer = {
-      id: Math.floor(Math.random() * 1000), // Generar un ID temporal
+      id: 0, // Generar un ID temporal
       name,
       dni: parseInt(dni),
       street,

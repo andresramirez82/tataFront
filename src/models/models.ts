@@ -2,7 +2,7 @@ import { User } from "./user";
 import { products } from "./products";
 import { UserApiResponse, CartApiResponse, ProdApiResponse } from "./api";
 import { carts, payments, CartList } from "./cart";
-import { Sale as Sales,SaleCart } from "./sales";
+import { Sale as Sales, SaleCart } from "./sales";
 import { discounts, dicountResponse } from "./discount";
 
 export declare namespace Auth {
@@ -38,6 +38,12 @@ export declare namespace Discount {
     export type dicountsResponse = dicountResponse;
 }
 
-export interface withDiscount extends  Cart.cart{
+export interface withDiscount extends Cart.cart {
     discounts: Discount.dicountsResponse[];
-  }
+}
+
+export interface ErrorResponse {
+    message: string;
+    // Agrega otras propiedades si es necesario
+}
+

@@ -11,6 +11,8 @@ import ConfirmCart from "./ConfirmCart";
 import { carts } from "models/cart";
 import Ticket from "components/helpper/Ticket";
 import { PDFViewer } from '@react-pdf/renderer';
+import Help from "./Help";
+import { set } from "date-fns/esm";
 
 interface CartProps {
     idCart: number;
@@ -29,6 +31,7 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [discount, setdiscount] = useState<Discount.dicountsResponse[]>();
     const [finalizarBtn, setfinalizarBtn] = useState<boolean>(false);
+    const [showHelp, setshowHelp] = useState(false);
 
     const handleShowDeleteModal = () => setShowDeleteModal(true);
     const handleCloseDeleteModal = () => setShowDeleteModal(false);
@@ -170,8 +173,11 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
             if (event.key === ' ') {
                 setfinalizarBtn(true);
             }
-            if (event.key === 'Escape') {
+            if (event.key === 'Backspace') {
                 handleShowDeleteModal()
+            }
+            if (event.key === 'F1') {
+                setshowHelp(true)
             }
         };
 
@@ -184,6 +190,7 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
 
     return (
         <Container>
+            <Help show={showHelp} onClose={() => setshowHelp(false)}/>
             <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
                 <Modal.Header closeButton>
                     <Modal.Title>Confirmar eliminación</Modal.Title>

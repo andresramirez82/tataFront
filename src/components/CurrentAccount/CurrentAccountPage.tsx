@@ -59,7 +59,7 @@ const CurrentAccountPage: React.FC = () => {
       </Row>
       <Row>
         <Col>
-          <CurrentAccountList accounts={accounts} onDelete={handleDeleteAccount} />
+          <CurrentAccountList customers={customers} accounts={accounts} onDelete={handleDeleteAccount} />
         </Col>
       </Row>
     </Container>

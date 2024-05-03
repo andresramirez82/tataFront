@@ -1,7 +1,9 @@
 import React from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import {  ProductClass } from "functions/api";
+import { ProductClass } from "functions/api";
 import { toast } from 'react-toastify';
+import { AxiosError } from "axios";
+import { ErrorResponse } from "models/models";
 
 interface CreateProductFormProps {
     show: boolean;
@@ -15,19 +17,19 @@ interface CreateProductFormProps {
 const CreateProductForm: React.FC<CreateProductFormProps> = ({ show, onHide, name, productId }) => {
 
     const handleDeleteProduct = async () => {
-        try {
-            await ProductClass.deleteProduct(productId);
+        ProductClass.deleteProduct(productId).then(p => {
             toast(`Producto ${name} eliminado correctamente`);
-            // Puedes redirigir o realizar otras acciones después de eliminar el producto
-        } catch (error) {
-            console.error('Error al eliminar producto:', error);
-            toast('Hubo un error al eliminar el producto');
-        } finally {
+        }).catch(
+            (err: AxiosError<ErrorResponse>) => {
+                console.error(`${err.response}`);
+                toast(`${err.response?.data.message}`)
+            }
+        ).finally(() => {
             onHide();
-        }
+        })
     };
 
-    
+
     return (<Modal show={show} onHide={onHide}>
         <Modal.Header closeButton>
             <Modal.Title>Confirmar Eliminación</Modal.Title>

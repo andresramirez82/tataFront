@@ -6,12 +6,7 @@ import { toast } from 'react-toastify';
 import { getPayment, deletePayment, addPayment } from "functions/cart";
 import { AxiosError } from "axios";
 import PaymentEdit from "./PaymentEdit";
-
-interface ErrorResponse {
-  message: string;
-  // Agrega otras propiedades si es necesario
-}
-
+import {  ErrorResponse} from "models/models";
 
 const PaymentPage: React.FC = () => {
   const [payments, setPayments] = useState<payments[]>([]);
