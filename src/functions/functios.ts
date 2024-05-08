@@ -1,5 +1,7 @@
 import { format } from 'date-fns';
-import { Auth,  Sale, Discount} from "models/models";
+import { Sale, Discount } from "models/models";
+import { tokenDecode } from "functions/User";
+import { User } from "models/user";
 
 
 /**
@@ -41,30 +43,26 @@ export const formatDateISO = (fechaOriginal: Date | null): string => {
  * @param id 
  * @param name 
  */
-export const SaveUser = (id: number, name: string, lastlogin: Date) => {
-    const user: Auth.AuthUser = {
-        id,
-        name,
-        isAuthenticated: true,
-        lastlogin 
-    }
-    sessionStorage.setItem('user',JSON.stringify(user));
+export const SaveUser = ( token: string) => {
+    sessionStorage.setItem('token', token);
+    // sessionStorage.setItem('user', JSON.stringify(user));
 }
 
-export const getUser = () : Auth.AuthUser  =>  {
-    return JSON.parse( sessionStorage.getItem('user') || '')
+export const getUser = async (): Promise<User> => {
+    const decode = await tokenDecode();
+    return decode.user;
 }
 
 export const acumular = (sales: Sale.sale[], discount: Discount.dicountsResponse[] | undefined) => {
     let Cantidad: number = 0;
     sales.forEach(sale => {
-        
-       // const cantidad = sale.quantity * sale.product.price; This way the price of the product was not stored if it was changed.
+
+        // const cantidad = sale.quantity * sale.product.price; This way the price of the product was not stored if it was changed.
         const cantidad = sale.totalPrice;
         // console.log(cantidad, sale.quantity, ' * ', sale.product.price);
         Cantidad += (cantidad)
     })
-    discount?.forEach( dis => {
+    discount?.forEach(dis => {
         const cantidad = dis.discount
         // console.log(cantidad, sale.quantity, ' * ', sale.product.price);
         Cantidad += (cantidad);

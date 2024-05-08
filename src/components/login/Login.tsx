@@ -1,73 +1,104 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import CardBody from 'react-bootstrap/CardBody';
-import Card from "react-bootstrap/Card";
+import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import CardFooter from "react-bootstrap/CardFooter";
 import { getUsers, login } from "../../functions/api";
-import { Auth } from "models/models";
-import { formatDate, SaveUser } from "functions/functios";
+import { SaveUser } from "functions/functios";
 import { useNavigate } from 'react-router-dom';
-
+import { AxiosError } from "axios";
+import { ErrorResponse } from "models/models";
+import { toast } from "react-toastify";
+import { Auth } from "models/models";
 
 function Login() {
-  const [users, setusers] = useState<Auth.AuthUser[]>();
-  const [logueado, setlogueado] = useState<boolean>(false);
+  const [users, setUsers] = useState<Auth.AuthUser[]>([]);
+  const [selectedUser, setSelectedUser] = useState<string>('');
+  const [password, setPassword] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
+  const [logueado, setLogueado] = useState<boolean>(false);
+  const [isFormInvalid, setIsFormInvalid] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    getUsers().then(
-      user => {setusers(user)
-      if (user.length === 0) {
-        navigate('/home/Users');
-      }
-      }
-    )
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    getUsers().then(users => {
+      setUsers(users);
+    });
+  }, [navigate]);
 
   useEffect(() => {
     if (logueado) {
       navigate('/home');
-    } 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [logueado])
-  
+    }
+  }, [logueado, navigate]);
 
-  const LoginFn = (name: string, id: number) => {
-    login(id).then(log => {
-      if (log?.user?.lastlogin !== null) {
-        SaveUser(id, name, log.user.lastlogin);
-        setlogueado(true);
-      }
-    })
-  }
+  const handleLogin = () => {
+    if (!username || !password) return;
+
+    login(username, password)
+      .then(log => {
+        if (log?.user?.lastlogin !== null) {
+          SaveUser(log.token);
+          setLogueado(true);
+        }
+      })
+      .catch((err: AxiosError<ErrorResponse>) => {
+        toast(`${err.response?.data.message}`);
+      });
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+
+    if (form.checkValidity()) {
+      setIsFormInvalid(false);
+      handleLogin();
+    } else {
+      e.stopPropagation();
+      setIsFormInvalid(true);
+    }
+    form.classList.add("was-validated");
+  };
 
   return (
-    <Container className="mt-5 custom-container">
-      <Col>
-        <Row md={12} className="mb-4">
-          <h1>Elija un usuario</h1>
-        </Row>
+    <Container className="mt-5 d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
+    <div className="login-form p-4 rounded bg-light" style={{ maxWidth: "700px", width: "70%", minWidth:'70%', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.1)', minHeight: '30%' }}>
+      <h2 className="text-center mb-4">Iniciar sesión</h2>
+      <Form onSubmit={handleSubmit} noValidate validated={isFormInvalid}>
+        <Form.Group controlId="formBasicEmail">
+          <Form.Label>Usuario</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Ingrese su nombre de usuario"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+          <Form.Control.Feedback type="invalid">
+            Por favor ingrese su nombre de usuario.
+          </Form.Control.Feedback>
+        </Form.Group>
 
-      </Col>
-      <Row>
-        <Col>
-          <div className="card-group gap-3">
-            {users && users.map((u, i) => {
-              return (
-                <Card key={`card${i}`} className="text-bg-success">
-                  <CardBody className="text-bg-success"><Button onClick={() => LoginFn(u.name, u.id)}>{u.name}</Button></CardBody>
-                  <CardFooter>{formatDate(u.lastlogin)}</CardFooter>
-                </Card>);
-            })}
-          </div>
-        </Col>
+        <Form.Group controlId="formBasicPassword">
+          <Form.Label>Contraseña</Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="Ingresa tu contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <Form.Control.Feedback type="invalid">
+            Por favor ingrese su contraseña.
+          </Form.Control.Feedback>
+        </Form.Group>
 
-      </Row>
-    </Container >
+        <Button variant="primary" type="submit" className="w-100">
+          Iniciar sesión
+        </Button>
+      </Form>
+    </div>
+  </Container>
   );
 }
 

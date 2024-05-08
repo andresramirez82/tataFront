@@ -7,7 +7,7 @@ import { products  } from "./products";
 /**
  * Commun
  */
-interface ApiResponseBase {
+export interface ApiResponseBase {
     message: string;
 }
 export interface pagination<T> {
@@ -21,6 +21,8 @@ export interface pagination<T> {
 
 export interface UserApiResponse extends ApiResponseBase {
     user: User;
+    token: string;
+    message: string;
 }
 
 export interface CartApiResponse extends ApiResponseBase {

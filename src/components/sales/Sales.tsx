@@ -14,10 +14,13 @@ const Sales: React.FC = () => {
     const [carts, setcarts] = useState<withDiscount[]>();
     const [totalGeneral, setTotalGeneral] = useState<number>(0);
     const [idCart, setidCart] = useState<number>();
-    const [idUser] = useState<number>(getUser().id);
+    const [idUser, setidUser] = useState<number>();
 
 
     useEffect(() => {
+        getUser().then( user => {
+            setidUser( user.id );
+        })
         CartClass.getOpenCart().then(open => {
             setidCart(open.id);
         }).catch(err => {

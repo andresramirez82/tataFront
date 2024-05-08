@@ -6,7 +6,6 @@ import { toast } from 'react-toastify';
 import CUIL from "components/UI/CUIL/Cuil";
 import Tel from "components/UI/Tel/Tel";
 import Email from "components/UI/Email/Email";
-import Image from "components/UI/Image/Image";
 import URL from "components/UI/URL/URL";
 
 const CompanyCRUD: React.FC = () => {
@@ -57,14 +56,6 @@ const CompanyCRUD: React.FC = () => {
         })
     };
 
-    const upload = (param: any) => {
-        setFormData(() => ({
-            ...formData,
-            logo: param,
-        }));
-        //inputRef.current.click();
-        //setchangePic(false);
-    };
 
 
 

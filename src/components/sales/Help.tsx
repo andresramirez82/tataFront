@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Modal, Button, Form, Image, Row, Col, Table } from 'react-bootstrap';
+import React from 'react';
+import { Modal, Table } from 'react-bootstrap';
 
 interface HelpModal {
     show: boolean;

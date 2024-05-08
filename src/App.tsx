@@ -15,15 +15,32 @@ import DiscountManagementScreen from "components/discount/DiscountManagementScre
 import Company from "components/company/Company";
 import Customer from "components/customer/CustomerPage";
 import CurrentAccount from "components/CurrentAccount/CurrentAccountPage";
+import { createUser } from "functions/User";
+import { User,UserRole } from "models/user";
 
 const Stock = () => { return (<></>) };
 
 
 function App() {
   const [users, setusers] = useState<Auth.AuthUser[]>()
+
   useEffect(() => {
     getUsers().then(
-      user => setusers(user)
+      user => { setusers(user);
+        if (user.length===0) {
+          const newUser : User = {
+            id: 1,
+            lastlogin: null,
+            name: 'Usuario Administrador',
+            rol: UserRole.Admin,
+            password: 'admin',
+            username: 'admin'
+          }
+          createUser(newUser).then( nu => {
+            //navigate('/');
+          })
+        }
+       }
     )
     if (users)
       console.log('Aplicación iniciada', users);

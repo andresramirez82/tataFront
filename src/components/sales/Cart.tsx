@@ -12,7 +12,6 @@ import { carts } from "models/cart";
 import Ticket from "components/helpper/Ticket";
 import { PDFViewer } from '@react-pdf/renderer';
 import Help from "./Help";
-import { set } from "date-fns/esm";
 
 interface CartProps {
     idCart: number;

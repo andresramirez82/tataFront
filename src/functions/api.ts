@@ -36,11 +36,12 @@ export const getUsers = (): Promise<Auth.AuthUser[]> => {
   });
 };
 
-export const login = (id: number): Promise<Api.UserApiResponseType> => {
+export const login = (username: string, password: string): Promise<Api.UserApiResponseType> => {
   // Utiliza async/await para trabajar de forma más cómoda con Promesas
   return new Promise<Api.UserApiResponseType>((resolve, reject) => {
     const param = {
-      id
+      username, 
+      password
     }
     Axios.post(`/login/`, param)
       .then((response) => {

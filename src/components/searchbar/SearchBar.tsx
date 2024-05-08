@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Nav, NavDropdown, Navbar } from 'react-bootstrap';
 import { keyboardKey } from "@testing-library/user-event";
 import Users from "components/users/Users";
-import { Auth } from "models/models";
+import { User } from "models/user";
 import { useNavigate } from "react-router-dom";
+import { tokenDecode } from "functions/User";
 
 
 interface propsSearchBar {
@@ -12,7 +13,7 @@ interface propsSearchBar {
 
 const SearchBar = (props: propsSearchBar) => {
     const [searchText, setSearchText] = useState("");
-    const [user, setUser] = useState<Auth.AuthUser>();
+    const [user, setUser] = useState<User>();
     const Navigate = useNavigate();
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,11 +33,17 @@ const SearchBar = (props: propsSearchBar) => {
     };
 
     useEffect(() => {
-        const userSession: Auth.AuthUser = JSON.parse(sessionStorage.getItem('user') || '{}');
-        if (userSession.id === undefined) {
+        tokenDecode().then(ul => {
+            const userSession = ul.user;
+            if (userSession.id === undefined) {
+                Navigate("/");
+            }
+            setUser(userSession);
+        }).catch(err => {
+            console.error(err);
             Navigate("/");
-        }
-        setUser(userSession);
+        })
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -51,14 +58,14 @@ const SearchBar = (props: propsSearchBar) => {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto">
-                    <Nav.Link href="/home/stock"><span className="bi bi-calculator"/> Stock</Nav.Link>
-                    <NavDropdown title={<span className="bi bi-cart"> Ventas</span> }>
-                        <NavDropdown.Item href="/home/sales"><span className="bi bi-cart"/> Nuevas Ventas</NavDropdown.Item>
-                        <NavDropdown.Item href="/home/sales/list"><span className="bi bi-list"/> Listado</NavDropdown.Item>
+                    <Nav.Link href="/home/stock"><span className="bi bi-calculator" /> Stock</Nav.Link>
+                    <NavDropdown title={<span className="bi bi-cart"> Ventas</span>}>
+                        <NavDropdown.Item href="/home/sales"><span className="bi bi-cart" /> Nuevas Ventas</NavDropdown.Item>
+                        <NavDropdown.Item href="/home/sales/list"><span className="bi bi-list" /> Listado</NavDropdown.Item>
                     </NavDropdown>
-                    <Nav.Link href="/home/products"><span className="bi bi-bag"/> Productos</Nav.Link>
-                    <Nav.Link href="/home/Discount"><span className="bi bi-percent"/> Descuentos</Nav.Link>
-                    <Nav.Link href="/home/Customer"><span className="bi bi-person"/> Clientes</Nav.Link>
+                    <Nav.Link href="/home/products"><span className="bi bi-bag" /> Productos</Nav.Link>
+                    <Nav.Link href="/home/Discount"><span className="bi bi-percent" /> Descuentos</Nav.Link>
+                    <Nav.Link href="/home/Customer"><span className="bi bi-person" /> Clientes</Nav.Link>
                 </Nav>
             </Navbar.Collapse>
 
