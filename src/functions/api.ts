@@ -30,7 +30,7 @@ export const getUsers = (): Promise<Auth.AuthUser[]> => {
         resolve(usersData);
       })
       .catch((error) => {
-        console.error(error);
+        // console.error(error);
         reject(error);
       });
   });

@@ -25,7 +25,7 @@ const ConfirmarVentaModal: React.FC<HelpModal> = ({ show, onClose }) => {
                     </tr>
                     <tr>
                         <td>Cancelar Venta</td>
-                        <td><kbd>BackSpace</kbd></td>
+                        <td><kbd>F4</kbd></td>
                     </tr>
                     <tr>
                         <td>Agregar Producto</td>

@@ -59,12 +59,12 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ show, onHide, discoun
                     id: discountsDetails.id || 0
                 };
                 const update = await DiscountClass.UpdateDiscounts(descuento);
-                console.log(update);
-                toast('Se ha editado correctamente');
+                
+                toast.success(`Se ha editado correctamente ${update.name} del producto ${update.product.name}`);
                 onHide(); // Cierra el modal después de guardar los cambios
-            } catch (error) {
-                console.error('Error al guardar cambios:', error);
-                toast('Error al guardar cambios');
+            } catch (err: any) {
+                console.error('Error al guardar cambios:', err);
+                toast.error(`${err.response?.data.message}`)
             }
         }
     };

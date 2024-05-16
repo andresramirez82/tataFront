@@ -93,3 +93,17 @@ export const deleteCurrentAccount = (idCA: number): Promise<CurrentAccount> => {
             });
     });
 };
+
+export const sendMail = (mail: string, text: string, subject: string): Promise<any> => {
+    // Utiliza async/await para trabajar de forma más cómoda con Promesas
+    return new Promise<any>((resolve, reject) => {
+        Axios.post(`customers/mail`, {mail, text,subject})
+            .then((response) => {
+                resolve(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+                reject(error);
+            });
+    });
+};

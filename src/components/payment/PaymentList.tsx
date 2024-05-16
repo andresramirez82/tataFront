@@ -31,7 +31,13 @@ const PaymentList: React.FC<PaymentListProps> = ({ payments, onDelete, onUpdate 
           <tr key={payment.id}>
             <th><span className="bi-credit-card-2-back"></span> {payment.id}</th>
             <td>{payment.tipo}</td>
-            <td>{payment.id && <><button className="btn btn-primary" onClick={() => onUpdate(payment)}><span className='bi bi-pencil' /> Editar</button><button className="btn btn-danger" onClick={() => onDelete(Number(payment.id))} disabled={Validar(payment.id)}><span className='bi bi-trash' /> Eliminar</button></>}</td>
+            <td>
+              <div className='d-grid gap-2'>
+                {payment.id && <>
+                  <button className="btn btn-primary" onClick={() => onUpdate(payment)}><span className='bi bi-pencil' /> Editar</button>
+                  <button className="btn btn-danger" onClick={() => onDelete(Number(payment.id))} disabled={Validar(payment.id)}><span className='bi bi-trash' /> Eliminar</button>
+                </>}
+              </div></td>
           </tr>
         ))}
       </tbody>

@@ -10,6 +10,7 @@ export interface User {
     lastlogin: Date | null;
     password: string;
     rol: UserRole;
+    email?: string;
     username: string;
     active?: boolean;
   }

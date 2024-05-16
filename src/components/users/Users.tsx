@@ -41,9 +41,9 @@ const User: React.FC<UserProps> = ({ idUser }) => {
       <Card className="card">
         {userData?.name && <Thumbnail name={userData?.name} />}
         <div className="card-body">
-          <h5 className="card-title">{userData?.name || 'nombre'}</h5>
+          <h5 className="card-title">{userData?.name  || 'nombre'} ({userData?.username})</h5>
           {userData?.lastlogin && (
-            <p className="card-text">
+            <p className="card-text text-center">
               {formatDate(userData?.lastlogin) || 'último acceso'}
             </p>
           )}

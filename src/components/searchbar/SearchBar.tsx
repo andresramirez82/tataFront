@@ -40,7 +40,7 @@ const SearchBar = (props: propsSearchBar) => {
             }
             setUser(userSession);
         }).catch(err => {
-            console.error(err);
+            // console.error(err);
             Navigate("/");
         })
 
@@ -72,7 +72,6 @@ const SearchBar = (props: propsSearchBar) => {
             <Nav className="ml-auto">
                 <NavDropdown title={<span className="bi bi-person" />} >
                     {user?.id && <NavDropdown.Item eventKey="perfil"><Users idUser={user?.id} /></NavDropdown.Item>}
-
                     <NavDropdown.Item eventKey="configuracion" href="/home/Settings">Configuración</NavDropdown.Item>
                     <NavDropdown.Divider />
                     <NavDropdown.Item eventKey="cerrarSesion" onClick={closeSession}>Cerrar Sesión</NavDropdown.Item>

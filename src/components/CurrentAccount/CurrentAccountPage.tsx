@@ -12,25 +12,25 @@ const CurrentAccountPage: React.FC = () => {
 
   const handleAddAccount = (newAccount: CurrentAccount) => {
     createCurrentAccount(newAccount).then(n => {
-        toast('Se agregó correctamente')
-        actualiar();
+      toast.success('Se agregó correctamente')
+      actualiar();
     }).catch(err => {
-        toast('Error al agregar cta cte')
+      toast.error(`${err.response?.data.message}`)
     })
   };
 
   const handleDeleteAccount = (id: number) => {
     deleteCurrentAccount(id).then(del => {
-        toast('Se borróp correctamente')
-        actualiar();
+      toast.success('Se borróp correctamente')
+      actualiar();
     }).catch(err => {
-        toast('Error al borrar cta cte')
+      toast.error(`${err.response?.data.message}`)
     })
   };
 
   const actualiar = () => {
     getCurrentAccount().then(customer => {
-        setAccounts(customer);
+      setAccounts(customer);
     }).catch(e => {
       console.error(e)
     })
@@ -43,7 +43,7 @@ const CurrentAccountPage: React.FC = () => {
 
   const actualiarCustomer = () => {
     getCustomers().then(customer => {
-        setcustomers(customer);
+      setcustomers(customer);
     }).catch(e => {
       console.error(e)
     })

@@ -125,24 +125,27 @@ const ProductList: React.FC = () => {
                                     <td>{product.quantity}</td>
                                     {product.date !== undefined && <td>{formatDate(product.date)}</td>}
                                     <td>{product.comment}</td>
-                                    {product.id !== undefined && <td><Button variant="primary" onClick={() => Edit(Number(product.id))}>
-                                        <i className="bi bi-pencil mr-2"></i> Editar
-                                    </Button>
-                                        <Button variant="danger" onClick={() => Borrar(Number(product.id), product.name)}>
-                                            <i className='bi bi-trash mr-2'></i> Eliminar
-                                        </Button>
+                                    {product.id !== undefined && <td>
+                                        <div className='d-grid gap-2'>
+                                            <Button variant="primary" onClick={() => Edit(Number(product.id))}>
+                                                <i className="bi bi-pencil mr-2"></i> Editar
+                                            </Button>
+                                            <Button variant="danger" onClick={() => Borrar(Number(product.id), product.name)}>
+                                                <i className='bi bi-trash mr-2'></i> Eliminar
+                                            </Button>
+                                        </div>
                                     </td>}
                                 </tr>
                             ))}
                         </tbody>
                     </Table>
-                    <div>
+                    <div >
                         <Button onClick={handlePrevPage} disabled={pagination.prevPage === null}>
-                            <i className="bi bi-arrow-left"/> Anterior
+                            <i className="bi bi-arrow-left" /> Anterior
                         </Button>
                         <span>Página {pagination.currentPage} de {pagination.totalPages}</span>
                         <Button onClick={handleNextPage} disabled={pagination.nextPage === null}>
-                        <i className="bi bi-arrow-right"/> Siguiente
+                            <i className="bi bi-arrow-right" /> Siguiente
                         </Button>
                     </div>
                 </>

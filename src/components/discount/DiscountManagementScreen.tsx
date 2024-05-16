@@ -14,7 +14,7 @@ import EditDiscount from "./Edit";
 import DeleteDiscount from "./Delete";
 
 
-const Descuentos : DiscountDaysT = {"0":true,"1":true,"2":true,"3":true,"4":true,"5":true,"6":true}
+const Descuentos: DiscountDaysT = { "0": true, "1": true, "2": true, "3": true, "4": true, "5": true, "6": true }
 
 const DiscountManagementScreen: React.FC = () => {
     const now = new Date();
@@ -166,8 +166,8 @@ const DiscountManagementScreen: React.FC = () => {
         <Container>
             {selectDiscount && <EditDiscount discountId={selectDiscount} onHide={hideEdit} show={showEditModal} />}
             {selectDiscount && selectDiscountName && <DeleteDiscount discountId={selectDiscount} onHide={hideDelete} show={showDelete} name={selectDiscountName} />}
-            <h2><span className='bi bi-percent'/> Administrar Descuentos</h2>
-            <Button onClick={handleShowModal} variant="primary"><span className='bi bi-plus'/> Crear Descuento</Button>
+            <h2><span className='bi bi-percent' /> Administrar Descuentos</h2>
+            <Button onClick={handleShowModal} variant="primary"><span className='bi bi-plus' /> Crear Descuento</Button>
             <Table striped bordered hover>
                 <thead>
                     <tr>
@@ -185,21 +185,24 @@ const DiscountManagementScreen: React.FC = () => {
                 <tbody>
                     {discounts.map(discount => (
                         <tr key={discount.id}>
-                            <th><span className='bi bi-percent'/> {discount.id}</th>
+                            <th><span className='bi bi-percent' /> {discount.id}</th>
                             <td>{discount.name}</td>
                             <td>{discount.product.name}</td>
                             <td>{formatDate(discount.startDate)}</td>
                             <td>{formatDate(discount.endDate)}</td>
                             <td>{discount.discountAmount} %</td>
                             <td>{discount.requiredQuantity}</td>
-                            <td><WeekDays weekSchedule={discount.discountDays}/></td>
+                            <td><WeekDays weekSchedule={discount.discountDays} /></td>
                             <td>
-                                <Button variant="primary" onClick={() => Edit(Number(discount.id))}>
-                                    <i className="bi bi-pencil mr-2"></i> Editar
-                                </Button>
-                                <Button variant="danger" onClick={() => Borrar(Number(discount.id), discount.name)}>
-                                    <i className='bi bi-trash mr-2'></i> Eliminar
-                                </Button>
+                                <div className='d-grid gap-2'>
+                                    <Button variant="primary" onClick={() => Edit(Number(discount.id))}>
+                                        <i className="bi bi-pencil mr-2"></i> Editar
+                                    </Button>
+                                    <Button variant="danger" onClick={() => Borrar(Number(discount.id), discount.name)}>
+                                        <i className='bi bi-trash mr-2'></i> Eliminar
+                                    </Button>
+                                </div>
+
                             </td>
                         </tr>
                     ))}
@@ -251,7 +254,7 @@ const DiscountManagementScreen: React.FC = () => {
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Días de la semana</Form.Label>
-                            <DiscountDays onSave={onChangeDays} discountDaysData={Descuentos}/>
+                            <DiscountDays onSave={onChangeDays} discountDaysData={Descuentos} />
                         </Form.Group>
                         <Form.Group controlId="discountAmount">
                             <Form.Label>Descuento</Form.Label>

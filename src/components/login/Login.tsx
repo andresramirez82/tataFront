@@ -2,28 +2,28 @@ import React, { useEffect, useState } from "react";
 import Container from 'react-bootstrap/Container';
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { getUsers, login } from "../../functions/api";
+import { login } from "../../functions/api";
 import { SaveUser } from "functions/functios";
 import { useNavigate } from 'react-router-dom';
 import { AxiosError } from "axios";
 import { ErrorResponse } from "models/models";
 import { toast } from "react-toastify";
-import { Auth } from "models/models";
+// import { Auth } from "models/models";
 
 function Login() {
-  const [users, setUsers] = useState<Auth.AuthUser[]>([]);
-  const [selectedUser, setSelectedUser] = useState<string>('');
+  //const [users, setUsers] = useState<Auth.AuthUser[]>([]);
+  // const [selectedUser, setSelectedUser] = useState<string>('');
   const [password, setPassword] = useState<string>("");
   const [username, setUsername] = useState<string>("");
   const [logueado, setLogueado] = useState<boolean>(false);
   const [isFormInvalid, setIsFormInvalid] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
+ /* useEffect(() => {
     getUsers().then(users => {
-      setUsers(users);
+      //setUsers(users);
     });
-  }, [navigate]);
+  }, [navigate]);*/
 
   useEffect(() => {
     if (logueado) {

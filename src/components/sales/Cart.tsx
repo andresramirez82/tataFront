@@ -172,7 +172,7 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
             if (event.key === ' ') {
                 setfinalizarBtn(true);
             }
-            if (event.key === 'Backspace') {
+            if (event.key === 'F4') {
                 handleShowDeleteModal()
             }
             if (event.key === 'F1') {

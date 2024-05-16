@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
-import { Cart, Discount } from "models/models";
+import { Cart } from "models/models";
+import { User } from "models/user";
 import { Company } from "models/company";
 import { acumular, formatDate } from "functions/functios";
 import { getCompanies } from "functions/company";
 import { CartClass } from "functions/api";
+import { tokenDecode } from "functions/User";
 
 
 // Define estilos
@@ -63,9 +65,9 @@ interface ComprobanteVentaProps {
 
 
 const ComprobanteVentaPDF: React.FC<ComprobanteVentaProps> = ({ cart }) => {
-  const [discount, setdiscount] = useState<Discount.dicountsResponse[]>();
   const [tcart, settcart] = useState<Cart.cart>();
   const [company, setcompany] = useState<Company>();
+  const [user, setUser] = useState<User>();
 
   useEffect(() => {
     getCompanies().then(
@@ -73,6 +75,12 @@ const ComprobanteVentaPDF: React.FC<ComprobanteVentaProps> = ({ cart }) => {
         setcompany(c);
       }
     )
+
+    tokenDecode().then(ul => {
+      const userSession = ul.user;
+
+      setUser(userSession);
+    })
   }, [])
 
   useEffect(() => {
@@ -92,11 +100,6 @@ const ComprobanteVentaPDF: React.FC<ComprobanteVentaProps> = ({ cart }) => {
         .catch(err => {
           console.error(err);
         })
-      CartClass.discountsForCart(idCartParam).then(dis => {
-        setdiscount(dis);
-      }).catch(err => {
-        console.log(err)
-      })
     }
   }
 
@@ -115,29 +118,29 @@ const ComprobanteVentaPDF: React.FC<ComprobanteVentaProps> = ({ cart }) => {
   };
 
   return (
-    <Document author='aRamirez'>
+    <Document author={`${user?.name}`} creator={`${company?.name}`} language='Es_es' subject={`Comprobante Nº ${tcart?.id}`}>
       <Page size="A4" style={styles.page}>
         <View style={styles.head}>
-        <View style={styles.row}>
-          <Image style={styles.img} src={company?.logo} />
-        </View>
-        <View style={styles.row}>
-          <View style={styles.header}>
-            <Text style={styles.title}>Comprobante de Venta</Text>
-            <Text style={styles.subtitle}>ID de Venta: {cart.id}</Text>
-            <Text style={styles.subtitle}>Fecha: {formatDate(cart.cartDate)}</Text>
-            <Text style={styles.subtitle}>Cajero: {cart.user.id} - {cart.user.name}</Text>
+          <View style={styles.row}>
+            <Image style={styles.img} src={company?.logo} />
           </View>
-          <View style={styles.header}>
-            <Text>{company?.name}</Text>
-            <Text>{company?.cuil}</Text>
-            <Text>{company?.phone}</Text>
-            <Text>{company?.address}</Text>
-            <Text>{company?.email}</Text>
+          <View style={styles.row}>
+            <View style={styles.header}>
+              <Text style={styles.title}>Comprobante de Venta</Text>
+              <Text style={styles.subtitle}>ID de Venta: {cart.id}</Text>
+              <Text style={styles.subtitle}>Fecha: {formatDate(cart.cartDate)}</Text>
+              <Text style={styles.subtitle}>Cajero: {cart.user.id} - {cart.user.name}</Text>
+            </View>
+            <View style={styles.header}>
+              <Text>{company?.name}</Text>
+              <Text>{company?.cuil}</Text>
+              <Text>{company?.phone}</Text>
+              <Text>{company?.address}</Text>
+              <Text>{company?.email}</Text>
+            </View>
           </View>
         </View>
-        </View>
-        
+
 
         <View style={styles.section}>
           <Text style={styles.subtitle}>Detalle de la venta:</Text>
@@ -149,14 +152,14 @@ const ComprobanteVentaPDF: React.FC<ComprobanteVentaProps> = ({ cart }) => {
         </View>
         <View style={styles.section}>
           <Text style={styles.subtitle}>Descuentos:</Text>
-          {discount && discount.map((item, index) => (
+          {tcart?.discountsApplied && tcart.discountsApplied.map((item, index) => (
             <Text key={index} style={styles.content}>
               {item.discountName} - {item.productName} - Subtotal: {formatPrice(item.discount)}
             </Text>
           ))}
         </View>
         <View style={styles.section}>
-          <Text style={styles.total}>Total: {tcart?.sales && formatPrice(acumular(tcart?.sales, discount))}</Text>
+          <Text style={styles.total}>Total: {tcart?.sales && formatPrice(acumular(tcart?.sales, tcart.discountsApplied))}</Text>
         </View>
       </Page>
     </Document>

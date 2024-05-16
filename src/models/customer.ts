@@ -4,6 +4,7 @@ export interface Customer {
     dni?: number;
     street?: string;
     details?: string;
+    mail?: string;
   }
 
   export interface CurrentAccount {

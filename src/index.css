@@ -1,3 +1,11 @@
+body { font-family: 'Roboto', sans-serif; }
+
 .btn u {
     text-decoration: underline;
   }
+tbody {
+  font-family: 'Space Mono' !important;
+}
+.Toastify__toast-body {
+  font-family: 'Assistant' !important;
+}

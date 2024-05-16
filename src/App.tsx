@@ -15,16 +15,16 @@ import DiscountManagementScreen from "components/discount/DiscountManagementScre
 import Company from "components/company/Company";
 import Customer from "components/customer/CustomerPage";
 import CurrentAccount from "components/CurrentAccount/CurrentAccountPage";
-import { createUser } from "functions/User";
-import { User,UserRole } from "models/user";
+// import { createUser } from "functions/User";
+// import { User,UserRole } from "models/user";
 
 const Stock = () => { return (<></>) };
 
 
 function App() {
-  const [users, setusers] = useState<Auth.AuthUser[]>()
+  //const [users, setusers] = useState<Auth.AuthUser[]>()
 
-  useEffect(() => {
+  /*useEffect(() => {
     getUsers().then(
       user => { setusers(user);
         if (user.length===0) {
@@ -45,7 +45,7 @@ function App() {
     if (users)
       console.log('Aplicación iniciada', users);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [])*/
 
   return (
     <BrowserRouter>

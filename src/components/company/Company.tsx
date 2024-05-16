@@ -39,19 +39,21 @@ const CompanyCRUD: React.FC = () => {
 
     const handleSubmit = () => {
         createCompany(formData).then(() => {
-            toast(`Se agrego correctamente la información de la empresa`);
+            toast.success(`Se agrego correctamente la información de la empresa`);
             fetchCompanies();
             handleCloseModal();
         }).catch(err => {
+            toast.error(`${err.response?.data.message}`)
             console.error(err);
         })
     };
 
     const handleDelete = (id: number) => {
         deleteCompany(id).then(() => {
-            toast(`Se borro correctamente los datos de la empresa`);
+            toast.success(`Se borro correctamente los datos de la empresa`);
             setCompanies({ id: 0, name: '', cuil: '', phone: '', email: '', address: '' });
         }).catch(err => {
+            toast.error(`${err.response?.data.message}`)
             console.error(err);
         })
     };

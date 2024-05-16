@@ -31,6 +31,8 @@ const PaymentPage: React.FC = () => {
     addPayment(payment).then(resp => {
       toast(`Se agregó correcatmente`);
       listar();
+    }).catch((err: AxiosError<ErrorResponse>) => {
+      toast(`${err.response?.data.message}`)
     })
 
   };

@@ -10,20 +10,22 @@ import { AxiosError } from "axios";
 import { ErrorResponse } from "models/models";
 import UserRoleSelect from "components/helpper/Rol";
 import { resetPass, generarPassword, changeState, exist } from "functions/User";
+import Mail from "components/helpper/Mail";
+import ResetPass from "components/helpper/ResetPass";
 
 
 
 const UserManagement: React.FC = () => {
     const [users, setUsers] = useState<User[]>([]);
-    const [user, setuser] = useState<User>({ id: 0, name: "", lastlogin: null, password: "", rol: UserRole.Customer, username: '' });
+    const [user, setuser] = useState<User>({ id: 0, name: "", lastlogin: null, password: "", rol: UserRole.Customer, username: '', email: '' });
     const [loading, setLoading] = useState(true);
     const [isFormInvalid, setIsFormInvalid] = useState(false);
 
- 
+
     const validarUser = () => {
         if (user.username) {
             exist(user.username).then(e => {
-                if (!e===true) {
+                if (!e === true) {
                     toast.warning(`Ya existe un usuario ${user.username}`);
                     setuser({
                         ...user,
@@ -54,8 +56,8 @@ const UserManagement: React.FC = () => {
         try {
             const response = await getUsers();
             setUsers(response);
-        } catch (error) {
-            console.error("Error al obtener usuarios:", error);
+        } catch (error: any) {
+            toast.error(`${error.response?.data.message} Listar Usuarios`);
         } finally {
             setLoading(false);
         }
@@ -67,6 +69,8 @@ const UserManagement: React.FC = () => {
                 UserClass.createUser(user).then(resp => {
                     toast.success(`Se creó correctamente el usuario ${user.name}`);
                     fetchUsers();
+                }).catch((err: AxiosError<ErrorResponse>) => {
+                    toast.error(`${err.response?.data.message}`);
                 })
             }
 
@@ -95,8 +99,8 @@ const UserManagement: React.FC = () => {
         resetPass(id, newpass).then(np => {
             toast.info(`Se actualizó correctamente la pass ${newpass}`, { autoClose: false })
             navigator.clipboard.writeText(newpass);
-        }).catch(err => {
-            toast.error(`Huvo un problema al actualizar la pass`)
+        }).catch((err: AxiosError<ErrorResponse>) => {
+            toast.error(`${err.response?.data.message}`)
         })
     }
 
@@ -110,8 +114,8 @@ const UserManagement: React.FC = () => {
                 )
             );
             toast.info(`El estado del usuario se ha actualizado correctamente.`);
-        } catch (error) {
-            toast.error(`Hubo un problema al actualizar el estado del usuario.`);
+        } catch (err: any) {
+            toast.error(`${err.response?.data.message}`)
         }
     };
 
@@ -141,7 +145,6 @@ const UserManagement: React.FC = () => {
                         onChange={(e) => setuser({ ...user, name: e.target.value })}
                         required
                     />
-
                 </div>
                 <div className="mb-3">
                     <label htmlFor="name" className="form-label">Password:</label>
@@ -174,6 +177,7 @@ const UserManagement: React.FC = () => {
                             <th>id</th>
                             <th>Usuario</th>
                             <th>Nombre</th>
+                            <th>Correo</th>
                             <th>Último acceso</th>
                             <th>activo</th>
                             <th>Acción</th>
@@ -185,6 +189,7 @@ const UserManagement: React.FC = () => {
                                 <th><span className="bi-person"></span> {user.id}</th>
                                 <td>{user.username} </td>
                                 <td>{user.name} </td>
+                                <td><Mail email={user.email} name={user.name} /> </td>
                                 <td> {formatDate(user.lastlogin)}</td>
                                 <td> <Form.Check
                                     type="switch"
@@ -192,7 +197,10 @@ const UserManagement: React.FC = () => {
                                     checked={user.active}
                                     onChange={() => ChangeStates(user.id, !user.active)}
                                 /> </td>
-                                <td><button className="btn btn-secondary" onClick={() => resetUser(user.id)}><span className='bi bi-lock' /> Reset</button><button className="btn btn-danger" onClick={() => deleteUser(user.id)}><span className='bi bi-trash' /> Eliminar</button></td>
+                                <td><div className="d-grid gap-2">
+                                    {user.id && <ResetPass email={user.email} name={user.name} idUser={user.id} />}
+                                    <button className="btn btn-danger" onClick={() => deleteUser(user.id)}><span className='bi bi-trash' /> Eliminar</button>
+                                </div></td>
 
                             </tr>
                         ))}

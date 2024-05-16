@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { Customer } from 'models/customer';
+import Email from "components/UI/Email/Email";
 
 interface Props {
   onSubmit: (customer: Customer) => void;
@@ -11,6 +12,7 @@ const CustomerForm: React.FC<Props> = ({ onSubmit }) => {
   const [dni, setDni] = useState('');
   const [street, setStreet] = useState('');
   const [details, setDetails] = useState('');
+  const [mail, setMail] = useState('');
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -20,6 +22,7 @@ const CustomerForm: React.FC<Props> = ({ onSubmit }) => {
       dni: parseInt(dni),
       street,
       details,
+      mail
     };
     onSubmit(newCustomer);
     // Limpiar los campos después de enviar el formulario
@@ -43,6 +46,7 @@ const CustomerForm: React.FC<Props> = ({ onSubmit }) => {
         <Form.Label>Calle</Form.Label>
         <Form.Control type="text" value={street} onChange={(e) => setStreet(e.target.value)} required />
       </Form.Group>
+      <Email value={mail} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMail(e.target.value)} required aria-label='Correo electrónico'/>
       <Form.Group controlId="formDetails">
         <Form.Label>Detalles</Form.Label>
         <Form.Control type="text" value={details} onChange={(e) => setDetails(e.target.value)} required />

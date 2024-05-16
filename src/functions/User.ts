@@ -116,7 +116,7 @@ export const exist = (username: string): Promise<boolean> => {
     })
 }
 
-export const generarPassword = (longitud:number): string => {
+export const generarPassword = (longitud: number): string => {
     const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+';
     let password = '';
     for (let i = 0; i < longitud; i++) {
@@ -124,4 +124,8 @@ export const generarPassword = (longitud:number): string => {
         password += caracterAleatorio;
     }
     return password;
+}
+
+export const getToken = (): string => {
+    return sessionStorage.getItem('token') || '';
 }

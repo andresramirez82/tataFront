@@ -57,7 +57,9 @@ const Sales: React.FC = () => {
     }
 
     return (<Container>
-        <Row md={12}><Alert variant='light '><h1>Ventas</h1></Alert></Row>
+        <Row md={12}>
+            <h2><span className="bi bi-cart"/> Ventas</h2>
+            </Row>
         <Row>
             <Col md={6}>
                 {idCart === undefined && <div><Alert variant="warning">
@@ -73,8 +75,8 @@ const Sales: React.FC = () => {
                 <Table>
                     <tbody>
                         <tr>
-                            <th><i className="bi bi-cash-coin"></i>Total Diario </th>
-                            <th><span className="bi-calendar"></span>( {hoy()} )</th>
+                            <th><i className="bi bi-cash-coin"></i> Total Diario </th>
+                            <th><span className="bi-calendar"></span> ( {hoy()} )</th>
                             <td><h4><MoneyFormatter amount={totalGeneral} /></h4></td>
                         </tr>
                     </tbody>

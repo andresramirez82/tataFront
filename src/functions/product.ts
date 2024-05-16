@@ -146,7 +146,7 @@ export const fetchProductsAPI = (currentPage: number, order: string): Promise<pa
                 resolve(response.data);
             })
             .catch((error) => {
-                console.error(error);
+                //console.error(error);
                 reject(error);
             });
     });
