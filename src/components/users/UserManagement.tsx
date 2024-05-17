@@ -9,7 +9,7 @@ import Spinner from "components/helpper/Spinner";
 import { AxiosError } from "axios";
 import { ErrorResponse } from "models/models";
 import UserRoleSelect from "components/helpper/Rol";
-import { resetPass, generarPassword, changeState, exist } from "functions/User";
+import { changeState, exist } from "functions/User";
 import Mail from "components/helpper/Mail";
 import ResetPass from "components/helpper/ResetPass";
 
@@ -93,16 +93,6 @@ const UserManagement: React.FC = () => {
     useEffect(() => {
         fetchUsers();
     }, []);
-
-    const resetUser = (id: number) => {
-        const newpass = generarPassword(10);
-        resetPass(id, newpass).then(np => {
-            toast.info(`Se actualizó correctamente la pass ${newpass}`, { autoClose: false })
-            navigator.clipboard.writeText(newpass);
-        }).catch((err: AxiosError<ErrorResponse>) => {
-            toast.error(`${err.response?.data.message}`)
-        })
-    }
 
     const ChangeStates = async (idUser: number, state: boolean) => {
         try {

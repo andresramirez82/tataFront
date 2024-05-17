@@ -1,4 +1,6 @@
 import Axios from "components/axios/Axios";
+import Axios2 from "axios";
+import { config } from "config/config";
 import { Auth, Api } from "models/models";
 import {
   searchProduct,
@@ -43,7 +45,26 @@ export const login = (username: string, password: string): Promise<Api.UserApiRe
       username, 
       password
     }
-    Axios.post(`/login/`, param)
+    Axios2.post(`${config.urlAPI}login/`, param)
+      .then((response) => {
+        // Aquí asumo que los datos devueltos por la API tienen la forma correcta
+        // const usersData: Auth.AuthUser[] = response.data;
+        resolve(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+        reject(error);
+      });
+  });
+};
+
+export const reset = (username: string): Promise<Api.UserApiResponseType> => {
+  // Utiliza async/await para trabajar de forma más cómoda con Promesas
+  return new Promise<Api.UserApiResponseType>((resolve, reject) => {
+    const param = {
+      username, 
+    }
+    Axios2.post(`${config.urlAPI}login/resetpass/${username}`, param)
       .then((response) => {
         // Aquí asumo que los datos devueltos por la API tienen la forma correcta
         // const usersData: Auth.AuthUser[] = response.data;
