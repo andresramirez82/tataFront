@@ -129,3 +129,7 @@ export const generarPassword = (longitud: number): string => {
 export const getToken = (): string => {
     return sessionStorage.getItem('token') || '';
 }
+
+export const getTokenRefresh = (): string => {
+    return sessionStorage.getItem('tokenRefresh') || '';
+}

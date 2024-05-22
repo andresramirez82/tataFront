@@ -22,6 +22,7 @@ export interface pagination<T> {
 export interface UserApiResponse extends ApiResponseBase {
     user: User;
     token: string;
+    tokenRefresh: string;
     message: string;
 }
 

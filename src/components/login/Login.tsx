@@ -39,7 +39,7 @@ function Login() {
     login(username, password)
       .then(log => {
         if (log?.user?.lastlogin !== null) {
-          SaveUser(log.token);
+          SaveUser(log.token, log.tokenRefresh);
           setLogueado(true);
         } else {
           setforgetp(true)

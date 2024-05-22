@@ -43,8 +43,9 @@ export const formatDateISO = (fechaOriginal: Date | null): string => {
  * @param id 
  * @param name 
  */
-export const SaveUser = ( token: string) => {
+export const SaveUser = ( token: string, tokenRefresh: string) => {
     sessionStorage.setItem('token', token);
+    sessionStorage.setItem('tokenRefresh', tokenRefresh);
     // sessionStorage.setItem('user', JSON.stringify(user));
 }
 

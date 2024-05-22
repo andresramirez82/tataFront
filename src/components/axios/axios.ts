@@ -1,14 +1,22 @@
-import axios, { AxiosInstance, AxiosError } from 'axios';
+import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { config } from "../../config/config";
-import { getToken } from "../../functions/User";
+import { getToken, getTokenRefresh} from "../../functions/User";
+import { SaveUser } from "functions/functios"; // Asegúrate de que la ruta a SaveUser sea correcta
+import { toast } from 'react-toastify';
+
 
 const api: AxiosInstance = axios.create({
   baseURL: config.urlAPI,
 });
 
-// Define el tipo de retorno para el interceptor de solicitud
+// Extiende el tipo InternalAxiosRequestConfig para incluir la propiedad _retry
+interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
+  _retry?: boolean;
+}
+
+// Define el interceptor de solicitud
 api.interceptors.request.use(
-  async (config) => {
+  async (config: CustomAxiosRequestConfig) => {
     const token = await getToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -18,25 +26,48 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+// Define el interceptor de respuesta
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
-    // const originalRequest = error.config;
-    // console.log(originalRequest)
-
-    // Si el estado de error es 403 y no hay un intento de solicitud original (_retry),
-    // significa que el token ha expirado y necesitamos redirigir a la página raíz
+    const originalRequest = error.config as CustomAxiosRequestConfig;
     
-    if (error.request.status === 403 || error.request.status === 401) {
-      sessionStorage.clear();
-     
+    if (originalRequest) {
+      // Si el estado de error es 401 y no hay un intento de solicitud original (_retry),
+      // significa que el token ha expirado y necesitamos intentar obtener uno nuevo
+      if (error.response?.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+        const refreshToken = await getTokenRefresh(); // Asegúrate de usar await para obtener el refresh token
+        try {
+          const response = await axios.post(`${config.urlAPI}login/auth/token`, {
+            refresh_token: refreshToken
+          });
+
+          if (response.status === 201 || response.status === 200) {
+            const newToken = response.data.token;
+            console.log(response.data)
+            SaveUser(newToken, refreshToken);
+            // Actualiza los encabezados para la solicitud original y las futuras solicitudes
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + newToken;
+            originalRequest.headers['Authorization'] = 'Bearer ' + newToken;
+            // Reintenta la solicitud original
+            return axios(originalRequest);
+          }
+        } catch (refreshError) {
+          return Promise.reject(refreshError);
+        }
+      }
+    }
+
+    // Si el error es 403 o 401 (y no es un problema de token expirado)
+    if (error.request.status === 403 || error.request.status === 401 || error.request.status  === 402) {
+      //sessionStorage.clear();
       // Redirige a la página raíz
+      if (error.request.status === 402)toast.error('Se ha intentado entrar con un token vencido');
       
       window.location.href = "/";
-      console.clear();
-      
-      // Lanza un error para detener la ejecución del código subsiguiente
-      throw new Error("token");
+      //console.clear();
+      //throw new Error("token");
     }
 
     // Si hay un error diferente, simplemente rechaza la promesa con el error

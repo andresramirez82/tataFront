@@ -5,6 +5,7 @@ import Users from "components/users/Users";
 import { User } from "models/user";
 import { useNavigate } from "react-router-dom";
 import { tokenDecode } from "functions/User";
+import Socket from "components/helpper/Socket";
 
 
 interface propsSearchBar {
@@ -32,6 +33,9 @@ const SearchBar = (props: propsSearchBar) => {
         Navigate(`/home/stock/${encodedText}`);
     };
 
+
+
+
     useEffect(() => {
         tokenDecode().then(ul => {
             const userSession = ul.user;
@@ -43,7 +47,6 @@ const SearchBar = (props: propsSearchBar) => {
             // console.error(err);
             Navigate("/");
         })
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -70,8 +73,9 @@ const SearchBar = (props: propsSearchBar) => {
             </Navbar.Collapse>
 
             <Nav className="ml-auto">
+                {user?.id && <Socket user={user.username} />}
                 <NavDropdown title={<span className="bi bi-person" />} >
-                    {user?.id && <NavDropdown.Item eventKey="perfil"><Users idUser={user?.id} /></NavDropdown.Item>}
+                    {user?.id && <><NavDropdown.Item eventKey="perfil"><Users idUser={user?.id} /></NavDropdown.Item></>}
                     <NavDropdown.Item eventKey="configuracion" href="/home/Settings">Configuración</NavDropdown.Item>
                     <NavDropdown.Divider />
                     <NavDropdown.Item eventKey="cerrarSesion" onClick={closeSession}>Cerrar Sesión</NavDropdown.Item>

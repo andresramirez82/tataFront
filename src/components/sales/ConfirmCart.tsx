@@ -15,8 +15,8 @@ import { toast } from 'react-toastify';
 import { getOrder } from "functions/mercadopago";
 import { carts } from 'models/cart';
 import { keyboardKey } from "@testing-library/user-event";
-import { set } from 'date-fns/esm';
 import { createPay } from 'functions/pay';
+import { config } from "config/config";
 
 
 interface confSaleProps {
@@ -70,7 +70,7 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
   }, [idCart])
 
   useEffect(() => {
-    const socket = io('https://deep-drain-production.up.railway.app');
+    const socket = io(config.urlAPI2);
     socket.on('notification', (notification) => {
       // console.log(notification)
       if (notification) {
