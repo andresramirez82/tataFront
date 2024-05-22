@@ -54,6 +54,7 @@ api.interceptors.response.use(
             return axios(originalRequest);
           }
         } catch (refreshError) {
+          window.location.href = "/";
           return Promise.reject(refreshError);
         }
       }
@@ -63,8 +64,7 @@ api.interceptors.response.use(
     if (error.request.status === 403 || error.request.status === 401 || error.request.status  === 402) {
       //sessionStorage.clear();
       // Redirige a la página raíz
-      if (error.request.status === 402)toast.error('Se ha intentado entrar con un token vencido');
-      
+            
       window.location.href = "/";
       //console.clear();
       //throw new Error("token");
