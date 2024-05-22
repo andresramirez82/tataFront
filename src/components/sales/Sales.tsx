@@ -6,7 +6,8 @@ import { acumular } from "functions/functios";
 import MoneyFormatter from "components/helpper/Money";
 import Cart from "components/sales/Cart";
 import { withDiscount } from './../../models/models';
-
+import { Cart as CartModel } from 'models/models';
+import TicketModal from "./TicketModal";
 
 
 
@@ -15,11 +16,13 @@ const Sales: React.FC = () => {
     const [totalGeneral, setTotalGeneral] = useState<number>(0);
     const [idCart, setidCart] = useState<number>();
     const [idUser, setidUser] = useState<number>();
+    const [showTicket, setshowTicket] = useState<boolean>(false);
+    const [cartv, setcartv] = useState<CartModel.cart>();
 
 
     useEffect(() => {
-        getUser().then( user => {
-            setidUser( user.id );
+        getUser().then(user => {
+            setidUser(user.id);
         })
         CartClass.getOpenCart().then(open => {
             setidCart(open.id);
@@ -41,6 +44,15 @@ const Sales: React.FC = () => {
         })
     }, [idCart])
 
+    const verTicket = (cart: CartModel.cart) => {
+        setcartv(cart);
+        setshowTicket(true);
+    }
+
+    const CloseTicket = () => {
+        setcartv(undefined);
+        setshowTicket(false);
+    }
 
     const addCart = () => {
         const newCart: any = {
@@ -57,9 +69,10 @@ const Sales: React.FC = () => {
     }
 
     return (<Container>
+        {showTicket && cartv && <TicketModal cart={cartv} onClose={CloseTicket} show={showTicket} />}
         <Row md={12}>
-            <h2><span className="bi bi-cart"/> Ventas</h2>
-            </Row>
+            <h2><span className="bi bi-cart" /> Ventas</h2>
+        </Row>
         <Row>
             <Col md={6}>
                 {idCart === undefined && <div><Alert variant="warning">
@@ -92,6 +105,7 @@ const Sales: React.FC = () => {
                             <th>Pago</th>
                             <th>Usuario</th>
                             <th>Monto</th>
+                            <th></th>
                         </tr>
 
                         </thead>
@@ -103,7 +117,9 @@ const Sales: React.FC = () => {
                                         >
                                             <th scope="row"><span className="bi-cart"></span> {c.id}</th><td>{formatDate(c.cartDate)}</td>
                                             <td>{c.payment.tipo}</td>
-                                            <td>{c.user.name}</td><td><MoneyFormatter amount={totalGeneral} /></td></tr>);
+                                            <td><MoneyFormatter amount={acumular(c.sales, c.discountsApplied)}></MoneyFormatter></td>
+                                            <td><span className="btn btn-success bi bi-ticket" title='ver Ticket' onClick={() => verTicket(c)}> Ticket</span></td>
+                                        </tr>);
                                 })}
                         </tbody>
                     </Table>
