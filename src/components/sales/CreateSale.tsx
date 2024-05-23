@@ -31,9 +31,11 @@ const CreateSale: React.FC<EditProductFormProps> = ({ show, onHide, product, idC
   );
 
   useEffect(() => {
+    SetStates();
     if (inputRef.current) {
       inputRef.current.focus();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -86,11 +88,15 @@ const CreateSale: React.FC<EditProductFormProps> = ({ show, onHide, product, idC
   }
 
   useEffect(() => {
+    SetStates();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const SetStates = () => {
     if (product.id) {
       setnewSale({ ...newSale, productId: product.id });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }
 
 
   const Agregar = () => {
