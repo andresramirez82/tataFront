@@ -10,8 +10,9 @@ import CreateSale from "./CreateSale";
 import ConfirmCart from "./ConfirmCart";
 import { carts } from "models/cart";
 import Ticket from "components/helpper/Ticket";
-import { PDFViewer } from '@react-pdf/renderer';
+import { PDFViewer, pdf, Document, Page, View } from '@react-pdf/renderer';
 import Help from "./Help";
+import { sendMailPdf } from "functions/customer";
 
 interface CartProps {
     idCart: number;
@@ -31,6 +32,7 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
     const [discount, setdiscount] = useState<Discount.dicountsResponse[]>();
     const [finalizarBtn, setfinalizarBtn] = useState<boolean>(false);
     const [showHelp, setshowHelp] = useState(false);
+    const [mail, setmail] = useState<string>('')
 
     const handleShowDeleteModal = () => setShowDeleteModal(true);
     const handleCloseDeleteModal = () => setShowDeleteModal(false);
@@ -146,7 +148,7 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
             toast(`Se borró correctamente el carrito ${idCart}`);
             setidCart(undefined);
         }).catch(err => {
-            toast(`Hubo un error al eliminar la venta ${idCart}`)
+            toast(`Hubo un error al eliminar la venta ${idCart}`);
         })
     }
 
@@ -187,9 +189,57 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
         };
     }, []);
 
+
+    const MyDoc = (
+        <Document>
+            <Page>
+                <View>
+                    Texto
+                </View>
+            </Page>
+        </Document>
+    );
+
+    const ticket = cartTicket ? <Ticket cart={cartTicket} /> : MyDoc;
+
+    const EnviarMail = async () => {
+        if (cartTicket) {
+            try {
+                // Generar el blob del PDF
+                const blob = await pdf(ticket).toBlob();
+
+                // Crear y configurar el FormData
+                const formData = new FormData();
+                formData.append('to', mail);
+                formData.append('text', `Se adjunta su comprobante de venta Nro ${cart?.id} <br/> Vendedor: <b>${cart?.user.name}</b>`);
+                formData.append('subject', `Comprobante Nro: ${cart?.id}`);
+                formData.append('file', blob, `ComprobanteNro:${cart?.id}.pdf`);
+
+
+                // console.log(formData)
+                // Enviar el formulario
+
+                if (mail === '')
+                    {
+                        
+                        toast.error(`Debe completar un mail`)
+                    }
+                else {
+                    const response = await sendMailPdf(formData);
+                    toast.success(response.message);
+                }
+
+               
+                //console.log('Correo enviado exitosamente:', response);
+            } catch (error) {
+                console.error('Error al enviar el correo:', error);
+            }
+        }
+    };
+
     return (
         <Container>
-            <Help show={showHelp} onClose={() => setshowHelp(false)}/>
+            <Help show={showHelp} onClose={() => setshowHelp(false)} />
             <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
                 <Modal.Header closeButton>
                     <Modal.Title>Confirmar eliminación</Modal.Title>
@@ -225,7 +275,7 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
                         <Button variant="danger" className='col-6' onClick={handleShowDeleteModal}>
                             <i className="bi bi-cart-x mr-2"></i> <br />Cancelar
                         </Button>
-                        {cart && <ConfirmCart idCart={cart?.id} onConfirmarVenta={onConfirmarVenta} totalSales={acumular(cart.sales, discount)} handleCloseParent={confirmSaleClose} mostarTicket={mostarTicket} finalizar={finalizarBtn}/>}
+                        {cart && <ConfirmCart idCart={cart?.id} onConfirmarVenta={onConfirmarVenta} totalSales={acumular(cart.sales, discount)} handleCloseParent={confirmSaleClose} mostarTicket={mostarTicket} finalizar={finalizarBtn} />}
                     </div>
 
                 </Row>
@@ -248,9 +298,25 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
                     </Row></>}
                 {cartTicket && <>
                     <form onSubmit={CerrarModal}>
-                        <Button variant="danger" className='col-12' onClick={CerrarModal} autoFocus >
-                            <i className="bi bi-cart-x mr-2"></i> <br />Cerrar
-                        </Button>
+                        <Row md={12}>
+                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                                <Form.Label>Correo Electrónico</Form.Label>
+                                <Form.Control type="email" placeholder="nombre@gmail.com" onChange={(e: ChangeEvent<HTMLInputElement>) => setmail(e.currentTarget.value)}/>
+                            </Form.Group>
+                        </Row>
+                        <Row md={12} className="gap-6">
+
+
+                            <Button variant="success" className='col-6' onClick={EnviarMail} autoFocus >
+                                <i className="bi bi-cart-x mr-2"></i> <br />Enviar Mail
+                            </Button>
+
+                            <Button variant="danger" className='col-6' onClick={CerrarModal} autoFocus >
+                                <i className="bi bi-cart-x mr-2"></i> <br />Cerrar
+                            </Button>
+                        </Row>
+
+
                     </form>
                 </>}
                 {cartTicket && <PDFViewer width="1000" height="600">

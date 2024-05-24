@@ -41,7 +41,7 @@ const CustomerPage: React.FC = () => {
     getCustomers().then(customer => {
       setCustomers(customer);
     }).catch(e => {
-      console.error(e)
+      //console.error(e)
     })
   }
 

@@ -49,7 +49,7 @@ export const tokenDecode = (): Promise<TokenContent> => {
             const decodedToken = jwtDecode<TokenContent>(token);
             resolve(decodedToken)
         } catch (error) {
-            reject('Error al decodificar el token');
+            window.location.href = "/";
         }
     })
 }

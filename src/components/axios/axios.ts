@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'ax
 import { config } from "../../config/config";
 import { getToken, getTokenRefresh} from "../../functions/User";
 import { SaveUser } from "functions/functios"; // Asegúrate de que la ruta a SaveUser sea correcta
-import { toast } from 'react-toastify';
+
 
 
 const api: AxiosInstance = axios.create({
@@ -45,7 +45,7 @@ api.interceptors.response.use(
 
           if (response.status === 201 || response.status === 200) {
             const newToken = response.data.token;
-            console.log(response.data)
+            // console.log(response.data)
             SaveUser(newToken, refreshToken);
             // Actualiza los encabezados para la solicitud original y las futuras solicitudes
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + newToken;
@@ -54,14 +54,14 @@ api.interceptors.response.use(
             return axios(originalRequest);
           }
         } catch (refreshError) {
-          window.location.href = "/";
+          //window.location.href = "/";
           return Promise.reject(refreshError);
         }
       }
     }
 
     // Si el error es 403 o 401 (y no es un problema de token expirado)
-    if (error.request.status === 403 || error.request.status === 401 || error.request.status  === 402) {
+    if (error.request.status  === 402) {
       //sessionStorage.clear();
       // Redirige a la página raíz
             
