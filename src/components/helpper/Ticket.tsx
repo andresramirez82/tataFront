@@ -118,7 +118,7 @@ const ComprobanteVentaPDF: React.FC<ComprobanteVentaProps> = ({ cart }) => {
   };
 
   return (
-    <Document author={`${user?.name}`} creator={`${company?.name}`} language='Es_es' subject={`Comprobante Nº ${tcart?.id}`}>
+    <Document author={`${user?.name}`} creator={`${company?.name}`} language='Es_es' subject={`Comprobantes de ${company?.name} - ${company?.cuil}`} title={`Comprobante Nº ${tcart?.id}`}>
       <Page size="A4" style={styles.page}>
         <View style={styles.head}>
           <View style={styles.row}>
