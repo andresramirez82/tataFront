@@ -82,7 +82,7 @@ const CartTotalsByDay: React.FC = () => {
         <Container>
             <Row className="mt-4">
                 <Col>
-                    <span ><h2><span className="bi bi-list"/> Lista de Totales Diarios de Carritos</h2></span>
+                    <span ><h2><span className="bi bi-list" /> Lista de Totales Diarios de Carritos</h2></span>
                 </Col>
             </Row>
             <Row className="mt-4">
@@ -115,7 +115,7 @@ const CartTotalsByDay: React.FC = () => {
                 </Col>
             </Row>
             <Row className="mt-4">
-                <Col className="col-6">
+                <Col className="md-6">
                     <h4>Cierres</h4>
                     <Table striped bordered hover>
                         <thead>
@@ -128,7 +128,10 @@ const CartTotalsByDay: React.FC = () => {
                             {totals.map((item, index) => (
                                 <tr key={index}>
                                     <th onClick={() => SelectedDate(item.date)}>
-                                    <a href='#' className='link-underline link-underline-opacity-0 link-underline-opacity-75-hover cursor-pointer'><span className="bi-calendar-date"></span> {formatDateWithoutHours(item.date)}</a>
+                                        <a href='#' className='link-underline link-underline-opacity-0 link-underline-opacity-75-hover cursor-pointer'>
+                                            <span className="bi-calendar-date"></span>
+                                            {formatDateWithoutHours(item.date)}
+                                        </a>
                                     </th>
                                     <td><Total date={item.date} /></td>
                                 </tr>
@@ -136,7 +139,7 @@ const CartTotalsByDay: React.FC = () => {
                         </tbody>
                     </Table>
                 </Col>
-                <Col className="col-6">
+                <Col className="md-6">
                     <h4>Carritos</h4>
                     {selectedCartDate && <CartByDate date={selectedCartDate} />}
                 </Col>

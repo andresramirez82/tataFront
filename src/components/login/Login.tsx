@@ -1,16 +1,19 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from "react";
-import Container from 'react-bootstrap/Container';
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { login,reset } from "../../functions/api";
+import { login, reset } from "../../functions/api";
 import { SaveUser } from "functions/functios";
 import { useNavigate } from 'react-router-dom';
 import { AxiosError } from "axios";
 import { ErrorResponse } from "models/models";
 import { toast } from "react-toastify";
+import "./login.css";
+import CompanyHead from "./CompanyHead";
 
 // import { Auth } from "models/models";
+
+
 
 function Login() {
   //const [users, setUsers] = useState<Auth.AuthUser[]>([]);
@@ -67,16 +70,17 @@ function Login() {
   };
 
   const forget = () => {
-    reset(username).then( r => {
+    reset(username).then(r => {
       toast.success(`${r.message}`);
       setforgetp(false);
     })
   }
 
   return (
-    <Container className="mt-5 d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
-      <div className="login-form p-4 rounded bg-light" style={{ maxWidth: "700px", width: "70%", minWidth: '70%', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.1)', minHeight: '30%' }}>
-        <h2 className="text-center mb-4">Iniciar sesión</h2>
+    <div className="wrapper body">
+      <div className="login">
+
+        <CompanyHead />
         <Form onSubmit={handleSubmit} noValidate validated={isFormInvalid}>
           <Form.Group controlId="formBasicEmail">
             <Form.Label>Usuario</Form.Label>
@@ -113,7 +117,7 @@ function Login() {
 
         </Form>
       </div>
-    </Container>
+    </div>
   );
 }
 

@@ -103,17 +103,24 @@ const CartByDate: React.FC<propsCartbydate> = ({ date }) => {
                 </tbody>
                 <thead>
                     <tr>
-                        <th colSpan={5}>Totales</th>
+                        <th colSpan={6}>Totales</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <th colSpan={3}><i className="bi bi-currency-dollar"></i> Ventas</th>
+                        <th colSpan={4}><i className="bi bi-currency-dollar"></i> Ventas</th>
                         <td colSpan={2}><MoneyFormatter amount={totales.sales} /></td>
                     </tr>
                     <tr>
-                        <th colSpan={3} ><i className="bi bi-percent"></i> Descuentos</th>
+                        <th colSpan={4} ><i className="bi bi-percent"></i> Descuentos</th>
                         <td colSpan={2}><MoneyFormatter amount={totales.discount} /></td>
+                    </tr>
+                    <tr>
+                        <td colSpan={6}> <hr/></td>
+                    </tr>
+                    <tr>
+                        <th colSpan={4} ><i className="bi bi-clipboard-check"></i> Total</th>
+                        <td colSpan={2}><MoneyFormatter amount={totales.sales + totales.discount} total /></td>
                     </tr>
                 </tbody>
             </Table>

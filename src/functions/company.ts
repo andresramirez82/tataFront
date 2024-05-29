@@ -30,6 +30,20 @@ export const getCompany = (idCompany: number): Promise<Company> => {
     });
 };
 
+export const getCompanyLogin = (): Promise<Company> => {
+    // Utiliza async/await para trabajar de forma más cómoda con Promesas
+    return new Promise<Company>((resolve, reject) => {
+        Axios.get(`login/companydata`)
+            .then((response) => {
+                resolve(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+                reject(error);
+            });
+    });
+};
+
 export const createCompany = (company: Company): Promise<Company> => {
     // Utiliza async/await para trabajar de forma más cómoda con Promesas
     return new Promise<Company>((resolve, reject) => {

@@ -39,11 +39,11 @@ api.interceptors.response.use(
         originalRequest._retry = true;
         const refreshToken = await getTokenRefresh(); // Asegúrate de usar await para obtener el refresh token
         try {
-          const response = await axios.post(`${config.urlAPI}login/auth/token`, {
+          axios.post(`${config.urlAPI}login/auth/token`, {
             refresh_token: refreshToken
-          });
-
-          if (response.status === 201 || response.status === 200) {
+        })
+        .then(response => {
+           if (response.status === 201 || response.status === 200) {
             const newToken = response.data.token;
             // console.log(response.data)
             SaveUser(newToken, refreshToken);
@@ -52,7 +52,19 @@ api.interceptors.response.use(
             originalRequest.headers['Authorization'] = 'Bearer ' + newToken;
             // Reintenta la solicitud original
             return axios(originalRequest);
+          } else {
+            window.location.href = "/";
+            sessionStorage.clear();
           }
+        })
+        .catch(error => {
+            // Maneja el error aquí
+            window.location.href = "/";
+            sessionStorage.clear();
+        });
+
+          
+        
         } catch (refreshError) {
           //window.location.href = "/";
           return Promise.reject(refreshError);

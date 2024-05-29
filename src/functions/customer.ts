@@ -125,3 +125,17 @@ export const sendMailPdf = (formData: FormData): Promise<any> => {
             });
     });
 };
+
+export const getMails = (): Promise<{ id: number, mail: string }[]> => {
+    // Utiliza async/await para trabajar de forma más cómoda con Promesas
+    return new Promise<{ id: number, mail: string }[]>((resolve, reject) => {
+        Axios.get(`customers/mails`)
+            .then((response) => {
+                resolve(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+                reject(error);
+            });
+    });
+};

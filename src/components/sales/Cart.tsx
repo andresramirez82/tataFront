@@ -12,7 +12,9 @@ import { carts } from "models/cart";
 import Ticket from "components/helpper/Ticket";
 import { PDFViewer, pdf, Document, Page, View } from '@react-pdf/renderer';
 import Help from "./Help";
-import { sendMailPdf } from "functions/customer";
+import { getMails, sendMailPdf } from "functions/customer";
+import { Typeahead } from 'react-bootstrap-typeahead';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
 
 interface CartProps {
     idCart: number;
@@ -32,10 +34,25 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
     const [discount, setdiscount] = useState<Discount.dicountsResponse[]>();
     const [finalizarBtn, setfinalizarBtn] = useState<boolean>(false);
     const [showHelp, setshowHelp] = useState(false);
-    const [mail, setmail] = useState<string>('')
+    const [mail, setmail] = useState<string>('');
+    const [mailslist, setmailslist] = useState<{ id: number, mail: string }[]>([]);
 
     const handleShowDeleteModal = () => setShowDeleteModal(true);
     const handleCloseDeleteModal = () => setShowDeleteModal(false);
+
+    useEffect(() => {
+        const fetchMails = async () => {
+            try {
+                const mails = await getMails();
+                setmailslist(mails);
+            } catch (error) {
+                console.error("Error fetching mails:", error);
+            }
+        };
+
+        fetchMails();
+    }, []);
+    
 
     useEffect(() => {
         if (isEditing && inputRef.current) {
@@ -43,17 +60,15 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
         }
     }, [isEditing]);
 
-
     useEffect(() => {
         Actualizar(idCart);
-    }, [idCart])
+    }, [idCart]);
 
     const confirmSaleClose = () => {
         setcart(undefined);
         Actualizar(idCart);
         setfinalizarBtn(false);
-    }
-
+    };
 
     const Actualizar = (idCartParam: number) => {
         if (idCartParam) {
@@ -63,32 +78,29 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
                         setcart(myCart);
                         setEditing(true);
                     }
-
                 })
                 .catch(err => {
                     console.error(err);
-                })
+                });
             CartClass.discountsForCart(idCartParam).then(dis => {
                 setdiscount(dis);
             }).catch(err => {
-                console.log(err)
-            })
+                console.log(err);
+            });
         }
-    }
+    };
 
     const BuscarProd = (barcode: string) => {
         ProductClass.getProductByBarcode(barcode).then(resp => {
             if (resp.length > 1) {
                 toast(`Hay ${resp.length} productos que coinciden con la búsqueda se más específico`);
             } else {
-                // seguir acá
                 setProd(resp[0]);
             }
         }).catch(err => {
-            console.error(err)
-        })
-    }
-
+            console.error(err);
+        });
+    };
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -100,22 +112,19 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
                 BuscarProd(barCode);
             setshowCreateSale(true);
         } else {
-            // Si hay errores de validación, muestra los mensajes de error
             e.stopPropagation();
             setIsFormInvalid(true);
         }
         form.classList.add('was-validated');
-
-    }
+    };
 
     const onConfirmarVenta = (idCart: number, idPayment: number) => [
         CartClass.updateCart(idCart, idPayment, discount).then(resp => {
             setfinalizarBtn(false);
-
         }).catch(err => {
             console.error(err);
         })
-    ]
+    ];
 
     const handleHideModalSale = () => {
         setshowCreateSale(false);
@@ -127,21 +136,20 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
                         Actualizar(idCart);
                         setEditing(true);
                     }
-
                 })
                 .catch(err => {
                     console.error(err);
-                })
+                });
         }
         if (inputRef.current) {
-            inputRef.current.value = ''; // No error
+            inputRef.current.value = '';
         }
-    }
+    };
 
     const CerrarModal = () => {
         setidCart(undefined);
         setcartTicket(undefined);
-    }
+    };
 
     const DeleteCart = () => {
         CartClass.deleteCart(idCart).then(resp => {
@@ -149,22 +157,21 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
             setidCart(undefined);
         }).catch(err => {
             toast(`Hubo un error al eliminar la venta ${idCart}`);
-        })
-    }
+        });
+    };
 
     const BorraSale = (idSale: number) => {
         CartClass.deleteSale(idSale).then(sale => {
             toast(`Se borró correctamente la venta`);
             Actualizar(idCart);
-        }
-        ).catch(err => {
+        }).catch(err => {
             toast(`Error al borrar`);
-        })
-    }
+        });
+    };
 
     const mostarTicket = (cart: carts) => {
-        setcartTicket(cart)
-    }
+        setcartTicket(cart);
+    };
 
     /**
      * Hot´s keys Handler
@@ -175,10 +182,10 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
                 setfinalizarBtn(true);
             }
             if (event.key === 'F4') {
-                handleShowDeleteModal()
+                handleShowDeleteModal();
             }
             if (event.key === 'F1') {
-                setshowHelp(true)
+                setshowHelp(true);
             }
         };
 
@@ -188,7 +195,6 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
             document.removeEventListener('keydown', handleKeyDown);
         };
     }, []);
-
 
     const MyDoc = (
         <Document>
@@ -205,32 +211,19 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
     const EnviarMail = async () => {
         if (cartTicket) {
             try {
-                // Generar el blob del PDF
                 const blob = await pdf(ticket).toBlob();
-
-                // Crear y configurar el FormData
                 const formData = new FormData();
                 formData.append('to', mail);
                 formData.append('text', `Se adjunta su comprobante de venta Nro ${cart?.id} <br/> Vendedor: <b>${cart?.user.name}</b>`);
                 formData.append('subject', `Comprobante Nro: ${cart?.id}`);
                 formData.append('file', blob, `ComprobanteNro:${cart?.id}.pdf`);
 
-
-                // console.log(formData)
-                // Enviar el formulario
-
-                if (mail === '')
-                    {
-                        
-                        toast.error(`Debe completar un mail`)
-                    }
-                else {
+                if (mail === '') {
+                    toast.error(`Debe completar un mail`);
+                } else {
                     const response = await sendMailPdf(formData);
                     toast.success(response.message);
                 }
-
-               
-                //console.log('Correo enviado exitosamente:', response);
             } catch (error) {
                 console.error('Error al enviar el correo:', error);
             }
@@ -269,16 +262,15 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
                 </tbody>
             </Table>
             <div className='row gap-3'>
-                {!cartTicket && <><Row>
-
-                    <div className="input-group-append d-flex gap-1">
-                        <Button variant="danger" className='col-6' onClick={handleShowDeleteModal}>
-                            <i className="bi bi-cart-x mr-2"></i> <br />Cancelar
-                        </Button>
-                        {cart && <ConfirmCart idCart={cart?.id} onConfirmarVenta={onConfirmarVenta} totalSales={acumular(cart.sales, discount)} handleCloseParent={confirmSaleClose} mostarTicket={mostarTicket} finalizar={finalizarBtn} />}
-                    </div>
-
-                </Row>
+                {!cartTicket && <>
+                    <Row>
+                        <div className="input-group-append d-flex gap-1">
+                            <Button variant="danger" className='col-6' onClick={handleShowDeleteModal}>
+                                <i className="bi bi-cart-x mr-2"></i> <br />Cancelar
+                            </Button>
+                            {cart && <ConfirmCart idCart={cart?.id} onConfirmarVenta={onConfirmarVenta} totalSales={acumular(cart.sales, discount)} handleCloseParent={confirmSaleClose} mostarTicket={mostarTicket} finalizar={finalizarBtn} />}
+                        </div>
+                    </Row>
                     <Row>
                         <Col md={12}>
                             <Form noValidate validated={isFormInvalid} onSubmit={handleSubmit}>
@@ -293,30 +285,36 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
                                     Por favor ingrese un codigo de barras
                                 </Form.Control.Feedback>
                             </Form>
-
                         </Col>
-                    </Row></>}
+                    </Row>
+                </>}
                 {cartTicket && <>
                     <form onSubmit={CerrarModal}>
                         <Row md={12}>
-                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                            <Form.Group className="mb-3" controlId="mailforTicket">
                                 <Form.Label>Correo Electrónico</Form.Label>
-                                <Form.Control type="email" placeholder="nombre@gmail.com" onChange={(e: ChangeEvent<HTMLInputElement>) => setmail(e.currentTarget.value)}/>
+                                <Typeahead
+                                    id="mail-typeahead"
+                                    onChange={(selected: any) => {
+                                        if (selected.length > 0) {
+                                            setmail(selected[0].mail);
+                                        }
+                                    }}
+                                    options={mailslist}
+                                    labelKey="mail"
+                                    placeholder="nombre@gmail.com"
+                                />
+                                
                             </Form.Group>
                         </Row>
                         <Row md={12} className="gap-6">
-
-
                             <Button variant="success" className='col-6' onClick={EnviarMail} autoFocus >
                                 <i className="bi bi-cart-x mr-2"></i> <br />Enviar Mail
                             </Button>
-
                             <Button variant="danger" className='col-6' onClick={CerrarModal} autoFocus >
                                 <i className="bi bi-cart-x mr-2"></i> <br />Cerrar
                             </Button>
                         </Row>
-
-
                     </form>
                 </>}
                 {cartTicket && <PDFViewer width="1000" height="600">
@@ -354,13 +352,11 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
                             </tbody>
                         </Table>
                     </div>
-
                 </Row>}
-
             </div>
-
             {Prod && <CreateSale product={Prod} show={showCreateSale} onHide={handleHideModalSale} idCart={idCart} />}
-        </Container>);
-}
+        </Container>
+    );
+};
 
 export default Cart;
