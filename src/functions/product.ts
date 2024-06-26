@@ -153,7 +153,7 @@ export const fetchProductsAPI = (currentPage: number, order: string): Promise<pa
 }
 
 
-export const fetchDiscounts = (currentPage: number, order: string): Promise<pagination<discounts>> => {
+export const fetchDiscounts = (): Promise<pagination<discounts>> => {
     return new Promise<pagination<discounts>>((resolve, reject) => {
         Axios.get(`/discounts`)
             .then((response) => {

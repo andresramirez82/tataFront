@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Table } from 'react-bootstrap';
-import { Customer } from '../../models/customer';
-import Mail from "../../components/helpper/Mail";
+import { Customer } from '@models/customer';
+import Mail from "@components/helpper/Mail";
 
 interface Props {
   customers: Customer[];

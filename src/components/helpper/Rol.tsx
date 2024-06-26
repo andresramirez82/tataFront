@@ -1,4 +1,4 @@
-import { UserRole } from "../../models/user";
+import { UserRole } from "@models/user";
 import { Form } from "react-bootstrap";
 import { useState, useEffect } from "react";
 

@@ -2,11 +2,11 @@ import { Sale } from "./sales";
 import { User } from "./user";
 import { dicountResponse } from "./discount";
 
-interface DiscountApplied {
+/*interface DiscountApplied {
     discountName: string;
     discountAmount: number;
     productId: number; // O cualquier otro identificador único del producto
-}
+}*/
 
 export interface carts {
     id: number;

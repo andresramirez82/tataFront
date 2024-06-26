@@ -1,9 +1,9 @@
 import React, { useEffect, useState, CSSProperties } from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { sendMail } from '../../functions/customer';
+import { sendMail } from '@functions/customer';
 import { toast } from 'react-toastify';
-import { getCompany } from '../../functions/company';
-import { Company as CompanyModel } from '../../models/company';
+import { getCompany } from '@functions/company';
+import { Company as CompanyModel } from '@models/company';
 import ReactDOMServer from 'react-dom/server';
 
 interface MailProps {

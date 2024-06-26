@@ -1,17 +1,17 @@
 // src/components/UserManagement.tsx
 import React, { useState, useEffect } from "react";
 import { Form, Table } from 'react-bootstrap';
-import { UserClass, getUsers } from "../../functions/api";
-import { User, UserRole } from "../../models/user";
-import { formatDate } from "../../functions/functios";
+import { UserClass, getUsers } from "@functions/api";
+import { User, UserRole } from "@models/user";
+import { formatDate } from "@functions/functios";
 import { toast } from 'react-toastify';
-import Spinner from "../../components/helpper/Spinner";
+import Spinner from "@components/helpper/Spinner";
 import { AxiosError } from "axios";
-import { ErrorResponse } from "../../models/models";
-import UserRoleSelect from "../../components/helpper/Rol";
-import { changeState, exist } from "../../functions/User";
-import Mail from "../../components/helpper/Mail";
-import ResetPass from "../../components/helpper/ResetPass";
+import { ErrorResponse } from "@models/models";
+import UserRoleSelect from "@components/helpper/Rol";
+import { changeState, exist } from "@functions/User";
+import Mail from "@components/helpper/Mail";
+import ResetPass from "@components/helpper/ResetPass";
 
 
 
@@ -66,7 +66,7 @@ const UserManagement: React.FC = () => {
     const createUser = async () => {
         try {
             if (user) {
-                UserClass.createUser(user).then(resp => {
+                UserClass.createUser(user).then( () => {
                     toast.success(`Se creó correctamente el usuario ${user.name}`);
                     fetchUsers();
                 }).catch((err: AxiosError<ErrorResponse>) => {
@@ -82,7 +82,7 @@ const UserManagement: React.FC = () => {
 
     const deleteUser = async (userId: number) => {
 
-        UserClass.deleteUser(userId).then(u => {
+        UserClass.deleteUser(userId).then( () => {
             toast.success(`Se eliminó correctamente el usuario`);
             fetchUsers();
         }).catch((err: AxiosError<ErrorResponse>) => {

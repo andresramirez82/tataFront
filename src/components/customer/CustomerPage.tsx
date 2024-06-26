@@ -4,12 +4,12 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import CustomerForm from './CustomerForm';
 import CustomerList from './CustomerList';
-import { Customer } from '../../models/customer';
-import { getCustomers, createCustomer, deleteCustomer } from "../../functions/customer";
+import { Customer } from '@models/customer';
+import { getCustomers, createCustomer, deleteCustomer } from "@functions/customer";
 import { toast } from 'react-toastify';
 import { AxiosError } from "axios";
-import { ErrorResponse } from "../../models/models";
-import CurrentAccount from "../../components/CurrentAccount/CurrentAccountPage";
+import { ErrorResponse } from "@models/models";
+import CurrentAccount from "@components/CurrentAccount/CurrentAccountPage";
 
 const CustomerPage: React.FC = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -18,7 +18,7 @@ const CustomerPage: React.FC = () => {
     createCustomer(newCustomer).then(t => {
       toast(`Se agregó correctamente el Cliente ${t.name}`)
       actualiar();
-    }).catch(e => {
+    }).catch( () => {
       toast(`Huvo un error al agregar el cliente ${newCustomer.name}`)
     })
 
@@ -40,8 +40,6 @@ const CustomerPage: React.FC = () => {
   const actualiar = () => {
     getCustomers().then(customer => {
       setCustomers(customer);
-    }).catch(e => {
-      //console.error(e)
     })
   }
 

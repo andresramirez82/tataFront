@@ -1,4 +1,4 @@
-import { payments, carts } from 'models/cart';
+// import { payments, carts } from 'models/cart';
 
 export interface pay {
     id: number;

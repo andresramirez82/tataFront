@@ -1,7 +1,7 @@
 import React from "react";
 import { Modal, ModalHeader, ModalTitle } from "react-bootstrap";
-import Ticket from "../../components/helpper/Ticket";
-import { Cart } from "../../models/models";
+import Ticket from "@components/helpper/Ticket";
+import { Cart } from "@models/models";
 import { PDFViewer } from '@react-pdf/renderer';
 
 interface TicketModalProps {

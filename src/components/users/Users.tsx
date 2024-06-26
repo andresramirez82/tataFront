@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { getUser } from '../../functions/api';
-import { Auth } from '../../models/models';
-import { formatDate } from '../../functions/functios';
-import Thumbnail from '../../components/helpper/Thumbnail';
+import { getUser } from '@functions/api';
+import { Auth } from '@models/models';
+import { formatDate } from '@functions/functios';
+import Thumbnail from '@components/helpper/Thumbnail';
 import ResetPass from "./ResetPass";
 
 const UserContainer = styled.div`

@@ -1,5 +1,5 @@
 import React from 'react';
-import { payments } from '../../models/cart';
+import { payments } from '@models/cart';
 import { Table } from 'react-bootstrap';
 
 interface PaymentListProps {

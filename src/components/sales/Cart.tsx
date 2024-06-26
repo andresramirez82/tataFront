@@ -1,18 +1,18 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Container, Row, Col, InputGroup, Form, Button, Modal, Table } from "react-bootstrap";
-import { CartClass, ProductClass } from "../../functions/api";
-import { Cart as CartModel, Product, Discount } from "../../models/models";
-import { formatDate } from "../../functions/functios";
-import { acumular } from "../../functions/functios";
-import MoneyFormatter from "../../components/helpper/Money";
+import { CartClass, ProductClass } from "@functions/api";
+import { Cart as CartModel, Product, Discount } from "@models/models";
+import { formatDate } from "@functions/functios";
+import { acumular } from "@functions/functios";
+import MoneyFormatter from "@components/helpper/Money";
 import { toast } from 'react-toastify';
 import CreateSale from "./CreateSale";
 import ConfirmCart from "./ConfirmCart";
-import { carts } from "../../models/cart";
-import Ticket from "../../components/helpper/Ticket";
+import { carts } from "@models/cart";
+import Ticket from "@components/helpper/Ticket";
 import { PDFViewer, pdf, Document, Page, View } from '@react-pdf/renderer';
 import Help from "./Help";
-import { getMails, sendMailPdf } from "../../functions/customer";
+import { getMails, sendMailPdf } from "@functions/customer";
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 
@@ -120,7 +120,7 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart, addCart }) => {
     };
 
     const onConfirmarVenta = (idCart: number, idPayment: number) => [
-        CartClass.updateCart(idCart, idPayment, discount).then(resp => {
+        CartClass.updateCart(idCart, idPayment, discount).then( () => {
             setfinalizarBtn(false);
         }).catch(err => {
             console.error(err);
@@ -154,19 +154,19 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart, addCart }) => {
     };
 
     const DeleteCart = () => {
-        CartClass.deleteCart(idCart).then(resp => {
+        CartClass.deleteCart(idCart).then(() => {
             toast(`Se borró correctamente el carrito ${idCart}`);
             setidCart(undefined);
-        }).catch(err => {
+        }).catch(() => {
             toast(`Hubo un error al eliminar la venta ${idCart}`);
         });
     };
 
     const BorraSale = (idSale: number) => {
-        CartClass.deleteSale(idSale).then(sale => {
+        CartClass.deleteSale(idSale).then(() => {
             toast(`Se borró correctamente la venta`);
             Actualizar(idCart);
-        }).catch(err => {
+        }).catch( () => {
             toast(`Error al borrar`);
         });
     };

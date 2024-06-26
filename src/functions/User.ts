@@ -1,4 +1,4 @@
-import Axios from "../components/axios/Axios";
+import Axios from "@components/axios/Axios";
 import { User } from './../models/user';
 import { jwtDecode } from 'jwt-decode';
 import { ApiResponseBase } from "../models/api";
@@ -44,7 +44,7 @@ interface TokenContent {
 
 export const tokenDecode = (): Promise<TokenContent> => {
     const token = sessionStorage.getItem('token') || '';
-    return new Promise<TokenContent>((resolve, reject) => {
+    return new Promise<TokenContent>((resolve) => {
         try {
             const decodedToken = jwtDecode<TokenContent>(token);
             resolve(decodedToken)

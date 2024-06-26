@@ -1,11 +1,11 @@
 // src/components/product/EditProductForm.tsx
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Modal, ButtonGroup } from 'react-bootstrap';
-import { ProductClass, TagClass } from '../../functions/api';
-import { Product } from '../../models/models';
-import { Tag } from '../../models/products';
+import { ProductClass, TagClass } from '@functions/api';
+import { Product } from '@models/models';
+import { Tag } from '@models/products';
 import { toast } from 'react-toastify';
-import TagSearch from "../../components/helpper/Tag";
+import TagSearch from "@components/helpper/Tag";
 //import ProductDetails from './ProductDetails';
 
 interface EditProductFormProps {

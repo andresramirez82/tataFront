@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import Money from "../..//components/helpper/Money";
-import { getCartByDate } from "../../functions/cart";
-import { acumular } from "../../functions/functios";
-import Spinner from "../../components/helpper/Spinner";
+import { getCartByDate } from "@functions/cart";
+import { acumular } from "@functions/functios";
+import Spinner from "@components/helpper/Spinner";
 
 
 const getTotalCarts = async (date: Date) => {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Button, Modal, ButtonGroup } from 'react-bootstrap';
-import { ProductClass } from '../../functions/api';
-import { Product } from '../../models/models';
+import { ProductClass } from '@functions/api';
+import { Product } from '@models/models';
 import { toast } from 'react-toastify';
 
 interface CreateProductFormProps {

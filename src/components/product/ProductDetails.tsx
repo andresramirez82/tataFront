@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { ProductClass } from '../../functions/api';
-import { Product } from '../../models/models';
+import { ProductClass } from '@functions/api';
+import { Product } from '@models/models';
 import { Alert, Button, Form, InputGroup, Row, Col, Container } from 'react-bootstrap';
-import { formatDate } from '../../functions/functios';
-import Stock from "../../components/helpper/Stock";
+import { formatDate } from '@functions/functios';
+import Stock from "@components/helpper/Stock";
 import EditProductForm from './EditProductForm';
 import { toast } from 'react-toastify';
 import Barcode from 'react-barcode';
 import { Carousel } from 'react-bootstrap';
-import DeleteProduct from "../../components/product/DeleteProduct";
+import DeleteProduct from "@components/product/DeleteProduct";
 
 interface ProductDetailsProps {
     productId: number;

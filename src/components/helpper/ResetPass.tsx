@@ -1,12 +1,12 @@
 import React, { useEffect, useState, CSSProperties } from 'react';
-import { sendMail } from '../../functions/customer';
+import { sendMail } from '@functions/customer';
 import { toast } from 'react-toastify';
-import { getCompany } from '../../functions/company';
-import { Company as CompanyModel } from '../../models/company';
+import { getCompany } from '@functions/company';
+import { Company as CompanyModel } from '@models/company';
 import ReactDOMServer from 'react-dom/server';
-import { resetPass, generarPassword } from "../../functions/User";
+import { resetPass, generarPassword } from "@functions/User";
 import { AxiosError } from "axios";
-import { ErrorResponse } from "../../models/models";
+import { ErrorResponse } from "@models/models";
 
 interface MailProps {
     email: string | undefined;
@@ -96,7 +96,7 @@ const ResetMail: React.FC<MailProps> = ({ email, name, idUser }) => {
 
     const resetUser = async () => {
         const newpass = generarPassword(10);
-        resetPass(idUser, newpass).then(np => {
+        resetPass(idUser, newpass).then( ()  => {
             navigator.clipboard.writeText(newpass);
             SendMail(email, newpass);
         }).catch((err: AxiosError<ErrorResponse>) => {

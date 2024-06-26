@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Modal } from 'react-bootstrap';
-import { resetPass } from "../../functions/User";
+import { resetPass } from "@functions/User";
 import { toast } from 'react-toastify';
 
 interface ResetPassProps {

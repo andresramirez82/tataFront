@@ -1,12 +1,12 @@
 // src/components/product/EditProductForm.tsx
 import React, { useState, useEffect } from 'react';
 import {  Container, Modal, Row, Col } from 'react-bootstrap';
-import { CartClass } from '../../functions/api';
-import { Cart } from '../../models/models';
-//import Stock from "../../components/helpper/Stock";
+import { CartClass } from '@functions/api';
+import { Cart } from '@models/models';
+//import Stock from "@components/helpper/Stock";
 import { toast } from 'react-toastify';
 //import Barcode from 'react-barcode';
-import { formatDate } from '../../functions/functios';
+import { formatDate } from '@functions/functios';
 
 
 

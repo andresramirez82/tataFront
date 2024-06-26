@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios';
-import { config } from "../../config/config";
-import { getToken, getTokenRefresh} from "../../functions/User";
-import { SaveUser } from "../../functions/functios"; // Asegúrate de que la ruta a SaveUser sea correcta
+import { config } from "@config/config.js";
+import { getToken, getTokenRefresh} from "@functions/User.js";
+import { SaveUser } from "@functions/functios.js"; // Asegúrate de que la ruta a SaveUser sea correcta
 
 
 
@@ -57,7 +57,7 @@ api.interceptors.response.use(
             sessionStorage.clear();
           }
         })
-        .catch(error => {
+        .catch( () => {
             // Maneja el error aquí
             window.location.href = "/";
             sessionStorage.clear();

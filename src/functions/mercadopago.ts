@@ -11,13 +11,14 @@ interface ItemMp {
     description: string;
     picture_url: string;
 }
+/*
 interface OrderMP {
     external_reference: string;
     items: ItemMp[]
     notification_url: string;
 }
 
-
+*/
 export const createOrder = async (cart: Cart.cart, total: number): Promise<any> => {
     return new Promise<any>((resolve, reject) => {
         const itemsMP: ItemMp[] = [

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { payments } from '../../models/cart';
+import { payments } from '@models/cart';
 import { Form, Modal } from 'react-bootstrap';
-import { updatePayment } from "../../functions/cart";
+import { updatePayment } from "@functions/cart";
 import { toast } from 'react-toastify';
 
 interface PaymentEditProps {

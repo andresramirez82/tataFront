@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
-import { Cart } from "../../models/models";
-import { User } from "../../models/user";
-import { Company } from "../../models/company";
-import { acumular, formatDate } from "../../functions/functios";
-import { getCompanies } from "../../functions/company";
-import { CartClass } from "../../functions/api";
-import { tokenDecode } from "../../functions/User";
+import { Cart } from "@models/models";
+import { User } from "@models/user";
+import { Company } from "@models/company";
+import { acumular, formatDate } from "@functions/functios";
+import { getCompanies } from "@functions/company";
+import { CartClass } from "@functions/api";
+import { tokenDecode } from "@functions/User";
 
 
 // Define estilos

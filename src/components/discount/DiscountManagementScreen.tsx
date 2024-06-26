@@ -2,10 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { Button, Container, Table, Modal, Form } from 'react-bootstrap';
-import { fetchDiscounts, searchProduct, CreateDiscounts } from "../../functions/product";
-import { formatDate } from "../../functions/functios";
-import { discounts, DiscountDays as DiscountDaysT } from "../../models/discount";
-import { products } from "../../models/products";
+import { fetchDiscounts, searchProduct, CreateDiscounts } from "@functions/product";
+import { formatDate } from "@functions/functios";
+import { discounts, DiscountDays as DiscountDaysT } from "@models/discount";
+import { products } from "@models/products";
 import { toast } from 'react-toastify';
 
 import DiscountDays from "./DiscountDays";
@@ -39,7 +39,7 @@ const DiscountManagementScreen: React.FC = () => {
     const loadDiscounts = async () => {
         // Aquí deberías hacer la llamada a tu API para obtener los descuentos
         // Por simplicidad, aquí solo se muestra un array vacío
-        const data: discounts[] = (await fetchDiscounts(1, 'id')).dato;
+        const data: discounts[] = (await fetchDiscounts()).dato;
         setDiscounts(data);
     };
 
@@ -119,9 +119,9 @@ const DiscountManagementScreen: React.FC = () => {
                 product,
                 discountDays: formData.discountDays
             }
-            CreateDiscounts(newDiscount).then(n => {
+            CreateDiscounts(newDiscount).then(() => {
                 toast(`Se ha insertado correctamente el descuento ${newDiscount.name} en el producto ${newDiscount.product.name}`);
-            }).catch(err => {
+            }).catch( () => {
 
                 toast(`Ha habido un error al insertar el descuento ${newDiscount.name} en el producto ${newDiscount.product.name}`);
             }).finally(() => {

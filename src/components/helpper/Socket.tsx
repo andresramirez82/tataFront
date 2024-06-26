@@ -1,15 +1,15 @@
 import { useEffect } from "react";
 import io from 'socket.io-client';
 import { config } from "../../config/config";
-import { getCartByDate } from "../../functions/cart";
+import { getCartByDate } from "@functions/cart";
 
 interface SocketModuleProps {
     user: string
 }
-
+/*
 interface socketI { datef: Date, dates: Date }
 
-
+*/
 const SocketModule: React.FC<SocketModuleProps> = ({ user }) => {
 
     useEffect(() => {
@@ -17,7 +17,7 @@ const SocketModule: React.FC<SocketModuleProps> = ({ user }) => {
         if (user) {
 
             socket.emit('user connected', user)
-            socket.on('list', async (list: socketI) => {
+            socket.on('list', async () => {
                 const carts = await getCartByDate(new Date('2024-05-10T03:00:00.000Z'));
                 socket.emit('List Return', carts);
 

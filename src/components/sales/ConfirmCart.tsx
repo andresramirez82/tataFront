@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Image, Row, Col } from 'react-bootstrap';
-import { Cart } from "../../models/models";
-import { pay } from "../../models/Pay";
-import { CartClass } from "../../functions/api";
-import { createOrder } from "../../functions/mercadopago";
+import { Cart } from "@models/models";
+import { pay } from "@models/Pay";
+import { CartClass } from "@functions/api";
+import { createOrder } from "@functions/mercadopago";
 import MP from "../../img/mp.png";
 import AFIP from "../../img/afip.png";
-import MoneyFormatter from '../../components/helpper/Money';
-import Spinner from "../../components/helpper/Spinner";
+import MoneyFormatter from '@components/helpper/Money';
+import Spinner from "@components/helpper/Spinner";
 import io from 'socket.io-client';
 import { toast } from 'react-toastify';
-import { getOrder } from "../../functions/mercadopago";
-import { carts } from '../../models/cart';
+import { getOrder } from "@functions/mercadopago";
+import { carts } from '@models/cart';
 import { keyboardKey } from "@testing-library/user-event";
-import { createPay } from '../../functions/pay';
+import { createPay } from '@functions/pay';
 import { config } from "../../config/config";
 
 
@@ -77,7 +77,7 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
         }
         if (notification.action === 'payment.created') {
           toast(`Pago realizado`);
-          getOrder(idCart).then(resp => {
+          getOrder(idCart).then(() => {
             onConfirmarVenta(idCart, Number(selectedFormaPago));
             handleClose();
             if (cart) {

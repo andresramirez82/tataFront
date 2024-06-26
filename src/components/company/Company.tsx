@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, Form, Modal, Table } from 'react-bootstrap';
-import { Company } from '../../models/company';
-import { getCompanies, deleteCompany, createCompany } from "../../functions/company";
+import { Company } from '@models/company';
+import { getCompanies, deleteCompany, createCompany } from "@functions/company";
 import { toast } from 'react-toastify';
-import CUIL from "../../components/UI/CUIL/Cuil";
-import Tel from "../../components/UI/Tel/Tel";
-import Email from "../../components/UI/Email/Email";
-import URL from "../../components/UI/URL/URL";
+import CUIL from "@components/UI/CUIL/Cuil";
+import Tel from "@components/UI/Tel/Tel";
+import Email from "@components/UI/Email/Email";
+import URL from "@components/UI/URL/URL";
 
 const CompanyCRUD: React.FC = () => {
     const [companies, setCompanies] = useState<Company | undefined>({ id: 0, name: '', cuil: '', phone: '', email: '', address: '' });

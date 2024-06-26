@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { CartClass } from "../../functions/api";
+import { CartClass } from "@functions/api";
 import { Alert, Row, Col, Container, Button, Table } from 'react-bootstrap';
-import { formatDate, getUser, formatDateWithoutHours } from "../../functions/functios";
-import { acumular } from "../../functions/functios";
-import MoneyFormatter from "../..//components/helpper/Money";
-import Cart from "../../components/sales/Cart";
-import { withDiscount } from './../../models/models';
-import { Cart as CartModel } from '../../models/models';
+import { formatDate, getUser, formatDateWithoutHours } from "@functions/functios";
+import { acumular } from "@functions/functios";
+import MoneyFormatter from "@components/helpper/Money";
+import Cart from "@components/sales/Cart";
+import { withDiscount } from '@models/models';
+import { Cart as CartModel } from '@models/models';
 import TicketModal from "./TicketModal";
 
 
