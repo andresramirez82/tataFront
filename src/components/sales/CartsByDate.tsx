@@ -2,13 +2,13 @@
 // src/components/product/EditProductForm.tsx
 import React, { useState, useEffect } from 'react';
 import { Container, Table } from 'react-bootstrap';
-import { CartClass } from 'functions/api';
-import { Cart } from 'models/models';
+import { CartClass } from '../../functions/api';
+import { Cart } from '../../models/models';
 import { toast } from 'react-toastify';
-import { formatDate } from 'functions/functios';
-import { acumular } from 'functions/functios';
-import MoneyFormatter from 'components/helpper/Money';
-import Spinner from "components/helpper/Spinner";
+import { formatDate } from '../../functions/functios';
+import { acumular } from '../../functions/functios';
+import MoneyFormatter from '../../components/helpper/Money';
+import Spinner from "../../components/helpper/Spinner";
 import TicketModal from "./TicketModal";
 
 
@@ -40,8 +40,8 @@ const CartByDate: React.FC<propsCartbydate> = ({ date }) => {
     }, [cart])
 
     const totalCalculate = () => {
-        let TSales: number = 0;
-        let TDiscount: number = 0;
+        let TSales = 0;
+        let TDiscount = 0;
         cart?.forEach(c => {
             c.sales.forEach(s => {
                 TSales = TSales + s.totalPrice;

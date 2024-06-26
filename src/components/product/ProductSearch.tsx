@@ -1,8 +1,8 @@
 import React, { useState,useEffect } from 'react';
 import { Form, Button, Alert, Spinner } from 'react-bootstrap';
-import { ProductClass } from 'functions/api';
-import { Product } from 'models/models';
-import ProductDetails from 'components/product/ProductDetails';
+import { ProductClass } from '../../functions/api';
+import { Product } from '../../models/models';
+import ProductDetails from '../../components/product/ProductDetails';
 import CreateProductForm from './CreateProductForm';
 import { useParams } from 'react-router-dom';
 

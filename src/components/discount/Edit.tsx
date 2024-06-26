@@ -1,10 +1,10 @@
 // src/components/product/EditProductForm.tsx
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import { Form, Button, Modal, Table } from 'react-bootstrap';
-import { DiscountClass } from 'functions/api';
-import { formatDateISO } from "functions/functios";
-import { Discount, Product } from 'models/models';
-import { searchProduct } from "functions/product";
+import { DiscountClass } from '../../functions/api';
+import { formatDateISO } from "../../functions/functios";
+import { Discount, Product } from '../../models/models';
+import { searchProduct } from "../../functions/product";
 import DiscountDays from "./DiscountDays";
 import { toast } from 'react-toastify';
 

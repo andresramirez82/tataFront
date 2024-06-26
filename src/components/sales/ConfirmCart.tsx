@@ -1,22 +1,20 @@
-/* eslint-disable array-callback-return */
-/* eslint-disable jsx-a11y/alt-text */
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Image, Row, Col } from 'react-bootstrap';
-import { Cart } from "models/models";
-import { pay } from "models/Pay";
-import { CartClass } from "functions/api";
-import { createOrder } from "functions/mercadopago";
-import MP from "img/mp.png";
-import AFIP from "img/afip.png";
-import MoneyFormatter from 'components/helpper/Money';
-import Spinner from "components/helpper/Spinner";
+import { Cart } from "../../models/models";
+import { pay } from "../../models/Pay";
+import { CartClass } from "../../functions/api";
+import { createOrder } from "../../functions/mercadopago";
+import MP from "../../img/mp.png";
+import AFIP from "../../img/afip.png";
+import MoneyFormatter from '../../components/helpper/Money';
+import Spinner from "../../components/helpper/Spinner";
 import io from 'socket.io-client';
 import { toast } from 'react-toastify';
-import { getOrder } from "functions/mercadopago";
-import { carts } from 'models/cart';
+import { getOrder } from "../../functions/mercadopago";
+import { carts } from '../../models/cart';
 import { keyboardKey } from "@testing-library/user-event";
-import { createPay } from 'functions/pay';
-import { config } from "config/config";
+import { createPay } from '../../functions/pay';
+import { config } from "../../config/config";
 
 
 interface confSaleProps {
@@ -109,12 +107,10 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
     // Lógica para confirmar la venta con la forma de pago seleccionada
     if (sendMP && cart && selectedFormaPago === '2') {
       setloading(true);
-      createOrder(cart, totalSales).then((result: any) => {
+      createOrder(cart, totalSales).then(() => {
         // console.log(result)
-      }).catch((err: any) => {
+      }).catch((err: unknown) => {
         console.error(err)
-      }).finally(() => {
-
       })
     }
     if (selectedFormaPago !== '4' && !sendMP) {
@@ -130,12 +126,10 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
         mixP.forEach(p => {
           if (p.amount !== 0) {
             if (p.payment === 2 && sendMP) {
-              createOrder(cart, p.amount).then((result: any) => {
+              createOrder(cart, p.amount).then(() => {
                 agregarPay(p);
-              }).catch((err: any) => {
+              }).catch((err: unknown) => {
                 console.error(err)
-              }).finally(() => {
-  
               })
             } else {
               agregarPay(p)
@@ -177,7 +171,7 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
         payment: Number([e.currentTarget.name]),
         id: 0
       };
-      let Array: pay[] = [];
+      const Array: pay[] = [];
       mixP.forEach(r => {
         if (r.payment !== Number([e.currentTarget.name])) {
           Array.push(r)
@@ -185,7 +179,7 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
       })
       Array.push(newPay);
       setmixP(Array);
-      let total: number = 0;
+      let total = 0;
 
       if (Array.length > 0) {
         Array.forEach(r => {
@@ -203,7 +197,7 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
 
 
   const TotalParcial = () => {
-    let total: number = 0;
+    let total = 0;
 
     if (mixP.length > 0) {
       mixP.forEach(r => {

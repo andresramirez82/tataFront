@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
-import { Customer } from 'models/customer';
-import Email from "components/UI/Email/Email";
+import { Customer } from '../../models/customer';
+import Email from "../../components/UI/Email/Email";
 
 interface Props {
   onSubmit: (customer: Customer) => void;

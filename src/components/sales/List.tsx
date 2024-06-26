@@ -1,10 +1,9 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from "react";
-import { Alert, Container, Row, Col, Table, Form, Button } from 'react-bootstrap';
+import {  Container, Row, Col, Table, Form, Button } from 'react-bootstrap';
 import { getCartTotalsByDay } from "../../functions/cart";
-import { formatDateWithoutHours } from "functions/functios";
-import { Cart } from "models/models";
-import CartByDate from "components/sales/CartsByDate";
+import { formatDateWithoutHours } from "../../functions/functios";
+import { Cart } from "../../models/models";
+import CartByDate from "../../components/sales/CartsByDate";
 import Total from "./Total";
 
 

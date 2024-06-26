@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import PaymentForm from './PaymentForm';
 import PaymentList from './PaymentList';
-import { payments } from 'models/cart';
+import { payments } from '../../models/cart';
 import { toast } from 'react-toastify';
-import { getPayment, deletePayment, addPayment } from "functions/cart";
+import { getPayment, deletePayment, addPayment } from "../../functions/cart";
 import { AxiosError } from "axios";
 import PaymentEdit from "./PaymentEdit";
-import {  ErrorResponse} from "models/models";
+import {  ErrorResponse} from "../../models/models";
 
 const PaymentPage: React.FC = () => {
   const [payments, setPayments] = useState<payments[]>([]);

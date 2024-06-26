@@ -1,5 +1,5 @@
-import Axios from "components/axios/Axios";
-import { Company } from "models/company";
+import Axios from "../components/axios/Axios";
+import { Company } from "../models/company";
 
 
 export const getCompanies = (): Promise<Company> => {

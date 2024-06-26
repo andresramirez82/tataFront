@@ -1,12 +1,11 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { login, reset } from "../../functions/api";
-import { SaveUser } from "functions/functios";
+import { SaveUser } from "../../functions/functios";
 import { useNavigate } from 'react-router-dom';
 import { AxiosError } from "axios";
-import { ErrorResponse } from "models/models";
+import { ErrorResponse } from "../../models/models";
 import { toast } from "react-toastify";
 import "./login.css";
 import CompanyHead from "./CompanyHead";

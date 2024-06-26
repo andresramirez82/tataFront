@@ -1,6 +1,6 @@
-import UserManagement from "components/users/UserManagement";
-import PaymentPage from "components/payment/PaymentPage";
-import Company from "components/company/Company";
+import UserManagement from "../../components/users/UserManagement";
+import PaymentPage from "../../components/payment/PaymentPage";
+import Company from "../../components/company/Company";
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 

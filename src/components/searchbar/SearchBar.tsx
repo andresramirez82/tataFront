@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Nav, NavDropdown, Navbar, Form, FormControl, Button } from 'react-bootstrap';
 import { keyboardKey } from "@testing-library/user-event";
-import Users from "components/users/Users";
-import { User } from "models/user";
+import Users from "../../components/users/Users";
+import { User } from "../../models/user";
 import { useNavigate } from "react-router-dom";
-import { tokenDecode } from "functions/User";
-import Socket from "components/helpper/Socket";
+import { tokenDecode } from "../../functions/User";
+import Socket from "../../components/helpper/Socket";
 import ToggleButton from 'react-bootstrap/ToggleButton';
 
 interface propsSearchBar {

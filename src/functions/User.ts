@@ -1,7 +1,7 @@
-import Axios from "components/axios/Axios";
+import Axios from "../components/axios/Axios";
 import { User } from './../models/user';
 import { jwtDecode } from 'jwt-decode';
-import { ApiResponseBase } from "models/api";
+import { ApiResponseBase } from "../models/api";
 
 
 export const createUser = (newUser: { name: string }): Promise<User> => {

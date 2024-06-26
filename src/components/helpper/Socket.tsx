@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import io from 'socket.io-client';
-import { config } from "config/config";
-import { getCartByDate } from "functions/cart";
+import { config } from "../../config/config";
+import { getCartByDate } from "../../functions/cart";
 
 interface SocketModuleProps {
     user: string

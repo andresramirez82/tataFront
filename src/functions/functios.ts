@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
-import { Sale, Discount } from "models/models";
-import { tokenDecode } from "functions/User";
-import { User } from "models/user";
+import { Sale, Discount } from "../models/models";
+import { tokenDecode } from "../functions/User";
+import { User } from "../models/user";
 
 
 /**

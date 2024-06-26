@@ -1,6 +1,6 @@
-import Axios from "components/axios/Axios";
-import { Cart } from "models/models";
-import { formatDate } from "functions/functios";
+import Axios from "../components/axios/Axios";
+import { Cart } from "../models/models";
+import { formatDate } from "../functions/functios";
 
 interface ItemMp {
     id: number;

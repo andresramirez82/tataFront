@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { payments } from 'models/cart';
+import { payments } from '../../models/cart';
 import { Form } from 'react-bootstrap';
 
 interface PaymentFormProps {

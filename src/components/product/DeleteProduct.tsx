@@ -1,9 +1,9 @@
 import React from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import { ProductClass } from "functions/api";
+import { ProductClass } from "../../functions/api";
 import { toast } from 'react-toastify';
 import { AxiosError } from "axios";
-import { ErrorResponse } from "models/models";
+import { ErrorResponse } from "../../models/models";
 
 interface CreateProductFormProps {
     show: boolean;

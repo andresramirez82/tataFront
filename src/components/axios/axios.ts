@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { config } from "../../config/config";
 import { getToken, getTokenRefresh} from "../../functions/User";
-import { SaveUser } from "functions/functios"; // Asegúrate de que la ruta a SaveUser sea correcta
+import { SaveUser } from "../../functions/functios"; // Asegúrate de que la ruta a SaveUser sea correcta
 
 
 

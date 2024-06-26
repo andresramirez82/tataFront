@@ -1,7 +1,7 @@
-import Axios from "components/axios/Axios";
-import { carts, payments } from "models/cart";
-import { Cart, Api, Sale, Discount } from "models/models";
-import { withDiscount } from "models/models";
+import Axios from "../components/axios/Axios";
+import { carts, payments } from "../models/cart";
+import { Cart, Api, Sale, Discount } from "../models/models";
+import { withDiscount } from "../models/models";
 
 
 

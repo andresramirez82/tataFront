@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import CurrentAccountForm from './CurrentAccountForm';
 import CurrentAccountList from './CurrentAccountList';
-import { CurrentAccount, Customer } from 'models/customer';
-import { getCurrentAccount, getCustomers, deleteCurrentAccount, createCurrentAccount } from "functions/customer";
+import { CurrentAccount, Customer } from '../../models/customer';
+import { getCurrentAccount, getCustomers, deleteCurrentAccount, createCurrentAccount } from "../../functions/customer";
 import { toast } from 'react-toastify';
 
 const CurrentAccountPage: React.FC = () => {

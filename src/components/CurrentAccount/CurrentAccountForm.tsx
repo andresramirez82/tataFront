@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
-import { CurrentAccount, Customer } from 'models/customer';
+import { CurrentAccount, Customer } from '../../models/customer';
 
 interface Props {
   customers: Customer[];

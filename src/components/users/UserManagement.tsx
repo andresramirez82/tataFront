@@ -1,17 +1,17 @@
 // src/components/UserManagement.tsx
 import React, { useState, useEffect } from "react";
 import { Form, Table } from 'react-bootstrap';
-import { UserClass, getUsers } from "functions/api";
-import { User, UserRole } from "models/user";
-import { formatDate } from "functions/functios";
+import { UserClass, getUsers } from "../../functions/api";
+import { User, UserRole } from "../../models/user";
+import { formatDate } from "../../functions/functios";
 import { toast } from 'react-toastify';
-import Spinner from "components/helpper/Spinner";
+import Spinner from "../../components/helpper/Spinner";
 import { AxiosError } from "axios";
-import { ErrorResponse } from "models/models";
-import UserRoleSelect from "components/helpper/Rol";
-import { changeState, exist } from "functions/User";
-import Mail from "components/helpper/Mail";
-import ResetPass from "components/helpper/ResetPass";
+import { ErrorResponse } from "../../models/models";
+import UserRoleSelect from "../../components/helpper/Rol";
+import { changeState, exist } from "../../functions/User";
+import Mail from "../../components/helpper/Mail";
+import ResetPass from "../../components/helpper/ResetPass";
 
 
 

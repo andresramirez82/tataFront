@@ -1,7 +1,7 @@
-import Axios from "components/axios/Axios";
+import Axios from "../components/axios/Axios";
 import Axios2 from "axios";
-import { config } from "config/config";
-import { Auth, Api } from "models/models";
+import { config } from "../config/config";
+import { Auth, Api } from "../models/models";
 import {
   searchProduct,
   createProduct,

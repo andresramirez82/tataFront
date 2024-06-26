@@ -1,12 +1,12 @@
 // src/components/product/EditProductForm.tsx
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Modal, ButtonGroup } from 'react-bootstrap';
-import { ProductClass, TagClass } from 'functions/api';
-import { Product } from 'models/models';
-import { Tag } from 'models/products';
+import { ProductClass, TagClass } from '../../functions/api';
+import { Product } from '../../models/models';
+import { Tag } from '../../models/products';
 import { toast } from 'react-toastify';
-import TagSearch from "components/helpper/Tag";
-import ProductDetails from './ProductDetails';
+import TagSearch from "../../components/helpper/Tag";
+//import ProductDetails from './ProductDetails';
 
 interface EditProductFormProps {
   show: boolean;
@@ -17,7 +17,7 @@ interface EditProductFormProps {
 const EditProductForm: React.FC<EditProductFormProps> = ({ show, onHide, productId }) => {
   const [productDetails, setProductDetails] = useState<Product.product | null>(null);
   const [isFormInvalid, setIsFormInvalid] = useState(false);
-  const [existingTags, setExistingTags] = useState<number[]>([]);
+  //const [existingTags, setExistingTags] = useState<number[]>([]);
 
   useEffect(() => {
     const fetchProductDetails = async () => {

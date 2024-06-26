@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import {  DiscountClass } from "functions/api";
+import {  DiscountClass } from "../../functions/api";
 import { toast } from 'react-toastify';
 
 interface CreateProductFormProps {

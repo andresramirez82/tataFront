@@ -1,5 +1,5 @@
-import Axios from "components/axios/Axios";
-import { Customer, CurrentAccount } from 'models/customer';
+import Axios from "../components/axios/Axios";
+import { Customer, CurrentAccount } from '../models/customer';
 
 
 /**

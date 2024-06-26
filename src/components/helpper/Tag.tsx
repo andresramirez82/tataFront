@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Typeahead, TypeaheadComponentProps } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
-import { TagClass } from "functions/api";
+import { TagClass } from "../../functions/api";
 
 interface Tag {
     id: number;
@@ -29,15 +29,12 @@ const TagSearch: React.FC<TagSearchProps> = ({ existingTags, onAddTag }) => {
         setSelectedTags(selected as Tag[]);
     };
 
-    const handleAddTags = (event: any) => {
+    const handleAddTags = (event: unknown) => {
         event.preventDefault();
         onAddTag(selectedTags);
         setSelectedTags([]);
     };
 
-    useEffect(() => {
-
-    }, [selectedTags])
     
     return (
         <div>

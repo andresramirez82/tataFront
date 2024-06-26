@@ -1,8 +1,8 @@
-import Axios from "components/axios/Axios";
-import { Product } from "models/models";
+import Axios from "../components/axios/Axios";
+import { Product } from "../models/models";
 import { pagination } from './../models/api';
-import { products,Tag } from "models/products";
-import { discounts } from "models/discount";
+import { products,Tag } from "../models/products";
+import { discounts } from "../models/discount";
 
 
 export const searchProduct = (search: string): Promise<Product.product[]> => {

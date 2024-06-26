@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button } from 'react-bootstrap';
 import EditProductForm from './EditProductForm';
-import { formatDate } from "functions/functios";
-import DeleteProduct from "components/product/DeleteProduct";
-import { fetchProductsAPI } from "functions/product";
-import { products } from "models/products";
+import { formatDate } from "../../functions/functios";
+import DeleteProduct from "../../components/product/DeleteProduct";
+import { fetchProductsAPI } from "../../functions/product";
+import { products } from "../../models/products";
 
 
 const ProductList: React.FC = () => {

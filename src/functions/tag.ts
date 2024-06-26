@@ -1,5 +1,5 @@
-import Axios from "components/axios/Axios";
-import { Tag } from "models/products";
+import Axios from "../components/axios/Axios";
+import { Tag } from "../models/products";
 
 
 export const getTags = (): Promise<Tag[]> => {

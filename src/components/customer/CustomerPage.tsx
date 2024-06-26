@@ -4,12 +4,12 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import CustomerForm from './CustomerForm';
 import CustomerList from './CustomerList';
-import { Customer } from 'models/customer';
-import { getCustomers, createCustomer, deleteCustomer } from "functions/customer";
+import { Customer } from '../../models/customer';
+import { getCustomers, createCustomer, deleteCustomer } from "../../functions/customer";
 import { toast } from 'react-toastify';
 import { AxiosError } from "axios";
-import { ErrorResponse } from "models/models";
-import CurrentAccount from "components/CurrentAccount/CurrentAccountPage";
+import { ErrorResponse } from "../../models/models";
+import CurrentAccount from "../../components/CurrentAccount/CurrentAccountPage";
 
 const CustomerPage: React.FC = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);

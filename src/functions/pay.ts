@@ -1,5 +1,5 @@
-import Axios from "components/axios/Axios";
-import { pay } from 'models/Pay';
+import Axios from "../components/axios/Axios";
+import { pay } from '../models/Pay';
 
 
 export const getPays = (): Promise<pay[]> => {
