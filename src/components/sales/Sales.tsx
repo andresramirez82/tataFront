@@ -82,7 +82,7 @@ const Sales: React.FC = () => {
                     </Row>
                 </Alert>
                 </div>}
-                {idCart && <Cart idCart={idCart} setidCart={setidCart} />}
+                {idCart && <Cart idCart={idCart} setidCart={setidCart} addCart={addCart}/>}
             </Col>
             <Col md={6}>
                 <Table>

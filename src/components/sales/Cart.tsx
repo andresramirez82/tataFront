@@ -19,9 +19,10 @@ import 'react-bootstrap-typeahead/css/Typeahead.css';
 interface CartProps {
     idCart: number;
     setidCart: React.Dispatch<React.SetStateAction<number | undefined>>;
+    addCart: () => void;
 }
 
-const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
+const Cart: React.FC<CartProps> = ({ idCart, setidCart, addCart }) => {
     const [cart, setcart] = useState<CartModel.cart>();
     const inputRef = useRef<HTMLInputElement | null>(null);
     const [isEditing, setEditing] = useState(true);
@@ -149,6 +150,7 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart }) => {
     const CerrarModal = () => {
         setidCart(undefined);
         setcartTicket(undefined);
+        addCart();
     };
 
     const DeleteCart = () => {

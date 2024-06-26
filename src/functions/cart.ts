@@ -215,3 +215,17 @@ export const updatePayment = (Payment: payments): Promise<payments> => {
     });
 };
 
+export const updateIndex = (): Promise<any> => {
+    // Utiliza async/await para trabajar de forma más cómoda con Promesas
+    return new Promise<any>((resolve, reject) => {
+        Axios.get(`/carts/updateIndex`)
+            .then((response) => {
+                resolve(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+                reject(error);
+            });
+    });
+};
+
