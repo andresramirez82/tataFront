@@ -119,8 +119,8 @@ const Cart: React.FC<CartProps> = ({ idCart, setidCart, addCart }) => {
         form.classList.add('was-validated');
     };
 
-    const onConfirmarVenta = (idCart: number, idPayment: number) => [
-        CartClass.updateCart(idCart, idPayment, discount).then( () => {
+    const onConfirmarVenta = (idCart: number, idPayment: number, customer: number) => [
+        CartClass.updateCart(idCart, idPayment, discount, customer).then( () => {
             setfinalizarBtn(false);
         }).catch(err => {
             console.error(err);

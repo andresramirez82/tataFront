@@ -15,11 +15,13 @@ import { carts } from '@models/cart';
 import { keyboardKey } from "@testing-library/user-event";
 import { createPay } from '@functions/pay';
 import { config } from "../../config/config";
+import { getCustomers } from "@functions/customer";
+import { Customer } from "@models/customer";
 
 
 interface confSaleProps {
   idCart: number;
-  onConfirmarVenta: (idCart: number, idPayment: number) => void;
+  onConfirmarVenta: (idCart: number, idPayment: number, Customer: number) => void;
   totalSales: number;
   handleCloseParent: () => void;
   mostarTicket: (cart: carts) => void;
@@ -37,6 +39,8 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
   const [notifications, setNotifications] = useState<string>('Esperando la respuesta de Mercado Pago');
   const [mixP, setmixP] = useState<pay[]>([]);
   const [total, settotal] = useState<number>(0)
+  const [customerSelected, setcustomerSelected] = useState('0')
+  const [customer, setcustomer] = useState<Customer[]>([])
 
 
   useEffect(() => {
@@ -78,7 +82,7 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
         if (notification.action === 'payment.created') {
           toast(`Pago realizado`);
           getOrder(idCart).then(() => {
-            onConfirmarVenta(idCart, Number(selectedFormaPago));
+            onConfirmarVenta(idCart, Number(selectedFormaPago),Number(customerSelected));
             handleClose();
             if (cart) {
               mostarTicket(cart);
@@ -114,7 +118,7 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
       })
     }
     if (selectedFormaPago !== '4' && !sendMP) {
-      onConfirmarVenta(idCart, Number(selectedFormaPago));
+      onConfirmarVenta(idCart, Number(selectedFormaPago),Number(customerSelected));
       handleClose();
       if (cart) {
         mostarTicket(cart);
@@ -137,15 +141,15 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
           }
         }
         )
-        onConfirmarVenta(idCart, Number(selectedFormaPago));
+        onConfirmarVenta(idCart, Number(selectedFormaPago),Number(customerSelected));
         handleClose();
         if (cart) {
           mostarTicket(cart);
         }
       } else {
-        toast(`No coinciden los valores de los pagos faltan $ ${total-totalSales}`)
+        toast(`No coinciden los valores de los pagos faltan $ ${total - totalSales}`)
       }
-      
+
     }
 
   };
@@ -161,6 +165,10 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
     setSelectedFormaPago(e.target.value);
     setsendMP(false);
     setsendAFIP(false);
+  }
+
+  const changeCustomer = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setcustomerSelected(e.target.value)
   }
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -206,6 +214,16 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
       settotal(total);
     }
   }
+
+  useEffect(() => {
+    if (selectedFormaPago === '3') {
+      
+      getCustomers().then(cust => {
+        setcustomer(cust)
+      })
+    }
+  }, [selectedFormaPago])
+
 
   // region JSX
   return (
@@ -286,10 +304,32 @@ const ConfirmarVentaModal: React.FC<confSaleProps> = ({ onConfirmarVenta, idCart
                     }
                   })}
                   <Row>
-                    Total : <MoneyFormatter amount={total}/>
+                    Total : <MoneyFormatter amount={total} />
                   </Row>
                 </Col>
               </Row>}
+            {
+              selectedFormaPago === '3' && <Row>
+                <Col>
+                  <Form.Group controlId="customerID">
+                   <Form.Label>Selecciona un cliente: </Form.Label>
+                    <Form.Control
+                      as="select"
+                      value={customerSelected}
+                      onChange={changeCustomer}
+                      onKeyDown={selectOnKeyPressHandler}
+                      autoFocus
+                    >
+                      {customer.map((cust) => (
+                        <option key={cust.id} value={cust.id}>
+                          {cust.name}
+                        </option>
+                      ))}
+                    </Form.Control>
+                  </Form.Group>
+                </Col>
+              </Row>
+            }
 
           </Form>
         </Modal.Body>

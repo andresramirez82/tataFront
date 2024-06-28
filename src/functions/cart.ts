@@ -131,10 +131,10 @@ export const deletePayment = (id: number): Promise<payments[]> => {
     });
 };
 
-export const updateCart = (idCart: number, idPayment: number, discount: Discount.dicountsResponse[] | undefined): Promise<payments[]> => {
+export const updateCart = (idCart: number, idPayment: number, discount: Discount.dicountsResponse[] | undefined, idCustomer: number): Promise<payments[]> => {
     // Utiliza async/await para trabajar de forma más cómoda con Promesas
     return new Promise<payments[]>((resolve, reject) => {
-        Axios.put(`/carts/confirm`, { idCart, idPayment, discount })
+        Axios.put(`/carts/confirm`, { idCart, idPayment, discount, idCustomer })
             .then((response) => {
                 resolve(response.data);
             })
